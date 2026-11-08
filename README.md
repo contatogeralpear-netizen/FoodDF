@@ -1,6 +1,6 @@
 # FOODDF
 
-Plataforma de restaurantes com seleção por estado e cidade, cardápio, carrinho e finalização pelo WhatsApp. Inclui painel administrativo para cadastrar e gerenciar vários estabelecimentos, baseado nas telas fornecidas.
+Plataforma de restaurantes com seleção por estado e cidade, cardápio, carrinho e finalização pelo WhatsApp. Inclui painel administrativo individual para cada restaurante, baseado nas telas fornecidas.
 
 ## Desenvolvimento
 
@@ -10,7 +10,7 @@ Sem configuração de banco, o catálogo usa o restaurante modelo local. Com Sup
 
 ## Painel administrativo
 
-Acesse `/paineladministativo` — a grafia da rota segue a solicitação original. O acesso usa um link enviado pelo Supabase ao e-mail informado. O administrador central autorizado é `contatogeralpear@gmail.com`; não há cadastro público de lojistas. A autorização é conferida no banco, além da interface.
+Acesse `/paineladministativo` — a grafia da rota segue a solicitação original. O acesso usa um link enviado pelo Supabase ao e-mail informado. Cada conta com e-mail confirmado cadastra um restaurante e acessa somente seus dados. A conta contatogeralpear@gmail.com está vinculada ao modelo Brasa Burger. O painel global será uma etapa futura. A autorização é aplicada no banco por vínculo privado entre conta e restaurante.
 
 O painel permite selecionar ou cadastrar restaurantes, editar endereço e horários, publicar ou manter a loja em rascunho, gerenciar categorias e produtos, fotos, promoções e adicionais. Também configura Pix, dinheiro, cartão, entrega, retirada, taxa, pedido mínimo, bairros e WhatsApp. As alterações salvas alimentam o cardápio público. Os horários são informativos; a chave “Restaurante aberto” controla manualmente a abertura para novos pedidos.
 
@@ -33,7 +33,7 @@ Quando a persistência de pedidos não está habilitada, inclusive na demonstra�
 
 Os testes de navegador cobrem desktop e celular, filtros, busca, persistência do carrinho, entrega/retirada, troco, Pix demonstrativo, comprovante e conteúdo/destino do link WhatsApp. Não enviam mensagens.
 
-Os testes do painel em `tests/admin-flow.spec.ts` usam respostas de API isoladas para verificar formulários, imagens, adicionais, categorias, configurações, múltiplos restaurantes, planos e bloqueio de contas sem autorização. Não substituem o teste de autenticação por e-mail. `tests/admin-security.sql` verifica CRUD e políticas de acesso no Supabase dentro de uma transação integralmente revertida.
+Os testes do painel em `tests/admin-flow.spec.ts` usam respostas de API isoladas para verificar formulários, imagens, adicionais, categorias, configurações, cadastro individual e ausência de seletor de outras lojas, planos e bloqueio de contas sem autorização. Não substituem o teste de autenticação por e-mail. `tests/admin-security.sql` verifica CRUD e políticas de acesso no Supabase dentro de uma transação integralmente revertida.
 
 ## Implantação
 

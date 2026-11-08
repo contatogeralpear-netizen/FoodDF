@@ -1,6 +1,6 @@
 # FOODDF — base de dados e API
 
-O FOODDF é um marketplace: o cliente escolhe estado, cidade e restaurante. O cadastro e a administração dos estabelecimentos são feitos pelo administrador central em `/paineladministativo`. Não existe inscrição pública de lojistas nesta versão.
+O FOODDF é um marketplace. Cada conta confirma seu e-mail e cadastra seu próprio restaurante em /paineladministativo. O painel de gestão global não faz parte desta etapa.
 
 ## Estado desta entrega
 
@@ -9,24 +9,24 @@ O FOODDF é um marketplace: o cliente escolhe estado, cidade e restaurante. O ca
 - Restaurante **Brasa Burger**, em Brasília/DF, é fictício (`is_demo = true`). Cinco produtos e preços ilustrativos seguem as telas de referência.
 - WhatsApp de teste autorizado: `5561982429847`. A interface identifica os resumos como pedido fictício. Não há confirmação automática de envio ou de pagamento.
 - Nenhuma chave Pix foi inventada. `pix_key`, `pix_name` e `pix_city` estão vazios.
-- Painel administrativo com seleção, cadastro e edição de restaurantes, CRUD de produtos/categorias, fotos, promoções, adicionais, horários e configurações de pagamento/entrega.
+- Painel administrativo individual com cadastro e edição do próprio restaurante, CRUD de produtos/categorias, fotos, promoções, adicionais, horários e configurações de pagamento/entrega.
 - O envio de pedidos persistidos e de comprovantes privados permanece desativado por `FOODDF_ACCEPT_ORDERS=false` e ausência de chave secreta. Quando `acceptingOrders` retornado pelo catálogo é falso, o cliente prepara o resumo e abre o WhatsApp diretamente, sem criar um pedido no banco. A demonstração sempre identifica o pedido como fictício.
 
 ## Autenticação e administração
 
 O painel usa `supabase-js` com a chave publicável e login por link de e-mail (`signInWithOtp`). O endereço de retorno é `https://fooddf.vercel.app/paineladministativo`, que deve estar na lista de URLs permitidas do Supabase Auth. A entrega do e-mail e o primeiro acesso pela caixa de entrada ainda não foram verificados.
 
-`fooddf_private.administrators` contém a lista de e-mails administrativos, inicialmente `contatogeralpear@gmail.com`. O cliente não pode ler nem modificar essa tabela. A função `fooddf_private.is_admin()` exige usuário autenticado, e-mail confirmado, conta não anônima e correspondência com a lista. `public.fooddf_is_admin()` permite ao painel consultar sua própria autorização. As políticas RLS aplicam a mesma verificação a cada operação de cadastro; ocultar a interface não é a proteção principal.
+`fooddf_private.restaurant_members` vincula um e-mail confirmado a um restaurante. Não pode ser lida ou alterada pelos clientes. `can_manage` consulta o usuário confirmado e o vínculo no banco, sem confiar em metadados editáveis. O antigo `is_admin` retorna false; não há superadministrador habilitado. `fooddf_has_panel_access` permite abrir o cadastro para contas confirmadas.
 
-O administrador central gerencia todos os estabelecimentos. Não há isolamento por proprietário ou convite automático de lojistas nesta versão. Novas lojas começam em rascunho e só aparecem no catálogo quando estão publicadas e ativas. A abertura é controlada manualmente por `is_open`; `opening_hours` informa os horários, sem agendamento automático.
+`fooddf_create_restaurant` cria o primeiro rascunho e o vínculo de propriedade em uma transação, com bloqueio para cadastros simultâneos e limite de um restaurante por conta. Todas as operações autenticadas são limitadas pela RLS ao restaurante do proprietário. Uma conta não lista outras lojas nem acessa seus produtos, categorias, planos ou métricas. Novos restaurantes começam em rascunho. O controle is_open é manual; horários são informativos.
 
 As tabelas `restaurants` e `products` guardam as configurações da loja e os campos de apresentação do cardápio. `categories` organiza os nomes por restaurante; a RPC `fooddf_rename_category` atualiza o nome e os produtos vinculados na mesma transação. Produtos podem ter preço promocional, destaque, disponibilidade, quantidade de pessoas servidas e adicionais com preço em centavos.
 
-As fotos de produtos, logos e capas ficam no bucket público `restaurant-images`. A leitura é pública para exibição no cardápio; envio e gerenciamento exigem administrador autorizado. São aceitos JPG, PNG e WebP de até 5 MB. Comprovantes de pagamento usam outro bucket, privado, e não devem ser enviados como imagens de catálogo.
+As fotos de produtos, logos e capas ficam no bucket público `restaurant-images`. A leitura é pública para exibição no cardápio; envio e gerenciamento exigem vínculo com o restaurante indicado no primeiro segmento do caminho do arquivo. São aceitos JPG, PNG e WebP de até 5 MB. Comprovantes de pagamento usam outro bucket, privado, e não devem ser enviados como imagens de catálogo.
 
 `restaurant_plans` registra o início do teste de sete dias e o interesse no Pro de R$ 24,90/mês, valor de referência. Não há gateway, contratação, cobrança recorrente ou bloqueio automático após o teste.
 
-`catalog_events` registra visitas e cliques no WhatsApp, deduplicados por restaurante, dia, identificador de sessão e tipo. Não recebe nome, telefone ou endereço do cliente. As métricas são aproximações de uso, não pedidos confirmados nem pagamentos. `fooddf_admin_metrics` retorna a agregação dos últimos sete dias apenas ao administrador.
+`catalog_events` registra visitas e cliques no WhatsApp, deduplicados por restaurante, dia, identificador de sessão e tipo. Não recebe nome, telefone ou endereço do cliente. As métricas são aproximações de uso, não pedidos confirmados nem pagamentos. `fooddf_admin_metrics` retorna a agregação dos últimos sete dias apenas ao proprietário do restaurante.
 
 ## Ambiente
 
@@ -75,9 +75,9 @@ A persistência de pedidos e comprovantes ainda precisa de testes completos em a
 
 ## Proteções e migrações
 
-Todas as tabelas públicas têm RLS. Visitantes e usuários autenticados sem autorização administrativa só leem restaurantes publicados/ativos, seus produtos ativos e categorias públicas. Administradores autorizados têm permissões de cadastro e acesso a planos e métricas. O cliente, mesmo administrativo, não recebe permissão para ler ou inserir pedidos persistidos, usar o limitador de requisições ou acessar comprovantes privados diretamente. Essas operações de API usam cliente exclusivo do servidor e validação de origem. Há limite persistente de dez tentativas por minuto/IP para pedidos e anexos; o IP é guardado como HMAC, não em texto.
+Todas as tabelas públicas têm RLS. A role authenticated acessa somente registros do próprio restaurante. A role anon lê apenas restaurantes publicados e campos públicos permitidos explicitamente; owner_id, telefone interno e metadados administrativos não são concedidos. Produtos públicos são filtrados por atividade e publicação. Pedidos persistidos e comprovantes privados continuam restritos à API futura do servidor.
 
-As migrações em `supabase/migrations` foram geradas com Supabase CLI 3.0.0 e aplicadas ao projeto via conector Supabase. Além da base e dos reforços de segurança, `admin_panel` adiciona cadastros, autorização, imagens, planos e eventos; `admin_metrics` adiciona a agregação administrativa. Nenhuma credencial está nas migrações. A tabela privada de administradores tem RLS e nenhuma política para clientes por intenção, pois só a função de autorização pode consultá-la.
+As migrações em `supabase/migrations` foram geradas com Supabase CLI 3.0.0 e aplicadas ao projeto via conector Supabase. Além da base e dos reforços de segurança, `admin_panel` adiciona cadastros, autorização, imagens, planos e eventos; `admin_metrics` adiciona a agregação administrativa. Nenhuma credencial está nas migrações. A migração restaurant_isolation substitui a autorização global por propriedade individual. Tabelas privadas não têm políticas para clientes por intenção.
 
 Verificação local da lógica de preços/validação:
 
@@ -88,7 +88,7 @@ npm run typecheck
 
 Validações remotas conferem catálogo público, RLS ativo, ausência de acesso público a pedidos, bucket privado e advisors de segurança. Os índices podem aparecer como ainda não utilizados em um projeto recém-criado.
 
-`tests/admin-security.sql` exercita CRUD administrativo, renomeação atômica de categoria, negação de escrita para visitantes e outras contas, proteção de imagens e métricas e rejeição de e-mail não confirmado. Todas as fixtures e alterações são revertidas no fim da transação. Execute esse teste apenas por uma conexão administrativa ao banco.
+`tests/admin-security.sql` cria duas contas e lojas em transação revertida, testa isolamento de leitura/escrita, uploads, planos, métricas, duplicidade de cadastro e contas não confirmadas. Fixtures não persistem.
 
 `tests/admin-flow.spec.ts` usa APIs simuladas e isoladas para validar a interface em desktop/celular, inclusive fotos, adicionais, salvamento, troca de restaurante e planos. Esses testes não comprovam entrega de e-mail nem uma sessão autenticada real de ponta a ponta.
 
