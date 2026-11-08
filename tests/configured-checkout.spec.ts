@@ -1,0 +1,20 @@
+import {test,expect} from '@playwright/test';
+test('configurações administrativas chegam ao pedido com promoções e adicionais',async({page},info)=>{
+ await page.route('**/api/catalog?*',route=>route.fulfill({json:{restaurant:{id:'test',slug:'test',name:'Modelo configurado',state:'DF',city:'Brasília',address:'Rua modelo, Loja 12, Asa Sul',isDemo:true,isOpen:true,deliveryFee:750,deliveryEnabled:true,pickupEnabled:false,minOrder:6000,neighborhoods:['Asa Sul'],paymentMethods:['cash'],whatsapp:'5561982429847'},products:[{id:'burger',name:'Burger configurado',description:'Com adicionais',price:2990,originalPrice:3490,category:'Artesanais',image:'burger',extras:[{id:'bacon',name:'Bacon extra',price:500}]}]}}));
+ await page.route('**/api/events',route=>route.fulfill({status:204}));
+ await page.goto('/?restaurante=test');
+ await expect(page.locator('.old-price')).toContainText('34,90');
+ await page.getByRole('button',{name:'Personalizar Burger configurado'}).click();
+ await page.getByLabel(/Bacon extra/).check();await page.getByRole('button',{name:/Adicionar ao pedido/}).click();
+ if(info.project.name==='mobile')await page.getByRole('button',{name:/Ver sacola/}).click();
+ await page.getByRole('button',{name:'Finalizar pedido',exact:true}).filter({visible:true}).click();
+ await expect(page.getByRole('alert').filter({hasText:'pedido mínimo'})).toContainText('60,00');
+ await page.getByRole('button',{name:'Personalizar Burger configurado'}).click();await page.getByRole('button',{name:/Adicionar ao pedido/}).click();
+ await page.reload();
+ if(info.project.name==='mobile')await page.getByRole('button',{name:/Ver sacola/}).click();
+ await page.getByRole('button',{name:'Finalizar pedido',exact:true}).filter({visible:true}).click();
+ await expect(page.getByRole('button',{name:'Retirada',exact:true})).toBeDisabled();
+ await page.getByLabel('Nome',{exact:true}).fill('Cliente teste');await page.getByLabel('WhatsApp',{exact:true}).fill('61999990000');await page.getByLabel('Rua, quadra e número').fill('Endereço fictício, 12');await page.getByLabel('Bairro',{exact:true}).fill('Outro bairro');await page.getByRole('button',{name:'Continuar para pagamento'}).click();await expect(page.getByRole('alert').filter({hasText:'Entregamos nos bairros'})).toContainText('Asa Sul');
+ await page.getByLabel('Bairro',{exact:true}).fill('Asa Sul');await page.getByRole('button',{name:'Continuar para pagamento'}).click();await expect(page.getByRole('radio')).toHaveCount(1);await expect(page.getByRole('radio',{name:/Dinheiro/})).toBeVisible();await expect(page.locator('.checkout-summary .total')).toContainText('72,30');
+ await page.getByRole('button',{name:'Revisar pedido',exact:true}).click();await page.evaluate(()=>{window.open=url=>{(window as unknown as {testUrl:string}).testUrl=String(url);return null;}});await page.getByRole('button',{name:'Enviar pedido pelo WhatsApp'}).click();const url=await page.evaluate(()=>(window as unknown as {testUrl:string}).testUrl);const message=new URL(url).searchParams.get('text');expect(message).toContain('Bacon extra');expect(message).toContain('72,30');expect(message).toContain('29,90');
+});

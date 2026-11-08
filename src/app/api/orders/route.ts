@@ -29,15 +29,17 @@ export async function POST(request: Request) {
       return responseFor(previous.data);
     }
     if (!(await rateLimit(request, 'orders', 10))) return jsonError('Muitas tentativas. Aguarde um minuto e tente novamente.', 429);
-    const restaurantResult = await db.from('restaurants').select('id,delivery_fee,whatsapp,pix_key,pix_name,pix_city,accepting_orders,is_demo').eq('id', input.restaurantId).eq('active', true).eq('status', 'published').single();
+    const restaurantResult = await db.from('restaurants').select('id,delivery_fee,whatsapp,pix_key,pix_name,pix_city,accepting_orders,is_demo,is_open,delivery_enabled,pickup_enabled,payment_methods,min_order').eq('id', input.restaurantId).eq('active', true).eq('status', 'published').single();
     const restaurant = restaurantResult.data;
-    if (restaurantResult.error || !restaurant?.accepting_orders || !restaurant.whatsapp || restaurant.is_demo) return jsonError('O restaurante ainda não está recebendo pedidos.', 409);
+    if (restaurantResult.error || !restaurant?.accepting_orders || !restaurant.whatsapp || restaurant.is_demo || !restaurant.is_open) return jsonError('O restaurante ainda não está recebendo pedidos.', 409);
+    if(!restaurant.payment_methods.includes(input.paymentMethod)||(input.fulfillment==='delivery'?!restaurant.delivery_enabled:!restaurant.pickup_enabled))return jsonError('Forma de pagamento ou entrega indisponível.',409);
     if (input.paymentMethod === 'pix' && (!restaurant.pix_key || !restaurant.pix_name || !restaurant.pix_city)) return jsonError('Pix indisponível. Escolha outra forma de pagamento.', 409);
-    const productResult = await db.from('products').select('id,name,price').eq('restaurant_id', input.restaurantId).eq('active', true).in('id', input.items.map(item => item.productId));
+    const productResult = await db.from('products').select('id,name,price,promo_price,extras').eq('restaurant_id', input.restaurantId).eq('active', true).in('id', input.items.map(item => item.productId));
     if (productResult.error) throw new Error('Catalog unavailable');
     let priced;
     try { priced = priceOrder(input, productResult.data, restaurant.delivery_fee); }
     catch (error) { return jsonError(error instanceof Error ? error.message : 'Não foi possível calcular o pedido.', 409); }
+    if(priced.subtotal<restaurant.min_order)return jsonError('O pedido não atingiu o valor mínimo do restaurante.',409);
     const created = await db.from('orders').insert({
       request_id: input.requestId, access_token_hash: accessHash, request_hash: fingerprint,
       restaurant_id: input.restaurantId, customer_name: input.customer.name, customer_phone: input.customer.phone,

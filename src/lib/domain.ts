@@ -1,5 +1,6 @@
-export type Product = { id: string; name: string; description: string; price: number; category: string; image: string };
-export type Restaurant = { id: string; slug: string; name: string; state: string; city: string; address: string; deliveryFee: number; isDemo: boolean; whatsapp?: string | null; pixKey?: string | null; pixName?: string | null; pixCity?: string | null; acceptingOrders?: boolean };
+export type ProductExtra = {id:string;name:string;price:number};
+export type Product = { id: string; name: string; description: string; price: number; category: string; image: string; originalPrice?:number; featured?:boolean; serves?:number; extras?:ProductExtra[] };
+export type Restaurant = { id: string; slug: string; name: string; state: string; city: string; address: string; deliveryFee: number; isDemo: boolean; whatsapp?: string | null; pixKey?: string | null; pixName?: string | null; pixCity?: string | null; acceptingOrders?: boolean; description?:string; cuisine?:string; logo?:string|null; cover?:string|null; isOpen?:boolean; openingHours?:{day:string;enabled:boolean;open:string;close:string}[]; deliveryEnabled?:boolean; pickupEnabled?:boolean; minOrder?:number; estimatedTime?:string; neighborhoods?:string[]; paymentMethods?:('pix'|'cash'|'card')[]; receiptRequired?:boolean };
 export type Customer = { name: string; phone: string; address: string; neighborhood: string; complement: string; notes: string };
 export const demoRestaurant: Restaurant = { id: 'brasa-burger', slug: 'brasa-burger', name: 'Brasa Burger', state: 'DF', city: 'Brasília', address: 'CLS 308, Bloco B, Loja 12 — Asa Sul', deliveryFee: 500, isDemo: true, acceptingOrders: true };
 export const demoProducts: Product[] = [

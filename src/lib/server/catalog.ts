@@ -1,4 +1,7 @@
 import 'server-only';
+import type { AdminRestaurant } from '@/lib/admin';
+const publicFields='id,slug,name,state,city,address,delivery_fee,whatsapp,pix_key,pix_name,pix_city,accepting_orders,is_demo,description,cuisine,logo_url,cover_url,is_open,opening_hours,delivery_enabled,pickup_enabled,min_order,estimated_time,neighborhoods,payment_methods,receipt_required,neighborhood,complement';
+function publicRestaurant(r:AdminRestaurant){return {id:r.id,slug:r.slug,name:r.name,state:r.state,city:r.city,address:[r.address,...[r.complement,r.neighborhood].filter(v=>v&&!r.address.toLocaleLowerCase('pt-BR').includes(v.toLocaleLowerCase('pt-BR')))].filter(Boolean).join(', '),deliveryFee:r.delivery_fee,whatsapp:r.whatsapp,pixKey:r.pix_key,pixName:r.pix_name,pixCity:r.pix_city,isDemo:r.is_demo,acceptingOrders:canCreateOrders()&&r.accepting_orders,description:r.description,cuisine:r.cuisine,logo:r.logo_url,cover:r.cover_url,isOpen:r.is_open,openingHours:r.opening_hours,deliveryEnabled:r.delivery_enabled,pickupEnabled:r.pickup_enabled,minOrder:r.min_order,estimatedTime:r.estimated_time,neighborhoods:r.neighborhoods,paymentMethods:r.payment_methods,receiptRequired:r.receipt_required};}
 import { canCreateOrders, database, hasDatabase } from './supabase';
 
 export const demoProducts = [
@@ -18,14 +21,14 @@ export async function getCatalog(identifier = 'brasa-burger') {
   }
   if (!/^[a-z0-9-]{1,100}$/.test(identifier)) throw new Error('Restaurant not found');
   const db = database();
-  const restaurantResult = await db.from('restaurants').select('id,slug,name,state,city,address,delivery_fee,whatsapp,pix_key,pix_name,pix_city,accepting_orders,is_demo').or(`id.eq.${identifier},slug.eq.${identifier}`).eq('active', true).eq('status', 'published').single();
+  const restaurantResult = await db.from('restaurants').select(publicFields).or(`id.eq.${identifier},slug.eq.${identifier}`).eq('active', true).eq('status', 'published').single();
   if (restaurantResult.error) throw new Error('Restaurant not found');
-  const r = restaurantResult.data;
-  const productResult = await db.from('products').select('id,name,description,price,category,image').eq('restaurant_id', r.id).eq('active', true).order('sort_order');
+  const r = restaurantResult.data as unknown as AdminRestaurant;
+  const productResult = await db.from('products').select('id,name,description,price,category,image,image_url,promo_price,featured,serves,extras').eq('restaurant_id', r.id).eq('active', true).order('sort_order');
   if (productResult.error) throw new Error('Catalog unavailable');
   return {
-    products: productResult.data,
-    restaurant: { id: r.id, slug: r.slug, name: r.name, state: r.state, city: r.city, address: r.address, deliveryFee: r.delivery_fee, whatsapp: r.whatsapp, pixKey: r.pix_key, pixName: r.pix_name, pixCity: r.pix_city, isDemo: r.is_demo },
+    products: productResult.data.map(p=>({...p,price:p.promo_price??p.price,originalPrice:p.promo_price?p.price:undefined,image:p.image_url||p.image})),
+    restaurant: publicRestaurant(r),
     mode: canCreateOrders() && r.accepting_orders && r.whatsapp && !r.is_demo ? 'live' as const : 'demo' as const,
   };
 }
@@ -35,10 +38,10 @@ export async function getRestaurants(state?: string, city?: string) {
     const matches = (!state || state === demoRestaurant.state) && (!city || city.toLocaleLowerCase('pt-BR') === demoRestaurant.city.toLocaleLowerCase('pt-BR'));
     return { restaurants: matches ? [{ ...demoRestaurant, acceptingOrders: false }] : [], mode: 'demo' as const };
   }
-  let query = database().from('restaurants').select('id,slug,name,state,city,address,delivery_fee,is_demo,accepting_orders').eq('active', true).eq('status', 'published').order('name').limit(200);
+  let query = database().from('restaurants').select(publicFields).eq('active', true).eq('status', 'published').order('name').limit(200);
   if (state) query = query.eq('state', state);
   if (city) query = query.eq('city', city);
   const { data, error } = await query;
   if (error) throw new Error('Restaurants unavailable');
-  return { restaurants: data.map(r => ({ id: r.id, slug: r.slug, name: r.name, state: r.state, city: r.city, address: r.address, deliveryFee: r.delivery_fee, isDemo: r.is_demo, acceptingOrders: r.accepting_orders })), mode: canCreateOrders() ? 'live' as const : 'demo' as const };
+  return { restaurants: data.map(r => publicRestaurant(r as unknown as AdminRestaurant)), mode: canCreateOrders() ? 'live' as const : 'demo' as const };
 }
