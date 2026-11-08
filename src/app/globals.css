@@ -7,3 +7,18 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
 .old-price{display:block;font-size:12px;color:#897287;font-weight:400}.store-hours{border-top:1px solid #e7d9e7;padding:18px 0;font-size:13px}.store-hours summary{cursor:pointer;font-weight:700}.store-hours p{display:flex;justify-content:space-between;gap:10px;margin:10px 0}.extras-modal>.food-image{width:100%;height:180px;border-radius:18px}.extras-modal h2{margin-top:20px}.extras-modal>p{color:#80617e}.extras-modal h3{margin:20px 0 12px}.extra-choice{display:flex;align-items:center;gap:10px;border-top:1px solid #eee0ed;padding:15px 0;font-size:14px}.extra-choice span{flex:1}.extra-choice input{accent-color:#ff5900;width:18px;height:18px}.extras-modal>.button{margin-top:20px}.delivery-tabs button:disabled{opacity:.4;cursor:not-allowed}
+
+/* Transições elegantes de páginas e estados */
+.page-transition{animation:pageFadeIn .32s cubic-bezier(.16,1,.3,1) forwards;will-change:opacity,transform}
+.step-transition{animation:stepFadeIn .28s cubic-bezier(.16,1,.3,1) forwards;will-change:opacity,transform}
+@keyframes pageFadeIn{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes stepFadeIn{0%{opacity:0;transform:translateY(6px)}100%{opacity:1;transform:translateY(0)}}
+.modal-backdrop,.admin-modal-backdrop{animation:backdropFade .2s ease-out forwards}
+@keyframes backdropFade{from{opacity:0}to{opacity:1}}
+.modal,.admin-modal{animation:modalPop .24s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes modalPop{0%{opacity:0;transform:scale(.96) translateY(8px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+@view-transition{navigation:auto}
+::view-transition-old(root){animation:rootFadeOut .18s ease-out forwards}
+::view-transition-new(root){animation:rootFadeIn .22s ease-in forwards}
+@keyframes rootFadeOut{from{opacity:1}to{opacity:0}}
+@keyframes rootFadeIn{from{opacity:0}to{opacity:1}}
