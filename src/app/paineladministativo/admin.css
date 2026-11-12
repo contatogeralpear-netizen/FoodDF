@@ -13,3 +13,5 @@
 .admin-profile small{display:block;font-size:9px;color:#a482ab;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
 
 .admin-image-guide{display:block;margin-top:8px;color:#7e6482;font-size:11px;line-height:1.45}.admin-image-guide strong{color:#543259}.admin-upload{min-width:0}.admin-upload-image{overflow:hidden}
+
+.admin-auth-links{display:flex;justify-content:space-between;gap:16px;margin-top:20px}.admin-auth-card form .admin-field{text-align:left}.admin-auth-card select{width:100%}@media (prefers-reduced-motion:reduce){.admin-section-transition{animation:none}}

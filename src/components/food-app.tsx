@@ -14,6 +14,7 @@ const emptyCustomer:Customer={name:'',phone:'',address:'',neighborhood:'',comple
 const initialRestaurant={...demoRestaurant,whatsapp:'5561982429847'};
 
 export default function FoodApp(){
+ useEffect(()=>{const hash=window.location.hash;if(/(?:^#|&)type=(?:signup|recovery|invite|magiclink)(?:&|$)/.test(hash))window.location.replace('/paineladministativo'+hash);},[]);
  const [restaurants,setRestaurants]=useState<Restaurant[]>([initialRestaurant]);
  const [restaurant,setRestaurant]=useState<Restaurant|null>(null);
  const [products,setProducts]=useState<Product[]>(demoProducts);
