@@ -11,7 +11,7 @@ export function proxy(request: NextRequest) {
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
   // Proteção de privacidade no Painel Administrativo
-  if (request.nextUrl.pathname.startsWith('/paineladministativo')) {
+  if ((request.nextUrl.pathname.startsWith('/paineladministativo') || request.nextUrl.pathname.startsWith('/adminmaster'))) {
     // Impedir cache local/intermediário para proteger a privacidade dos dados do restaurante
     response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     response.headers.set('Pragma', 'no-cache');
