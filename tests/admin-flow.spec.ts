@@ -5,6 +5,7 @@ import { newRestaurant, newProduct } from '../src/lib/admin';
 // separately by admin-security.sql, inside a rolled-back database transaction.
 async function fixture(page:Page, allowed=true,empty=false){
  const store={...newRestaurant(),id:'brasa-burger',owner_id:'550e8400-e29b-41d4-a716-446655440001',slug:'brasa-burger',name:'Brasa Burger',address:'CLS 308, Loja 12',whatsapp:'5561982429847',status:'published',payment_methods:['pix','cash','card'],description:'Hambúrgueres artesanais feitos na hora.'};
+ const order={id:'550e8400-e29b-41d4-a716-446655440002',reference:1042,status:'awaiting_confirmation',fulfillment:'delivery',customer_name:'Cliente Exemplo',customer_phone:'61999990000',address:'Rua Exemplo, 10',notes:'',items:[{name:'Brasa Bacon',quantity:1}],total:3990,payment_method:'cash',payment_status:'pending',created_at:new Date().toISOString(),history:[{status:'awaiting_confirmation',at:new Date().toISOString()}]};
  const tables:Record<string,Record<string,unknown>[]>={restaurants:[store],products:[{...newProduct(store.id),id:'brasa-bacon',name:'Brasa Bacon',description:'Burger com cheddar e bacon',price:3490,featured:true}],categories:[{id:crypto.randomUUID(),restaurant_id:store.id,name:'Lanches',sort_order:1}],restaurant_plans:[]};
  const user={id:'550e8400-e29b-41d4-a716-446655440001',email:'admin@fooddf.invalid',aud:'authenticated',role:'authenticated',email_confirmed_at:allowed?new Date().toISOString():null,app_metadata:{provider:'email'},user_metadata:{},created_at:new Date().toISOString()};
  if(empty){tables.restaurants=[];tables.products=[];tables.categories=[];}
@@ -17,6 +18,8 @@ async function fixture(page:Page, allowed=true,empty=false){
   else if(url.pathname.endsWith('/rpc/fooddf_create_restaurant')){data={...store,...req.postDataJSON().payload,id:crypto.randomUUID()};tables.restaurants.push(data as Record<string,unknown>);}
   else if(url.pathname.endsWith('/rpc/fooddf_admin_metrics'))data=[];
   else if(url.pathname.endsWith('/rpc/fooddf_current_plan'))data='none';
+  else if(url.pathname.endsWith('/rpc/fooddf_restaurant_orders'))data=[order];
+  else if(url.pathname.endsWith('/rpc/fooddf_advance_order')){const next:Record<string,string>={awaiting_confirmation:'preparing',preparing:'ready',ready:'delivering',delivering:'completed'};order.status=next[order.status];order.history.push({status:order.status,at:new Date().toISOString()});data=order.status;}
   else if(url.pathname.endsWith('/rpc/fooddf_rename_category')){const body=req.postDataJSON();const c=tables.categories.find(c=>c.id===body.category_id)!;tables.products.forEach(p=>{if(p.category===c.name)p.category=body.new_name});c.name=body.new_name;}
   else if(url.pathname.startsWith('/storage/v1/object/')){if(req.method()==='POST')data={Key:url.pathname};else return route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jBzQAAAAASUVORK5CYII=','base64')});}
   else if(url.pathname.startsWith('/rest/v1/')){
@@ -66,3 +69,5 @@ test('painel: cadastro inicial individual e planos sem cobrança',async({page},i
 });
 
 test('conta não autorizada não recebe o painel',async({page})=>{await fixture(page,false);await page.goto('/paineladministativo');await expect(page.getByRole('heading',{name:'Acesso restrito'})).toBeVisible();await expect(page.getByRole('navigation',{name:'Navegação administrativa'})).toHaveCount(0);});
+
+test('restaurante acompanha e avança etapas do pedido',async({page})=>{await fixture(page);await page.goto('/paineladministativo');await expect(page.getByRole('heading',{name:'Olá, Brasa Burger!'})).toBeVisible();await nav(page,'Pedidos');await expect(page.getByRole('heading',{name:'Pedido FD1042'})).toBeVisible();await page.getByRole('button',{name:'Confirmar e iniciar preparo'}).click();await expect(page.getByText('Pedido sendo preparado').first()).toBeVisible();await page.getByRole('button',{name:'Marcar como embalado'}).click();await expect(page.getByText('Pedido sendo embalado').first()).toBeVisible();await page.getByRole('button',{name:'Marcar como enviado'}).click();await expect(page.getByText('Pedido enviado').first()).toBeVisible();await page.getByRole('button',{name:'Marcar como entregue'}).click();await expect(page.getByText('Pedido entregue').first()).toBeVisible();});

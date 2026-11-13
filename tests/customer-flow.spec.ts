@@ -78,3 +78,8 @@ test('retirada sem taxa, troco validado, cartão e remoção de itens',async({pa
  await page.getByRole('button',{name:'Remover Brasa Bacon'}).filter({visible:true}).click();
  await expect(page.getByText('Sua sacola está esperando').filter({visible:true})).toBeVisible();
 });
+
+test('cliente consulta andamento pelo número e WhatsApp',async({page})=>{
+ await page.route('https://qegwmsvwmanppoksqsgp.supabase.co/rest/v1/rpc/fooddf_track_order',async route=>{const q=route.request().postDataJSON();const result=q.order_number==='FD1042'&&q.phone==='61999990000'?{reference:'FD1042',restaurant:'Brasa Burger',status:'ready',fulfillment:'pickup',created_at:new Date().toISOString(),history:[{status:'awaiting_confirmation',at:new Date().toISOString()},{status:'ready',at:new Date().toISOString()}]}:null;await route.fulfill({json:result});});
+ await page.goto('/');await page.getByRole('button',{name:'Acompanhar pedido',exact:true}).click();await page.getByLabel('Número do pedido').fill('FD1042');await page.getByLabel('WhatsApp da compra').fill('61999990000');await page.getByRole('button',{name:'Consultar pedido'}).click();await expect(page.getByRole('heading',{name:'Pedido preparado para retirada'})).toBeVisible();await expect(page.getByText('FD1042 · Brasa Burger')).toBeVisible();
+});
