@@ -16,6 +16,7 @@ async function fixture(page:Page, allowed=true,empty=false){
   else if(url.pathname.endsWith('/rpc/fooddf_has_panel_access'))data=allowed;
   else if(url.pathname.endsWith('/rpc/fooddf_create_restaurant')){data={...store,...req.postDataJSON().payload,id:crypto.randomUUID()};tables.restaurants.push(data as Record<string,unknown>);}
   else if(url.pathname.endsWith('/rpc/fooddf_admin_metrics'))data=[];
+  else if(url.pathname.endsWith('/rpc/fooddf_current_plan'))data='none';
   else if(url.pathname.endsWith('/rpc/fooddf_rename_category')){const body=req.postDataJSON();const c=tables.categories.find(c=>c.id===body.category_id)!;tables.products.forEach(p=>{if(p.category===c.name)p.category=body.new_name});c.name=body.new_name;}
   else if(url.pathname.startsWith('/storage/v1/object/')){if(req.method()==='POST')data={Key:url.pathname};else return route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jBzQAAAAASUVORK5CYII=','base64')});}
   else if(url.pathname.startsWith('/rest/v1/')){

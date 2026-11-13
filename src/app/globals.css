@@ -22,3 +22,5 @@
 ::view-transition-new(root){animation:rootFadeIn .22s ease-in forwards}
 @keyframes rootFadeOut{from{opacity:1}to{opacity:0}}
 @keyframes rootFadeIn{from{opacity:0}to{opacity:1}}
+
+.platform-banners{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;margin-top:22px;border-radius:16px}.platform-banners>a,.platform-banners>div{display:block;flex:0 0 100%;scroll-snap-align:start;overflow:hidden;border-radius:16px;background:#f1e7ef}.platform-banners img{display:block;width:100%;aspect-ratio:16/5;object-fit:cover}@media(max-width:700px){.platform-banners img{aspect-ratio:2/1}}

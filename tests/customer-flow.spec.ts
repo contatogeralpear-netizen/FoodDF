@@ -41,6 +41,7 @@ test('localização, busca, carrinho persistente e pedido Pix fictício', async 
  await expect(page.getByText('Pedido fictício, sem cobrança')).toBeVisible();
  await page.evaluate(()=>{window.open=(url)=>{(window as unknown as {testWhatsApp:string}).testWhatsApp=String(url);return null;}});
  await page.getByRole('button',{name:'Enviar pedido pelo WhatsApp'}).click();
+ await page.waitForFunction(()=>Boolean((window as unknown as {testWhatsApp?:string}).testWhatsApp));
  const url=await page.evaluate(()=>(window as unknown as {testWhatsApp:string}).testWhatsApp);
  expect(url).toContain('https://wa.me/5561982429847?text=');
  const message=new URL(url).searchParams.get('text');
@@ -50,6 +51,7 @@ test('localização, busca, carrinho persistente e pedido Pix fictício', async 
  expect(errors).toEqual([]);
 });
 test('retirada sem taxa, troco validado, cartão e remoção de itens',async({page},info)=>{
+ await page.route('**/api/catalog?*',async route=>{const response=await route.fetch();const body=await response.json();if(body.restaurant)body.restaurant.paymentMethods=['pix','cash','card'];await route.fulfill({response,json:body});});
  await page.goto('/?restaurante=brasa-burger');
  await page.getByRole('button',{name:'Adicionar Brasa Bacon',exact:true}).click();
  await page.locator('.product-card').filter({hasText:'Brasa Bacon'}).getByRole('button',{name:'Aumentar Brasa Bacon'}).click();
