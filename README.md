@@ -10,13 +10,19 @@ Sem configuração de banco, o catálogo usa o restaurante modelo local. Com Sup
 
 ## Painel administrativo
 
-Acesse `/paineladministativo` — a grafia da rota segue a solicitação original. O acesso usa um link enviado pelo Supabase ao e-mail informado. Cada conta com e-mail confirmado cadastra um restaurante e acessa somente seus dados. A conta contatogeralpear@gmail.com está vinculada ao modelo Brasa Burger. O painel global será uma etapa futura. A autorização é aplicada no banco por vínculo privado entre conta e restaurante.
+Acesse `/paineladministativo` — a grafia da rota segue a solicitação original. O acesso usa e-mail e senha, com criação de conta e recuperação por e-mail. Cada conta autorizada acessa somente os dados do estabelecimento vinculado; a autorização é aplicada no banco. A gestão geral possui uma área separada em `/adminmaster`.
 
 O painel permite selecionar ou cadastrar restaurantes, editar endereço e horários, publicar ou manter a loja em rascunho, gerenciar categorias e produtos, fotos, promoções e adicionais. Também configura Pix, dinheiro, cartão, entrega, retirada, taxa, pedido mínimo, bairros e WhatsApp. As alterações salvas alimentam o cardápio público. Os horários são informativos; a chave “Restaurante aberto” controla manualmente a abertura para novos pedidos.
 
 Visitas e cliques no WhatsApp são contados por sessão/dia. Cliques não equivalem a pedidos confirmados. A área de planos registra o início de um teste de sete dias e o interesse no Pro de R$ 24,90/mês, valor de referência. Não contrata assinatura, cobra valores nem bloqueia o cardápio nesta fase.
 
-O retorno de autenticação deve permitir `https://fooddf.vercel.app/paineladministativo` no Supabase. A entrega do e-mail e o primeiro login pela caixa de entrada ainda precisam ser verificados pelo titular.
+O endereço de retorno de confirmação e recuperação configurado pelo aplicativo é `https://fooddf.vercel.app/`; esse endereço deve estar permitido no Supabase. A entrega de e-mails depende da configuração do serviço de autenticação.
+
+## Páginas públicas e busca
+
+Cada restaurante publicado e ativo possui uma página em `/restaurantes/slug`, com nome e cardápio no HTML inicial. Os endereços antigos `/?restaurante=slug` continuam funcionando, com indicação de não indexação para evitar cópias. As páginas de pedidos, o restaurante de demonstração e os painéis também não devem ser indexados.
+
+`/para-restaurantes` apresenta o serviço e direciona ao cadastro. O sitemap contém a home, essa página e restaurantes reais publicados e ativos; rascunhos, bloqueados e demonstrações não entram. O sitemap único tem capacidade para 49.998 restaurantes; acima disso será necessário dividi-lo. `robots.txt` declara a política de agentes, e `llms.txt` é apenas um guia opcional, sem garantia de resultados em mecanismos de busca.
 
 ## Demonstração
 
@@ -29,6 +35,7 @@ Quando a persistência de pedidos não está habilitada, inclusive na demonstra�
 - `npm run typecheck`
 - `npm run build`
 - `npm run test:e2e` com o servidor local aberto (instale o navegador com `npx playwright install chromium`).
+- `node --test tests/catalog-seo.integration.mjs`, após `npm run build`, para verificar o catálogo e o sitemap com um banco simulado isolado.
 - `node --test src/lib/server/order-validation.test.mjs` para validação de pedidos, quando disponível.
 
 Os testes de navegador cobrem desktop e celular, filtros, busca, persistência do carrinho, entrega/retirada, troco, Pix demonstrativo, comprovante e conteúdo/destino do link WhatsApp. Não enviam mensagens.

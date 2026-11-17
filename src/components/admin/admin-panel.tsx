@@ -24,7 +24,7 @@ export default function AdminPanel(){
  const [busy,setBusy]=useState(false);const [dataLoading,setDataLoading]=useState(false);const [error,setError]=useState('');const [toast,setToast]=useState('');const [search,setSearch]=useState('');const [filter,setFilter]=useState('Todas');const [page,setPage]=useState(1);const [sidebar,setSidebar]=useState(false);const [help,setHelp]=useState(false);const [categoryModal,setCategoryModal]=useState(false);const [categoryName,setCategoryName]=useState('');const [renameId,setRenameId]=useState<string|null>(null);const [notifications,setNotifications]=useState(false);const loadVersion=useRef(0);const verifiedUser=useRef<string|null>(null);
  const isNew=Boolean(draft&&!restaurants.some(r=>r.id===draft.id));
  const dirty=section==='product'?JSON.stringify(product)!==JSON.stringify(originalProduct):(section==='restaurant'||section==='payments')&&JSON.stringify(draft)!==JSON.stringify(restaurant);
- const catalogLink=restaurant?`/?restaurante=${encodeURIComponent(restaurant.slug)}`:'/';
+ const catalogLink=restaurant?`/restaurantes/${encodeURIComponent(restaurant.slug)}`:'/';
  const filtered=products.filter(p=>(filter==='Todas'||p.category===filter)&&p.name.toLocaleLowerCase('pt-BR').includes(search.toLocaleLowerCase('pt-BR')));const pages=Math.max(1,Math.ceil(filtered.length/6));const currentPage=Math.min(page,pages);
  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo'}).format(new Date());
  const visits=metrics.find(m=>m.day===today)?.visits||0;const clicks=metrics.find(m=>m.day===today)?.clicks||0;

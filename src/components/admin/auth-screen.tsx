@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowLeft, ArrowRight, ShieldCheck } from 'lucide-react';
 import { adminClient, formatContactPhone } from '@/lib/admin';
 import { states } from '@/lib/domain';
@@ -9,6 +9,7 @@ type Mode='login'|'signup'|'forgot'|'recovery';
 export function AuthScreen({recovery,onRecoveryDone}:{recovery:boolean;onRecoveryDone:()=>void}) {
  const [mode,setMode]=useState<Mode>('login'); const [email,setEmail]=useState(''); const [password,setPassword]=useState(''); const [confirm,setConfirm]=useState(''); const [busy,setBusy]=useState(false); const [message,setMessage]=useState(''); const [error,setError]=useState('');
  const [company,setCompany]=useState({name:'',cuisine:'Restaurante',address:'',postal_code:'',complement:'',whatsapp:'',state:'DF',city:''});
+ useEffect(()=>{if(new URLSearchParams(window.location.search).get('cadastro')==='1')setMode('signup')},[]);
  const current=recovery?'recovery':mode;
  function change(next:Mode){setMode(next);setMessage('');setError('');setPassword('');setConfirm('')}
  async function submit(e:React.FormEvent){e.preventDefault();setError('');setMessage('');setBusy(true);try{const db=adminClient();const redirectTo=window.location.origin+'/';

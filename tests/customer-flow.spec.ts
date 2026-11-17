@@ -9,7 +9,7 @@ test('localização, busca, carrinho persistente e pedido Pix fictício', async 
  await page.getByLabel('Buscar restaurante').fill('inexistente');
  await expect(page.getByText('Não encontramos esse restaurante')).toBeVisible();
  await page.getByRole('button',{name:'Limpar busca'}).click();
- await page.getByRole('button',{name:/Restaurante modelo.*Brasa Burger/}).click();
+ await page.getByRole('link',{name:/Restaurante modelo.*Brasa Burger/}).click();
  await expect(page.getByRole('heading',{name:'Brasa Burger',exact:true})).toBeVisible();
  await page.getByRole('button',{name:'Bebidas',exact:true}).click();
  await expect(page.locator('.product-card')).toHaveCount(1);
