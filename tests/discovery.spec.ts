@@ -39,6 +39,8 @@ test('buscadores encontram as páginas públicas sem indexar a demonstração ou
 });
 
 test('a home permite conhecer o serviço e iniciar o cadastro de restaurante', async ({ page }) => {
+  const transitionErrors: string[] = [];
+  page.on('pageerror', error => { if (error.message.includes('ViewTransition')) transitionErrors.push(error.message); });
   await page.goto('/');
   await page.getByRole('link', { name: 'Conhecer o FOODDF para restaurantes' }).click();
   await expect(page.getByRole('heading', { name: 'Seu cardápio mais perto de quem tem fome.' })).toBeVisible();
@@ -46,6 +48,7 @@ test('a home permite conhecer o serviço e iniciar o cadastro de restaurante', a
   await expect(page.getByRole('heading', { name: 'Crie sua conta' })).toBeVisible();
   await expect(page.getByLabel('Nome da empresa')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  expect(transitionErrors).toEqual([]);
 });
 
 test('o novo endereço do cardápio preserva os links antigos e o carrinho', async ({ page }) => {

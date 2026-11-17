@@ -17,7 +17,6 @@
 @keyframes backdropFade{from{opacity:0}to{opacity:1}}
 .modal,.admin-modal{animation:modalPop .24s cubic-bezier(.16,1,.3,1) forwards}
 @keyframes modalPop{0%{opacity:0;transform:scale(.96) translateY(8px)}100%{opacity:1;transform:scale(1) translateY(0)}}
-@view-transition{navigation:auto}
 ::view-transition-old(root){animation:rootFadeOut .18s ease-out forwards}
 ::view-transition-new(root){animation:rootFadeIn .22s ease-in forwards}
 @keyframes rootFadeOut{from{opacity:1}to{opacity:0}}

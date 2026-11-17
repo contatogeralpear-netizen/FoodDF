@@ -11,6 +11,7 @@ export default function RootLayout({children}:{children:React.ReactNode}) {
     <html lang="pt-BR" className={nunito.variable}>
       <head>
         <meta name="view-transition" content="same-origin" />
+        <style>{'@view-transition { navigation: auto; }'}</style>
       </head>
       <body>
         <div className="page-transition">
