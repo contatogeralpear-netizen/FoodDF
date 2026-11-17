@@ -4,6 +4,7 @@ import { notFound, permanentRedirect } from 'next/navigation';
 import FoodApp from '@/components/food-app';
 import { restaurantPath } from '@/lib/domain';
 import { getCatalog, RestaurantNotFoundError } from '@/lib/server/catalog';
+import { isFreePromotionActive } from '@/lib/promotion';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,7 +39,7 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
   try {
     const catalog = await loadCatalog(slug);
     if (catalog.restaurant.slug !== slug) permanentRedirect(restaurantPath(catalog.restaurant.slug));
-    return <FoodApp initialCatalog={catalog} />;
+    return <FoodApp initialCatalog={catalog} promotionActive={isFreePromotionActive()} />;
   } catch (error) {
     if (error instanceof RestaurantNotFoundError) notFound();
     throw error;

@@ -44,7 +44,7 @@ test('a home permite conhecer o serviço e iniciar o cadastro de restaurante', a
   await page.goto('/');
   await page.getByRole('link', { name: 'Conhecer o FOODDF para restaurantes' }).click();
   await expect(page.getByRole('heading', { name: 'Seu cardápio mais perto de quem tem fome.' })).toBeVisible();
-  await page.getByRole('link', { name: 'Criar conta para meu restaurante' }).click();
+  await page.getByRole('link', { name: /Cadastrar meu restaurante grátis|Criar conta para meu restaurante/ }).click();
   await expect(page.getByRole('heading', { name: 'Crie sua conta' })).toBeVisible();
   await expect(page.getByLabel('Nome da empresa')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);

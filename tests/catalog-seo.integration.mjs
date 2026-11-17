@@ -90,7 +90,20 @@ test('páginas e sitemap expõem apenas lojas públicas; falhas não viram loja 
   assert.doesNotMatch(html, /name="robots" content="[^"]*noindex/);
   const sitemap = await (await fetch(`${base}/sitemap.xml`)).text();
   assert.match(sitemap, /\/restaurantes\/loja-ativa/);
+  assert.match(sitemap, /\/cidades\/df\/brasilia/);
+  assert.doesNotMatch(sitemap, /\/cidades\/sp/);
   assert.doesNotMatch(sitemap, /loja-modelo|loja-rascunho|loja-bloqueada/);
+  const directory=await (await fetch(`${base}/cidades`)).text();
+  assert.match(directory,/Distrito Federal/);
+  assert.match(directory,/São Paulo/);
+  const state=await (await fetch(`${base}/cidades/df`)).text();
+  assert.match(state,/href="\/cidades\/df\/brasilia"/);
+  const city=await (await fetch(`${base}/cidades/df/brasilia`)).text();
+  assert.match(city,/Loja Ativa/);
+  assert.doesNotMatch(city,/Loja Rascunho|Loja Bloqueada|Loja Modelo/);
+  assert.doesNotMatch(city,/name="robots" content="[^"]*noindex/);
+  const empty=await (await fetch(`${base}/cidades/sp/sao-paulo`)).text();
+  assert.match(empty,/name="robots" content="noindex, follow"/);
   for (const slug of ['loja-rascunho', 'loja-bloqueada', 'nao-existe']) {
     assert.equal((await fetch(`${base}/restaurantes/${slug}`)).status, 404);
   }

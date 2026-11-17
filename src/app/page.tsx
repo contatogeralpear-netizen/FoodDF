@@ -3,6 +3,7 @@ import FoodApp from '@/components/food-app';
 import { getRestaurants } from '@/lib/server/catalog';
 import { restaurantPath } from '@/lib/domain';
 import { siteOrigin } from '@/lib/seo';
+import { isFreePromotionActive } from '@/lib/promotion';
 
 type HomeProps = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
@@ -21,6 +22,6 @@ export default async function Page() {
   const schema = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'FOODDF', url: `${siteOrigin}/`, inLanguage: 'pt-BR' };
   return <>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }} />
-    <FoodApp initialRestaurants={result?.restaurants || []} initialCatalogError={!result} />
+    <FoodApp initialRestaurants={result?.restaurants || []} initialCatalogError={!result} promotionActive={isFreePromotionActive()} />
   </>;
 }

@@ -14,7 +14,7 @@ Acesse `/paineladministativo` — a grafia da rota segue a solicitação origina
 
 O painel permite selecionar ou cadastrar restaurantes, editar endereço e horários, publicar ou manter a loja em rascunho, gerenciar categorias e produtos, fotos, promoções e adicionais. Também configura Pix, dinheiro, cartão, entrega, retirada, taxa, pedido mínimo, bairros e WhatsApp. As alterações salvas alimentam o cardápio público. Os horários são informativos; a chave “Restaurante aberto” controla manualmente a abertura para novos pedidos.
 
-Visitas e cliques no WhatsApp são contados por sessão/dia. Cliques não equivalem a pedidos confirmados. A área de planos registra o início de um teste de sete dias e o interesse no Pro de R$ 24,90/mês, valor de referência. Não contrata assinatura, cobra valores nem bloqueia o cardápio nesta fase.
+Visitas e cliques no WhatsApp são contados por sessão/dia. Cliques não equivalem a pedidos confirmados. Novos restaurantes podem se cadastrar e usar a plataforma gratuitamente até 31 de dezembro de 2026. As condições posteriores ainda serão definidas; não há cobrança automática.
 
 O endereço de retorno de confirmação e recuperação configurado pelo aplicativo é `https://fooddf.vercel.app/`; esse endereço deve estar permitido no Supabase. A entrega de e-mails depende da configuração do serviço de autenticação.
 
@@ -22,7 +22,7 @@ O endereço de retorno de confirmação e recuperação configurado pelo aplicat
 
 Cada restaurante publicado e ativo possui uma página em `/restaurantes/slug`, com nome e cardápio no HTML inicial. Os endereços antigos `/?restaurante=slug` continuam funcionando, com indicação de não indexação para evitar cópias. As páginas de pedidos, o restaurante de demonstração e os painéis também não devem ser indexados.
 
-`/para-restaurantes` apresenta o serviço e direciona ao cadastro. O sitemap contém a home, essa página e restaurantes reais publicados e ativos; rascunhos, bloqueados e demonstrações não entram. O sitemap único tem capacidade para 49.998 restaurantes; acima disso será necessário dividi-lo. `robots.txt` declara a política de agentes, e `llms.txt` é apenas um guia opcional, sem garantia de resultados em mecanismos de busca.
+`/para-restaurantes` apresenta o serviço e direciona ao cadastro. `/cidades` organiza os municípios brasileiros por estado; páginas de localidades sem restaurantes reais permanecem fora do índice. O sitemap inclui páginas públicas relevantes e restaurantes reais publicados e ativos; rascunhos, bloqueados e demonstrações não entram. O sitemap único comporta até 44.398 restaurantes, além dos municípios e demais páginas; acima disso será necessário dividi-lo. `robots.txt` declara a política de agentes, e `llms.txt` é apenas um guia opcional, sem garantia de resultados em mecanismos de busca.
 
 ## Demonstração
 

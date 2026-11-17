@@ -1,0 +1,13 @@
+import { cache } from 'react';
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { restaurantPath } from '@/lib/domain';
+import { allMunicipalities, cityPath, getState, locationSlug, restaurantsInCity, statePath } from '@/lib/locations';
+import { getIndexableRestaurants } from '@/lib/server/catalog';
+
+export const dynamic='force-dynamic';
+type Props={params:Promise<{uf:string;cidade:string}>};
+const load=cache(getIndexableRestaurants);
+function findCity(uf:string,slug:string){return allMunicipalities.find(c=>c.state.toLowerCase()===uf.toLowerCase()&&locationSlug(c.name)===slug)}
+export async function generateMetadata({params}:Props):Promise<Metadata>{const {uf,cidade}=await params;const city=findCity(uf,cidade);if(!city)return {robots:{index:false,follow:true}};const stores=restaurantsInCity(await load(),uf,city.name);return {title:`Restaurantes em ${city.name}/${city.state} | FOODDF`,description:`Explore os cardápios dos restaurantes disponíveis em ${city.name}, ${city.state}, no FOODDF.`,alternates:{canonical:cityPath(city.state,city.name)},...(!stores.length?{robots:{index:false,follow:true}}:{})};}
+export default async function CityPage({params}:Props){const {uf,cidade}=await params;const city=findCity(uf,cidade);const state=getState(uf);if(!city||!state)notFound();const stores=restaurantsInCity(await load(),uf,city.name);return <main className="location-page"><nav className="location-nav"><a className="location-brand" href="/">FOODDF</a><a href="/para-restaurantes">Cadastrar meu restaurante</a></nav><section className="location-content"><a href={statePath(state[0])}>← Cidades de {state[1]}</a><h1>Restaurantes em {city.name} / {city.state}</h1>{stores.length?<><p>Conheça os estabelecimentos disponíveis em {city.name} e explore seus cardápios.</p><div className="location-grid">{stores.map(store=><a className="location-card" href={restaurantPath(store.slug)} key={store.slug}><span>{store.name}<small style={{display:'block',fontWeight:400,marginTop:6}}>{store.description||store.cuisine||'Ver cardápio'}</small></span>→</a>)}</div></>:<><p>Ainda não há restaurantes publicados nesta cidade. Consulte outras localidades ou cadastre seu estabelecimento.</p><div className="location-footer"><a href={statePath(state[0])}>Explorar outras cidades</a><a href="/para-restaurantes">Cadastrar meu restaurante</a></div></>}</section><footer className="location-footer"><a href="/">Voltar ao FOODDF</a><a href="/cidades">Cidades e estados</a></footer></main>}

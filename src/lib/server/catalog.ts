@@ -54,19 +54,23 @@ export async function getRestaurants(state?: string, city?: string) {
 }
 
 /** Only public, active, non-demo restaurants belong in search indexes. */
-export async function getIndexableRestaurantSlugs(): Promise<string[]> {
+export type IndexableRestaurant = {slug:string;name:string;state:string;city:string;description:string|null;cuisine:string|null};
+export async function getIndexableRestaurants(): Promise<IndexableRestaurant[]> {
   if (!hasDatabase()) return [];
-  const slugs: string[] = [];
+  const restaurants: IndexableRestaurant[] = [];
   const pageSize = 500;
-  const maxRestaurantUrls = 49998; // Two additional URLs are reserved for the platform.
+  const maxRestaurantUrls = 44398; // Reserve space for all 5,571 municipalities, states and platform URLs.
   for (let offset = 0; offset < maxRestaurantUrls; offset += pageSize) {
     const end = Math.min(offset + pageSize, maxRestaurantUrls) - 1;
-    const { data, error } = await database().from('restaurants').select('slug')
+    const { data, error } = await database().from('restaurants').select('slug,name,state,city,description,cuisine')
       .eq('active', true).eq('status', 'published').eq('is_demo', false)
       .order('slug').range(offset, end).abortSignal(AbortSignal.timeout(CATALOG_TIMEOUT_MS));
     if (error) throw new Error('Restaurants unavailable');
-    for (const row of data) if (/^[a-z0-9-]{1,100}$/.test(row.slug)) slugs.push(row.slug);
+    for (const row of data) if (/^[a-z0-9-]{1,100}$/.test(row.slug)) restaurants.push(row as IndexableRestaurant);
     if (data.length < end - offset + 1) break;
   }
-  return slugs;
+  return restaurants;
+}
+export async function getIndexableRestaurantSlugs(): Promise<string[]> {
+  return (await getIndexableRestaurants()).map(r=>r.slug);
 }
