@@ -35,7 +35,7 @@ export default function ContatoPage() {
       />
       <header className="institutional-header">
         <div className="institutional-header-inner">
-          <a href="/" className="institutional-brand"><img src="/images/fooddf-logo.png" alt="FOODDF" style={{ height: "36px", width: "auto", display: "inline-block", verticalAlign: "middle" }} /></a>
+          <a href="/" className="institutional-brand"><img src="/images/fooddf-logo-hd.png" alt="FOODDF" style={{ height: "36px", width: "auto", display: "inline-block", verticalAlign: "middle" }} /></a>
           <nav className="institutional-nav">
             <a href="/buscas">Restaurantes</a>
             <a href="/como-funciona">Como Funciona</a>

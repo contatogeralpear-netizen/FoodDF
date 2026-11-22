@@ -30,7 +30,7 @@ export function SiteFooter() {
           {/* Coluna 1: Marca e Posicionamento */}
           <div className="footer-col brand-col">
             <a href="/" className="footer-brand" aria-label="FOODDF - Início">
-              <img src="/images/fooddf-logo-white.png" alt="FOODDF" className="footer-brand-logo-img" />
+              <img src="/images/fooddf-logo-white-hd.png" alt="FOODDF" className="footer-brand-logo-img" />
             </a>
             <p className="footer-tagline">
               Plataforma de cardápios digitais para restaurantes locais. Encontre pratos, monte sua sacola e envie seu pedido diretamente pelo WhatsApp.

@@ -125,7 +125,7 @@ export default function FoodApp({initialRestaurants=[],initialCatalog,initialCat
 
  return <>
   <a href="#main" className="skip-link">Pular para o conteúdo</a>
-  <header className="header"><div className="header-inner"><button className="brand" aria-label="FOODDF, início" onClick={goHome}><img src="/images/fooddf-logo.png" alt="FOODDF" className="brand-logo-img" /></button><nav className="header-nav"><a className="header-nav-link" href="/como-funciona">Como funciona</a><a className="header-nav-link" href="#vantagens">Vantagens</a><a className="header-nav-link" href="/para-restaurantes">Para restaurantes</a><a className="header-cta-button" href="/buscas">Pedir agora</a><button className="location-button" onClick={()=>setLocation(true)}><MapPin size={18}/><span><small>Você está em</small><b>{city||'Brasília'} <span>• {state}</span></b></span><ChevronDown size={14}/></button>{restaurant&&<button className="bag-button" aria-label={`Abrir sacola com ${count} itens`} onClick={()=>{if(step!=='menu')go('menu');setCartOpen(true)}}><ShoppingBag size={23}/>{count>0&&<b>{count}</b>}</button>}</nav></div></header>
+  <header className="header"><div className="header-inner"><button className="brand" aria-label="FOODDF, início" onClick={goHome}><img src="/images/fooddf-logo-hd.png" alt="FOODDF" className="brand-logo-img" /></button><nav className="header-nav"><a className="header-nav-link" href="/como-funciona">Como funciona</a><a className="header-nav-link" href="#vantagens">Vantagens</a><a className="header-nav-link" href="/para-restaurantes">Para restaurantes</a><a className="header-cta-button" href="/buscas">Pedir agora</a><button className="location-button" onClick={()=>setLocation(true)}><MapPin size={18}/><span><small>Você está em</small><b>{city||'Brasília'} <span>• {state}</span></b></span><ChevronDown size={14}/></button>{restaurant&&<button className="bag-button" aria-label={`Abrir sacola com ${count} itens`} onClick={()=>{if(step!=='menu')go('menu');setCartOpen(true)}}><ShoppingBag size={23}/>{count>0&&<b>{count}</b>}</button>}</nav></div></header>
   <main id="main" className={`main ${restaurant?'store-main':'market-main'}`}>
    {loading&&<div className="loading-bar" role="status">Preparando seu cardápio…</div>}
    {error&&<div className="error-banner" role="alert"><Info size={19}/>{error}<button onClick={()=>setError('')} aria-label="Fechar aviso"><X size={16}/></button></div>}
@@ -141,7 +141,7 @@ export default function FoodApp({initialRestaurants=[],initialCatalog,initialCat
      </div>
      <div className="new-hero-right">
       <div className="hero-mosaic-card">
-       <img src="/images/hero-food-mosaic.png" alt="Cardápios de Brasília: hambúrgueres artesanais, pizza e saladas" />
+       <img src="/images/hero-food-mosaic-hd.png" alt="Cardápios de Brasília: hambúrgueres artesanais, pizza e saladas" />
       </div>
       <div className="floating-sticker sticker-scooter"><Bike size={18} color="#ff5900"/><span>Entrega Rápida</span></div>
       <div className="floating-sticker sticker-bsb"><Sparkles size={16} color="#ff5900"/><span>Catedral • BSB</span></div>
@@ -173,7 +173,7 @@ export default function FoodApp({initialRestaurants=[],initialCatalog,initialCat
       </div>
       <div className="audience-visual">
        <div className="customer-photo-wrapper">
-        <img src="/images/customer-ref.png" alt="Clientes satisfeitos pedindo no FOODDF" />
+        <img src="/images/customer-ref-hd.png" alt="Clientes satisfeitos pedindo no FOODDF" />
        </div>
       </div>
      </div>
@@ -208,7 +208,7 @@ export default function FoodApp({initialRestaurants=[],initialCatalog,initialCat
       </div>
       <div className="audience-visual">
        <div className="chef-photo-wrapper">
-        <img src="/images/chef-ref.png" alt="Chef e proprietário de restaurante FOODDF" />
+        <img src="/images/chef-ref-hd.png" alt="Chef e proprietário de restaurante FOODDF" />
        </div>
       </div>
      </div>
