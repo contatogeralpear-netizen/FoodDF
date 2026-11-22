@@ -84,8 +84,8 @@ export default async function CityPage({ params }: Props) {
                     <small style={{ display: 'block', fontWeight: 400, marginTop: 4, color: '#666' }}>
                       {store.description || store.cuisine || 'Ver cardápio'}
                     </small>
-                    <small style={{ display: 'block', marginTop: 4, color: '#ff5900', fontWeight: 700 }}>
-                      Entrega: {store.deliveryFee ? money(store.deliveryFee) : 'Grátis'}
+                    <small style={{ display: 'block', marginTop: 4, color: store.deliveryFee > 0 ? '#ff5900' : '#16a34a', fontWeight: 700 }}>
+                      {store.deliveryFee > 0 ? `Entrega: ${money(store.deliveryFee)}` : 'Frete Grátis'}
                     </small>
                   </span>
                   <span>Ver Cardápio →</span>

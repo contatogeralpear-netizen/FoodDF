@@ -866,3 +866,142 @@
   }
 }
 
+/* ==========================================================================
+   Page Transitions & Route Animations
+   ========================================================================== */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition {
+  animation: pageFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity, transform;
+  width: 100%;
+}
+
+/* ==========================================================================
+   Skeleton Screen & Shimmer Loading Effects
+   ========================================================================== */
+@keyframes skeletonShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-box {
+  display: block;
+  background-color: #f1ede8;
+  position: relative;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.skeleton-box::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.65) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: skeletonShimmer 1.5s infinite ease-in-out;
+  transform: translateX(-100%);
+}
+
+.skeleton-restaurant-card {
+  pointer-events: none;
+  border-color: #ebdcd5 !important;
+  background: #ffffff !important;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(56, 16, 47, 0.04);
+}
+
+.skeleton-photo-box {
+  height: 185px;
+  background: #ebe5df;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px 8px;
+}
+
+.skeleton-logo-circle {
+  flex-shrink: 0;
+}
+
+.skeleton-meta {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 18px 12px;
+}
+
+.skeleton-bottom {
+  display: flex;
+  align-items: center;
+  padding: 12px 18px 16px;
+  border-top: 1px dashed #f0ece8;
+}
+
+.skeleton-filters-card {
+  pointer-events: none;
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 20px;
+  border: 1px solid #ebdcd5;
+  margin-bottom: 24px;
+}
+
+.skeleton-product-card {
+  pointer-events: none;
+  background: #ffffff;
+  border: 1px solid #ebdcd5;
+  border-radius: 16px;
+}
+
+.skeleton-menu-layout {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+
+/* Frete Grátis Badge & Highlights */
+.free-delivery-badge {
+  color: #16a34a !important;
+  font-weight: 800 !important;
+}
+
+.free-delivery-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #ecfdf5;
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #a7f3d0;
+}
+
+

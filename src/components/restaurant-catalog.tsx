@@ -241,7 +241,7 @@ export default function RestaurantCatalog({
                   {/* Avaliação e Localização */}
                   <div className="restaurant-meta">
                     <span><MapPin size={14} />{r.city} / {r.state}</span>
-                    <span><Bike size={16} />Entrega {r.deliveryFee ? money(r.deliveryFee) : 'Grátis'}</span>
+                    <span><Bike size={16} />{r.deliveryFee > 0 ? `Entrega ${money(r.deliveryFee)}` : <strong style={{ color: '#16a34a' }}>Frete Grátis</strong>}</span>
                   </div>
 
                   <div className="restaurant-bottom">
