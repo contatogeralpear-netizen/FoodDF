@@ -22,6 +22,10 @@ export async function generateMetadata({ params }: RestaurantPageProps): Promise
     const description = restaurant.isDemo
       ? 'Conheça um cardápio fictício e veja como funciona o FOODDF. Não há cobrança na demonstração.'
       : `${restaurant.description || `Conheça o cardápio de ${restaurant.name}`} · ${restaurant.city}/${restaurant.state}.`;
+    const shareImage1x1 = restaurant.logo && (restaurant.logo.startsWith('http://') || restaurant.logo.startsWith('https://'))
+      ? restaurant.logo
+      : `${siteOrigin}/api/og/restaurant?slug=${encodeURIComponent(restaurant.slug)}`;
+
     return {
       title,
       description,
@@ -30,8 +34,23 @@ export async function generateMetadata({ params }: RestaurantPageProps): Promise
         : [`${restaurant.name}`, `restaurante em ${restaurant.city}`, `cardápio ${restaurant.name}`, `delivery ${restaurant.city}`],
       alternates: { canonical: restaurantPath(restaurant.slug) },
       ...(restaurant.isDemo ? { robots: { index: false, follow: true } } : { robots: indexableRobots }),
-      openGraph: ogDefaults(restaurantPath(restaurant.slug), title, description),
-      twitter: twitterDefaults,
+      openGraph: {
+        ...ogDefaults(restaurantPath(restaurant.slug), title, description),
+        images: [
+          {
+            url: shareImage1x1,
+            width: 600,
+            height: 600,
+            alt: `Logo e cardápio de ${restaurant.name} no FOODDF`,
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary',
+        title,
+        description,
+        images: [shareImage1x1],
+      },
     };
   } catch (error) {
     if (!(error instanceof RestaurantNotFoundError)) throw error;
