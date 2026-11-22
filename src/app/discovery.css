@@ -318,9 +318,77 @@
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 .audience-restaurant-cta .btn-white:hover {
-  background: #fdf3ea;
-  color: var(--orange);
+  background: #ff5900;
+  color: #ffffff;
   transform: translateY(-2px);
+}
+
+/* =========================================================
+   CONTAGEM REGRESSIVA NO CARD DE RESTAURANTES
+   ========================================================= */
+.audience-countdown-item {
+  align-items: flex-start;
+}
+.audience-countdown-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.audience-countdown-body h3 {
+  font-size: 15px;
+  font-weight: 850;
+  color: #ffffff;
+  margin: 0;
+}
+.countdown-widget {
+  margin: 6px 0 6px;
+}
+.countdown-grid {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.countdown-unit {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 110, 26, 0.4);
+  border-radius: 8px;
+  padding: 5px 8px;
+  min-width: 44px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(4px);
+}
+.unit-number {
+  font-size: 18px;
+  font-weight: 900;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+.unit-label {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #ff9d66;
+  margin-top: 2px;
+}
+.unit-separator {
+  font-size: 18px;
+  font-weight: 900;
+  color: #ff6e1a;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.countdown-ended {
+  color: #ff9d66;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .chef-photo-wrapper {
