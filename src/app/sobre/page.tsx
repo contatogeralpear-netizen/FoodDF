@@ -82,7 +82,28 @@ export default function SobrePage() {
           <h2>Operação e Transparência Institucional</h2>
           <div className="institutional-card-box">
             <p><strong>Identificação do Operador da Plataforma:</strong></p>
-            <p>Razão Social: [PREENCHER: Razão Social da Empresa]</p>
+            <p>
+              Operado por:{' '}
+              <a
+                href="https://www.instagram.com/capital_informatica"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#ff5900', fontWeight: 700, textDecoration: 'underline' }}
+              >
+                Capital Informática
+              </a>
+            </p>
+            <p>
+              Instagram Oficial do FOODDF:{' '}
+              <a
+                href="https://www.instagram.com/fooddfoficial"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#ff5900', fontWeight: 700, textDecoration: 'underline' }}
+              >
+                @fooddfoficial
+              </a>
+            </p>
             <p>CNPJ: [PREENCHER: Número do CNPJ]</p>
             <p>Endereço: [PREENCHER: Endereço completo da sede]</p>
             <p>Canal Oficial de Atendimento: [PREENCHER: e-mail de contato oficial]</p>

@@ -1,5 +1,25 @@
 import React from 'react';
 
+function InstagramIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    </svg>
+  );
+}
+
 export function SiteFooter() {
   const currentYear = new Date().getFullYear();
 
@@ -15,6 +35,31 @@ export function SiteFooter() {
             <p className="footer-tagline">
               Plataforma de cardápios digitais para restaurantes locais. Encontre pratos, monte sua sacola e envie seu pedido diretamente pelo WhatsApp.
             </p>
+            <div className="footer-social-wrapper" style={{ marginBottom: '16px' }}>
+              <a
+                href="https://www.instagram.com/fooddfoficial"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-instagram-link"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  color: '#ffffff',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  border: '1px solid rgba(255, 255, 255, 0.16)',
+                  padding: '7px 14px',
+                  borderRadius: '8px',
+                  transition: 'background 0.2s, border-color 0.2s',
+                }}
+              >
+                <InstagramIcon size={16} />
+                <span>Siga @fooddfoficial</span>
+              </a>
+            </div>
             <div className="footer-transparency-pill">
               <span>✓ Pedidos combinados direto com o restaurante</span>
             </div>
@@ -74,7 +119,22 @@ export function SiteFooter() {
           </p>
           <div className="footer-copyright-row">
             <span>© {currentYear} FOODDF — Todos os direitos reservados.</span>
-            <span>Operado por [PREENCHER: Razão Social, CNPJ e Endereço Oficial]</span>
+            <span>
+              Operado por{' '}
+              <a
+                href="https://www.instagram.com/capital_informatica"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: '#ff8a4c',
+                  textDecoration: 'underline',
+                  fontWeight: 700,
+                  textUnderlineOffset: '3px',
+                }}
+              >
+                Capital Informática
+              </a>
+            </span>
           </div>
         </div>
       </div>

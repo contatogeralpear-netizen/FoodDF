@@ -23,6 +23,7 @@ export function GET() {
 
 - [Sobre o FOODDF](${siteOrigin}/sobre): Missão, propósito e funcionamento da plataforma.
 - [Contato e Suporte](${siteOrigin}/contato): Canais de atendimento oficial ao cliente e aos estabelecimentos.
+- [Instagram Oficial](https://www.instagram.com/fooddfoficial): Canal oficial de novidades e restaurantes parceiros.
 - [Política de Privacidade (LGPD)](${siteOrigin}/privacidade): Tratamento de dados pessoais, direitos dos titulares e conformidade com a Lei Geral de Proteção de Dados.
 - [Preferências de Cookies](${siteOrigin}/cookies): Tipos de cookies utilizados e opções de consentimento.
 - [Termos de Uso](${siteOrigin}/termos): Condições gerais de navegação e responsabilidades contratuais.

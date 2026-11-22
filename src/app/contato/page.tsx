@@ -68,6 +68,28 @@ export default function ContatoPage() {
           <h2>Canais Oficiais da Plataforma</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', margin: '24px 0' }}>
             <div className="institutional-card-box" style={{ margin: 0 }}>
+              <div style={{ color: '#ff5900', marginBottom: '10px' }}>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                  <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                </svg>
+              </div>
+              <h3>Instagram Oficial</h3>
+              <p style={{ fontSize: '14px', color: '#553549' }}>Acompanhe novidades, restaurantes parceiros e promoções:</p>
+              <p>
+                <a
+                  href="https://www.instagram.com/fooddfoficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#ff5900', fontWeight: 800, textDecoration: 'underline' }}
+                >
+                  @fooddfoficial ↗
+                </a>
+              </p>
+            </div>
+
+            <div className="institutional-card-box" style={{ margin: 0 }}>
               <div style={{ color: '#ff5900', marginBottom: '10px' }}><Mail size={28} /></div>
               <h3>E-mail de Suporte Geral</h3>
               <p style={{ fontSize: '14px', color: '#553549' }}>Para dúvidas sobre o funcionamento da plataforma, sugestões ou suporte:</p>
@@ -97,7 +119,15 @@ export default function ContatoPage() {
           <h2>Endereço e Dados Cadastrais</h2>
           <p>
             FOODDF — Plataforma de Cardápios Digitais<br />
-            [PREENCHER: Razão Social do Operador]<br />
+            Operado por:{' '}
+            <a
+              href="https://www.instagram.com/capital_informatica"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#ff5900', fontWeight: 700 }}
+            >
+              Capital Informática
+            </a><br />
             CNPJ: [PREENCHER: Número do CNPJ]<br />
             [PREENCHER: Cidade / Estado / CEP]
           </p>

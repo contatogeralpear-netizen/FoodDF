@@ -33,7 +33,9 @@ export default async function Page() {
     url: `${siteOrigin}/`,
     logo: `${siteOrigin}/icon.svg`,
     description: 'Plataforma de cardápios digitais e pedidos pelo WhatsApp para restaurantes do Brasil.',
-    sameAs: [],
+    sameAs: [
+      'https://www.instagram.com/fooddfoficial'
+    ],
   };
   const websiteSchema = {
     '@context': 'https://schema.org',

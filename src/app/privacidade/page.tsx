@@ -65,7 +65,7 @@ export default function PrivacidadePage() {
           <h2>1. Quem é o Controlador dos Dados</h2>
           <p>
             O controlador dos dados pessoais tratados nesta plataforma é:<br />
-            <strong>[PREENCHER: Razão Social da Empresa Operadora do FOODDF]</strong><br />
+            <strong>Capital Informática (operadora do FOODDF)</strong> (<a href="https://www.instagram.com/capital_informatica" target="_blank" rel="noopener noreferrer" style={{ color: '#ff5900' }}>Instagram: @capital_informatica</a>)<br />
             CNPJ: [PREENCHER: Número do CNPJ]<br />
             Endereço: [PREENCHER: Endereço completo da sede]<br />
             Encarregado pelo Tratamento de Dados Pessoais (DPO): [PREENCHER: Nome do DPO / e-mail: dpo@fooddf.com.br]

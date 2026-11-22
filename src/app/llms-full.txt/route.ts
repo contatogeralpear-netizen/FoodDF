@@ -53,7 +53,9 @@ export function GET() {
 
 ## Contato e Operação
 - Suporte Oficial: ${siteOrigin}/contato
-- Operador: [PREENCHER: Razão Social, CNPJ e E-mail Institucional do FOODDF]
+- Operador: Capital Informática (https://www.instagram.com/capital_informatica)
+- Instagram Oficial do FOODDF: https://www.instagram.com/fooddfoficial
+- Informações Cadastrais: [PREENCHER: CNPJ e E-mail Institucional do FOODDF]
 `;
 
   return new Response(body, {
