@@ -1,0 +1,20 @@
+3. Checklist de Migração para Domínio Definitivo (fooddf.com.br)
+
+Quando o domínio fooddf.com.br for ativado na Vercel:
+
+ Configuração de DNS:
+Adicionar registros A ou CNAME fornecidos pela Vercel no painel do registrador (ex.: Registro.br).
+Configurar redirecionamento automático de www.fooddf.com.br para fooddf.com.br (ou vice-versa, conforme decisão de branding).
+ Variáveis de Ambiente na Vercel:
+Definir NEXT_PUBLIC_SITE_URL=https://fooddf.com.br no painel da Vercel (Production).
+O código já está preparado para ler essa variável prioritariamente.
+ Google Search Console:
+Cadastrar a propriedade de domínio fooddf.com.br.
+Submeter o sitemap: https://fooddf.com.br/sitemap.xml.
+Solicitar indexação da URL raiz /.
+ Bing Webmaster Tools & IndexNow:
+Importar as configurações do Google Search Console para o Bing.
+Verificar a presença e leitura do robots.txt.
+ Redirecionamento do domínio .vercel.app:
+O proxy.ts já envia X-Robots-Tag: noindex, nofollow para acessos vindos de *.vercel.app.
+Opcional: configurar na Vercel o redirecionamento 301 de fooddf.vercel.app para fooddf.com.br.
