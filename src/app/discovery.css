@@ -1,1 +1,398 @@
 .header-nav>a{display:flex;align-items:center;gap:8px;font-weight:750;font-size:14px;padding:12px 0;text-decoration:none}.restaurant-card{text-decoration:none;color:inherit;display:block}.restaurant-card[aria-disabled=true]{opacity:.6;cursor:wait}.business-invite{margin:25px 0 5px;padding:28px 30px;border-radius:18px;background:#f2e8f7;display:flex;align-items:center;justify-content:space-between;gap:24px}.business-invite h2{font-size:25px;margin:8px 0}.business-invite p{color:#765f73;font-size:13px;max-width:620px}.business-invite .button{white-space:nowrap}.footer>a:not(.brand){font-size:11px;font-weight:800;text-decoration:none}.footer>a:not(.brand):hover{text-decoration:underline}.not-found-page{min-height:100vh;max-width:1000px;margin:auto;padding:38px 30px}.not-found-logo{color:#ff5900;font-size:30px;font-weight:950;text-decoration:none}.not-found-page>div{padding:clamp(80px,15vh,150px) 0;max-width:700px}.not-found-page>div>p:first-child{font-size:11px;letter-spacing:.13em;color:#ff5900;font-weight:900}.not-found-page h1{font-size:clamp(36px,6vw,56px);margin:16px 0}.not-found-page h1+p{color:#765f73;margin-bottom:24px}@media(max-width:1050px){.header-nav .business-nav{display:none}}@media(max-width:700px){.business-invite{align-items:flex-start;flex-direction:column;padding:24px 20px}.business-invite .button{white-space:normal;width:100%}.footer>a:not(.brand){font-size:12px}}
+
+/* =========================================================
+   NOVO LAYOUT FOODDF (Design Atualizado Conforme Imagem)
+   ========================================================= */
+
+/* Novo Cabeçalho Estilizado */
+.header-nav-link {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--plum);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: color 0.15s, background-color 0.15s;
+}
+.header-nav-link:hover {
+  color: var(--orange);
+  background-color: rgba(255, 89, 0, 0.06);
+}
+.header-cta-button {
+  background: var(--orange);
+  color: #fff !important;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 10px 22px;
+  border-radius: 10px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(255, 89, 0, 0.2);
+  transition: transform 0.15s, background-color 0.15s, box-shadow 0.15s;
+}
+.header-cta-button:hover {
+  background: var(--orange-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(255, 89, 0, 0.3);
+}
+
+/* Nova Hero Section */
+.new-hero-section {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  padding: 24px 0 48px;
+  margin-bottom: 24px;
+}
+.new-hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.new-hero-title {
+  font-size: 46px;
+  font-weight: 950;
+  line-height: 1.14;
+  letter-spacing: -0.04em;
+  color: #2c1223;
+  margin-bottom: 20px;
+}
+.new-hero-title span {
+  display: block;
+  color: #2c1223;
+}
+.new-hero-desc {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #6d5567;
+  max-width: 500px;
+  margin-bottom: 32px;
+}
+.new-hero-buttons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.new-hero-buttons .primary-cta {
+  background: var(--orange);
+  color: white;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 850;
+  border-radius: 12px;
+  text-decoration: none;
+  box-shadow: 0 5px 16px rgba(255, 89, 0, 0.28);
+  transition: transform 0.18s, background-color 0.18s, box-shadow 0.18s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.new-hero-buttons .primary-cta:hover {
+  background: var(--orange-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(255, 89, 0, 0.38);
+}
+.new-hero-buttons .outline-cta {
+  background: white;
+  color: #2c1223;
+  border: 1.5px solid #2c1223;
+  padding: 13px 26px;
+  font-size: 15px;
+  font-weight: 850;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: transform 0.18s, background-color 0.18s, border-color 0.18s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.new-hero-buttons .outline-cta:hover {
+  background: #fdf6f9;
+  border-color: var(--orange);
+  color: var(--orange);
+  transform: translateY(-2px);
+}
+
+/* Lado Direito do Hero: Composição Visual */
+.new-hero-right {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-mosaic-card {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(53, 16, 47, 0.15);
+  background: #38122c;
+  aspect-ratio: 16 / 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-mosaic-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Stickers Flutuantes Decorativos em volta da composição */
+.floating-sticker {
+  position: absolute;
+  background: #fffcf8;
+  border-radius: 14px;
+  padding: 8px 12px;
+  box-shadow: 0 8px 24px rgba(45, 18, 36, 0.14);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #f3e5df;
+  font-size: 12px;
+  font-weight: 800;
+  color: #38102f;
+  z-index: 5;
+  transition: transform 0.25s ease;
+  pointer-events: none;
+}
+.floating-sticker:hover {
+  transform: scale(1.05);
+}
+.sticker-scooter {
+  top: -12px;
+  left: -12px;
+  transform: rotate(-6deg);
+}
+.sticker-bsb {
+  bottom: -14px;
+  left: 20px;
+  transform: rotate(-4deg);
+}
+.sticker-ponte {
+  bottom: -14px;
+  right: 15px;
+  transform: rotate(5deg);
+}
+
+/* =========================================================
+   SEÇÃO DIVIDIDA: "Para quem pede" vs "Para quem vende"
+   ========================================================= */
+.audiences-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin: 32px 0 48px;
+}
+
+/* Card 1: Para quem pede (Clientes) */
+.audience-card {
+  border-radius: 24px;
+  padding: 36px 32px;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 20px;
+  align-items: center;
+}
+.audience-customer {
+  background: #f6eee5;
+  color: #2c1223;
+  border: 1px solid #ede1d5;
+}
+.audience-header {
+  margin-bottom: 24px;
+}
+.audience-header h2 {
+  font-size: 26px;
+  font-weight: 950;
+  color: #2c1223;
+  line-height: 1.2;
+}
+.audience-header .tag {
+  font-size: 16px;
+  font-weight: 700;
+  color: #7b6274;
+  margin-top: 2px;
+  display: block;
+}
+
+/* Lista de Vantagens */
+.audience-features {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.audience-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.feature-icon-bubble {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.customer-icon {
+  background: #ffdfc9;
+  color: #e65100;
+}
+.audience-feature-item h3 {
+  font-size: 16px;
+  font-weight: 850;
+  color: #2c1223;
+  margin-bottom: 3px;
+}
+.audience-feature-item p {
+  font-size: 13px;
+  line-height: 1.45;
+  color: #6f5869;
+}
+
+/* Foto do Cliente */
+.audience-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.customer-photo-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 180px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #fcd036;
+  box-shadow: 0 10px 25px rgba(220, 150, 20, 0.25);
+  aspect-ratio: 4 / 5;
+}
+.customer-photo-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Card 2: Para quem vende (Restaurantes) */
+.audience-restaurant {
+  background: #351329;
+  color: #ffffff;
+  border: 1px solid #4a1d3b;
+}
+.audience-restaurant .audience-header h2 {
+  color: #ffffff;
+}
+.audience-restaurant .audience-header .tag {
+  color: #ff6e1a;
+}
+.restaurant-icon {
+  background: #4a1e3b;
+  color: #ff6e1a;
+}
+.audience-restaurant .audience-feature-item h3 {
+  color: #ffffff;
+}
+.audience-restaurant .audience-feature-item p {
+  color: #dfcad9;
+}
+.audience-restaurant-cta {
+  margin-top: 28px;
+}
+.audience-restaurant-cta .btn-white {
+  background: #ffffff;
+  color: #2c1223;
+  font-weight: 850;
+  font-size: 14px;
+  padding: 12px 24px;
+  border-radius: 10px;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.18s, background-color 0.18s, color 0.18s;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+.audience-restaurant-cta .btn-white:hover {
+  background: #fdf3ea;
+  color: var(--orange);
+  transform: translateY(-2px);
+}
+
+.chef-photo-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 180px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  aspect-ratio: 4 / 5;
+}
+.chef-photo-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+@media (max-width: 1024px) {
+  .new-hero-section {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    text-align: center;
+  }
+  .new-hero-left {
+    align-items: center;
+  }
+  .new-hero-title {
+    font-size: 38px;
+  }
+  .new-hero-desc {
+    max-width: 100%;
+  }
+  .new-hero-buttons {
+    justify-content: center;
+  }
+  .hero-mosaic-card {
+    max-width: 480px;
+    margin: auto;
+  }
+  .audiences-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .new-hero-title {
+    font-size: 32px;
+  }
+  .new-hero-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  .new-hero-buttons .primary-cta,
+  .new-hero-buttons .outline-cta {
+    width: 100%;
+  }
+  .audience-card {
+    grid-template-columns: 1fr;
+    padding: 28px 20px;
+    text-align: left;
+  }
+  .audience-visual {
+    margin-top: 16px;
+    justify-content: flex-start;
+  }
+  .customer-photo-wrapper,
+  .chef-photo-wrapper {
+    max-width: 220px;
+  }
+}
+

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, Bike, Check, ChevronDown, CircleHelp, Clock3, Copy, CreditCard, Flame, Heart, Info, MapPin, MessageCircle, Minus, Banknote, Paperclip, Pencil, Plus, QrCode, Search, ShieldCheck, ShoppingBag, Sparkles, Star, Store, Trash2, UserRound, UtensilsCrossed, X, ChefHat, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Bike, Check, ChevronDown, CircleHelp, Clock3, Copy, CreditCard, Flame, Heart, Info, MapPin, MessageCircle, Minus, Banknote, Paperclip, Pencil, Plus, QrCode, Search, ShieldCheck, ShoppingBag, Sparkles, Star, Store, Trash2, UserRound, UtensilsCrossed, X, ChefHat, CheckCircle2, Coins, Zap, Calendar, Percent, Users } from 'lucide-react';
 import QRCode from 'qrcode';
 import { cartItems, trackCatalog } from '@/lib/cart';
 import { FoodImage } from './food-image';
@@ -109,12 +109,90 @@ export default function FoodApp({initialRestaurants=[],initialCatalog,initialCat
 
  return <>
   <a href="#main" className="skip-link">Pular para o conteúdo</a>
-  <header className="header"><div className="header-inner"><button className="brand" aria-label="FOODDF, início" onClick={goHome}><span className="brand-icon"><ChefHat/></span>FOOD<span>DF</span><i/></button><button className="location-button" onClick={()=>setLocation(true)}><MapPin size={21}/><span><small>Você está em</small><b>{city||'Selecione a cidade'} <span>• {state}</span></b></span><ChevronDown size={16}/></button><nav className="header-nav"><button className={!restaurant?'nav-active':''} onClick={goHome}><UtensilsCrossed size={18}/><span>Restaurantes</span></button><a className="business-nav" href="/para-restaurantes"><Store size={18}/><span>Para restaurantes</span></a><button aria-label="Acompanhar pedido" onClick={()=>setTracking(true)}><Clock3 size={19}/><span>Acompanhar</span></button><button onClick={()=>setHelp(true)}><CircleHelp size={19}/><span>Ajuda</span></button>{restaurant&&<button className="bag-button" aria-label={`Abrir sacola com ${count} itens`} onClick={()=>{if(step!=='menu')go('menu');setCartOpen(true)}}><ShoppingBag size={23}/>{count>0&&<b>{count}</b>}</button>}</nav></div></header>
+  <header className="header"><div className="header-inner"><button className="brand" aria-label="FOODDF, início" onClick={goHome}><span className="brand-icon"><ChefHat/></span>FOOD<span>DF.</span></button><nav className="header-nav"><a className="header-nav-link" href="/como-funciona">Como funciona</a><a className="header-nav-link" href="#vantagens">Vantagens</a><a className="header-nav-link" href="/para-restaurantes">Para restaurantes</a><a className="header-cta-button" href="#restaurants">Pedir agora</a><button className="location-button" onClick={()=>setLocation(true)}><MapPin size={18}/><span><small>Você está em</small><b>{city||'Brasília'} <span>• {state}</span></b></span><ChevronDown size={14}/></button>{restaurant&&<button className="bag-button" aria-label={`Abrir sacola com ${count} itens`} onClick={()=>{if(step!=='menu')go('menu');setCartOpen(true)}}><ShoppingBag size={23}/>{count>0&&<b>{count}</b>}</button>}</nav></div></header>
   <main id="main" className={`main ${restaurant?'store-main':'market-main'}`}>
    {loading&&<div className="loading-bar" role="status">Preparando seu cardápio…</div>}
    {error&&<div className="error-banner" role="alert"><Info size={19}/>{error}<button onClick={()=>setError('')} aria-label="Fechar aviso"><X size={16}/></button></div>}
    {!restaurant?<div key="marketplace" className="step-transition">
-    <section className="market-hero"><div className="market-hero-copy"><div className="eyebrow"><span/> DA SUA CIDADE, PARA A SUA MESA</div><h1>Cardápios digitais e restaurantes:<br/>Seu próximo favorito está <em>por aqui.</em><svg viewBox="0 0 230 14" aria-hidden="true"><path d="M4 11Q112-5 225 7"/></svg></h1><p>Encontre um restaurante, escolha o que dá vontade<br className="desktop-break"/> e peça direto. Simples assim.</p><a className="button primary" href="#restaurants">Encontrar restaurantes<ArrowRight size={19}/></a><div className="hero-note"><MapPin size={16}/><span>Sabores locais. Boas descobertas.</span></div></div><div className="market-hero-photo"><FoodImage kind="hero" label="Hambúrguer artesanal na brasa com bacon, cheddar e batata frita"/><div className="photo-shade"/><span className="photo-label"><Flame size={18}/><span>Deu fome?<b>A gente resolve.</b></span></span><span className="floating-heart"><Heart size={24}/></span></div><span className="hero-spark"><Sparkles/></span></section>
+    <section className="new-hero-section">
+     <div className="new-hero-left">
+      <h1 className="new-hero-title">O sabor da sua cidade,<br/>direto na sua mesa.<br/><span>Sem taxas abusivas.</span></h1>
+      <p className="new-hero-desc">O delivery de Brasília que valoriza quem consome e quem produz. Peça com facilidade e apoie a gastronomia local.</p>
+      <div className="new-hero-buttons">
+       <a className="primary-cta" href="#restaurants">Quero Pedir Agora</a>
+       <a className="outline-cta" href="/para-restaurantes">Sou um Restaurante</a>
+      </div>
+     </div>
+     <div className="new-hero-right">
+      <div className="hero-mosaic-card">
+       <img src="/images/hero-food-mosaic.png" alt="Cardápios de Brasília: hambúrgueres artesanais, pizza e saladas" />
+      </div>
+      <div className="floating-sticker sticker-scooter"><Bike size={18} color="#ff5900"/><span>Entrega Rápida</span></div>
+      <div className="floating-sticker sticker-bsb"><Sparkles size={16} color="#ff5900"/><span>Catedral • BSB</span></div>
+      <div className="floating-sticker sticker-ponte"><MapPin size={16} color="#ff5900"/><span>Ponte JK</span></div>
+     </div>
+    </section>
+
+    <section className="audiences-section" id="vantagens">
+     <div className="audience-card audience-customer">
+      <div className="audience-content">
+       <div className="audience-header">
+        <h2>Para quem pede</h2>
+        <span className="tag">(Clientes)</span>
+       </div>
+       <div className="audience-features">
+        <div className="audience-feature-item">
+         <div className="feature-icon-bubble customer-icon"><Coins size={20}/></div>
+         <div><h3>Preço Justo</h3><p>Sem taxas extras abusivas, o seu bolso agradece.</p></div>
+        </div>
+        <div className="audience-feature-item">
+         <div className="feature-icon-bubble customer-icon"><Zap size={20}/></div>
+         <div><h3>Rápido e Direto</h3><p>Seu pedido vai direto e sem intermediários.</p></div>
+        </div>
+        <div className="audience-feature-item">
+         <div className="feature-icon-bubble customer-icon"><MapPin size={20}/></div>
+         <div><h3>Apoie o Local</h3><p>Fortaleça os restaurantes da sua vizinhança.</p></div>
+        </div>
+       </div>
+      </div>
+      <div className="audience-visual">
+       <div className="customer-photo-wrapper">
+        <img src="/images/customer-ref.png" alt="Clientes satisfeitos pedindo no FOODDF" />
+       </div>
+      </div>
+     </div>
+
+     <div className="audience-card audience-restaurant">
+      <div className="audience-content">
+       <div className="audience-header">
+        <h2>Para quem vende</h2>
+        <span className="tag">(Restaurantes)</span>
+       </div>
+       <div className="audience-features">
+        <div className="audience-feature-item">
+         <div className="feature-icon-bubble restaurant-icon"><Percent size={20}/></div>
+         <div><h3>Zero Comissão</h3><p>Tudo o que você vende é seu. Livre de taxas surpresas!</p></div>
+        </div>
+        <div className="audience-feature-item">
+         <div className="feature-icon-bubble restaurant-icon"><Calendar size={20}/></div>
+         <div><h3>Cadastro Grátis até 31/12/2026</h3><p>Aproveite essa oportunidade única.</p></div>
+        </div>
+        <div className="audience-feature-item">
+         <div className="feature-icon-bubble restaurant-icon"><Users size={20}/></div>
+         <div><h3>Mais Clientes</h3><p>Sua marca em destaque para milhares de pessoas em Brasília.</p></div>
+        </div>
+       </div>
+       <div className="audience-restaurant-cta">
+        <a className="btn-white" href="/paineladministativo?cadastro=1">Cadastrar Meu Restaurante</a>
+       </div>
+      </div>
+      <div className="audience-visual">
+       <div className="chef-photo-wrapper">
+        <img src="/images/chef-ref.png" alt="Chef e proprietário de restaurante FOODDF" />
+       </div>
+      </div>
+     </div>
+    </section>
     {banners.length>0&&<section className="platform-banners" aria-label="Destaques FOODDF">{banners.map(b=>b.link_url?<a key={b.id} href={b.link_url}><img src={b.image_url} alt={b.title}/></a>:<div key={b.id}><img src={b.image_url} alt={b.title}/></div>)}</section>}
     <section className="finder" aria-label="Escolha sua localização"><div className="finder-title"><span className="icon-tile"><MapPin size={22}/></span><div><strong>Onde vamos pedir hoje?</strong><small>Escolha sua região para começar</small></div></div><label><span>Estado</span><select aria-label="Estado" value={state} onChange={e=>{setState(e.target.value);setCity('')}}>{states.map(([uf,name])=><option key={uf} value={uf}>{name} ({uf})</option>)}</select></label><label><span>Cidade</span><select aria-label="Cidade" value={city} onChange={e=>setCity(e.target.value)}><option value="">{cities.length?'Todas as cidades':'Nenhuma cidade disponível'}</option>{cities.map(c=><option key={c}>{c}</option>)}</select></label><div className="finder-check"><CheckCircle2 size={20}/><span>Peça direto<br/><b>do restaurante</b></span></div></section>
     <section className="restaurants-section" id="restaurants"><div className="listing-header"><div><div className="eyebrow">BORA ESCOLHER?</div><h2>Restaurantes {city?<>em <span>{city}</span></>:'na sua região'}</h2><p>Seu novo prato favorito pode estar a um clique.</p></div><label className="search-field"><Search size={20}/><input aria-label="Buscar restaurante" placeholder="Buscar restaurante" value={search} onChange={e=>setSearch(e.target.value)}/>{search&&<button onClick={()=>setSearch('')} aria-label="Limpar busca"><X size={16}/></button>}</label></div>
