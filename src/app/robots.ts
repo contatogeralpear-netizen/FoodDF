@@ -7,12 +7,23 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/paineladministativo', '/adminmaster', '/api/'],
+        disallow: ['/api/'],
       },
       {
-        userAgent: ['GPTBot', 'ChatGPT-User', 'ClaudeBot', 'Applebot-Extended', 'CCBot', 'PerplexityBot', 'Amazonbot', 'Google-Extended', 'Meta-ExternalAgent', 'Bytespider', 'cohere-ai'],
+        // Crawlers de busca clássicos e mecanismos de busca de IA com citação em tempo real
+        userAgent: [
+          'Googlebot',
+          'Bingbot',
+          'Applebot',
+          'OAI-SearchBot',
+          'ChatGPT-User',
+          'Claude-SearchBot',
+          'Claude-User',
+          'PerplexityBot',
+          'Perplexity-User',
+        ],
         allow: '/',
-        disallow: ['/paineladministativo', '/adminmaster', '/api/'],
+        disallow: ['/api/'],
       },
     ],
     sitemap: `${siteOrigin}/sitemap.xml`,

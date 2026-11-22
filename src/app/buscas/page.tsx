@@ -14,15 +14,15 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const uf = query.uf?.toUpperCase();
   const cidade = query.cidade?.trim();
 
-  let title = 'Buscar restaurantes e cardápios digitais | FOODDF';
-  let description = 'Encontre restaurantes por estado e cidade. Filtre por maior avaliação, veja o cardápio completo e peça direto pelo WhatsApp sem taxas abusivas.';
+  let title = 'Buscar restaurantes e cardápios digitais';
+  let description = 'Encontre restaurantes por estado e cidade. Filtre por avaliação, explore cardápios atualizados e combine seu pedido direto pelo WhatsApp com o restaurante.';
 
   if (cidade && uf) {
-    title = `Restaurantes em ${cidade}, ${uf} | Melhores Avaliações – FOODDF`;
-    description = `Explore os melhores restaurantes em ${cidade} (${uf}). Peça pelo WhatsApp com preço justo no FOODDF.`;
+    title = `Restaurantes em ${cidade}, ${uf} — Cardápios Digitais`;
+    description = `Explore os restaurantes disponíveis em ${cidade} (${uf}). Peça direto pelo WhatsApp combinando prazos e entrega com o estabelecimento no FOODDF.`;
   } else if (uf) {
-    title = `Restaurantes em ${uf} | Melhores Avaliações – FOODDF`;
-    description = `Restaurantes cadastrados no estado ${uf}. Conheça os cardápios digitais e peça direto pelo WhatsApp.`;
+    title = `Restaurantes em ${uf} — Cardápios Digitais`;
+    description = `Restaurantes cadastrados no estado ${uf}. Conheça os cardápios digitais e combine seu pedido direto pelo WhatsApp.`;
   }
 
   return {
@@ -32,9 +32,9 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       'restaurantes em Brasília',
       'busca de restaurantes',
       'cardápio digital',
-      'pedir pelo WhatsApp',
-      'maior avaliação',
-      'delivery sem taxa',
+      'pedir comida pelo WhatsApp',
+      'delivery em Brasília',
+      'pedidos pelo WhatsApp',
       'FOODDF',
     ],
     alternates: { canonical: '/buscas' },

@@ -38,28 +38,10 @@ export function CountdownTimer() {
 
   if (!timeLeft) {
     return (
-      <div className="countdown-widget" aria-label="Carregando contagem regressiva">
-        <div className="countdown-grid">
-          <div className="countdown-unit">
-            <span className="unit-number">--</span>
-            <span className="unit-label">dias</span>
-          </div>
-          <span className="unit-separator">:</span>
-          <div className="countdown-unit">
-            <span className="unit-number">--</span>
-            <span className="unit-label">horas</span>
-          </div>
-          <span className="unit-separator">:</span>
-          <div className="countdown-unit">
-            <span className="unit-number">--</span>
-            <span className="unit-label">min</span>
-          </div>
-          <span className="unit-separator">:</span>
-          <div className="countdown-unit">
-            <span className="unit-number">--</span>
-            <span className="unit-label">seg</span>
-          </div>
-        </div>
+      <div className="countdown-widget" aria-label="Cadastro gratuito até 31 de dezembro de 2026">
+        <span style={{ fontSize: '13px', fontWeight: 800, color: '#fef3c7', padding: '6px 12px', background: 'rgba(255,255,255,0.15)', borderRadius: '8px', display: 'inline-block' }}>
+          Até 31 de dezembro de 2026
+        </span>
       </div>
     );
   }

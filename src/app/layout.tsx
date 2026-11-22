@@ -1,14 +1,20 @@
 import type { Metadata } from 'next';
 import { Nunito_Sans } from 'next/font/google';
 import { siteOrigin, indexableRobots, defaultOgImage, siteName, twitterDefaults } from '@/lib/seo';
+import CookieConsent from '@/components/cookie-consent';
 import './globals.css';
 import './discovery.css';
 import './support.css';
-const nunito = Nunito_Sans({subsets:['latin'],display:'swap',variable:'--font-nunito'});
+
+const nunito = Nunito_Sans({ subsets: ['latin'], display: 'swap', variable: '--font-nunito' });
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteOrigin),
-  title: { default: 'FOODDF — Restaurantes e cardápios por cidade | Peça pelo WhatsApp', template: '%s | FOODDF' },
-  description: 'Encontre restaurantes por estado e cidade, conheça os cardápios e peça pelo WhatsApp. Cardápio digital grátis para restaurantes.',
+  title: {
+    default: 'FOODDF — Restaurantes e cardápios por cidade | Peça pelo WhatsApp',
+    template: '%s | FOODDF',
+  },
+  description: 'Encontre restaurantes por estado e cidade, conheça os cardápios digitais e combine seu pedido direto pelo WhatsApp.',
   keywords: ['restaurantes', 'cardápio digital', 'pedir pelo WhatsApp', 'delivery', 'comida', 'Brasília', 'cardápio online', 'FOODDF'],
   authors: [{ name: 'FOODDF' }],
   creator: 'FOODDF',
@@ -18,7 +24,7 @@ export const metadata: Metadata = {
   icons: { icon: '/icon.svg' },
   openGraph: {
     title: 'FOODDF — Restaurantes e cardápios por cidade',
-    description: 'Encontre restaurantes por estado e cidade, conheça os cardápios e peça pelo WhatsApp.',
+    description: 'Encontre restaurantes por estado e cidade, conheça os cardápios digitais e combine seu pedido direto pelo WhatsApp.',
     url: '/',
     siteName,
     locale: 'pt_BR',
@@ -28,17 +34,44 @@ export const metadata: Metadata = {
   twitter: twitterDefaults,
   alternates: { canonical: '/' },
 };
-export default function RootLayout({children}:{children:React.ReactNode}) {
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'FOODDF',
+    url: siteOrigin,
+    logo: `${siteOrigin}/icon.svg`,
+    description: 'Plataforma brasileira de cardápios digitais para restaurantes locais com pedidos pelo WhatsApp.',
+  };
+
+  const webSiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'FOODDF',
+    url: siteOrigin,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${siteOrigin}/buscas?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
   return (
     <html lang="pt-BR" className={nunito.variable}>
       <head>
         <meta name="view-transition" content="same-origin" />
         <style>{'@view-transition { navigation: auto; }'}</style>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify([organizationSchema, webSiteSchema]).replace(/</g, '\\u003c') }}
+        />
       </head>
       <body>
         <div className="page-transition">
           {children}
         </div>
+        <CookieConsent />
       </body>
     </html>
   );

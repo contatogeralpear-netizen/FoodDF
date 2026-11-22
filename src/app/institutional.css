@@ -1,0 +1,251 @@
+/* ==========================================================================
+   Páginas Institucionais, Guias Editoriais (AEO/GEO) e Legal (LGPD)
+   ========================================================================== */
+.institutional-wrapper {
+  background: #fffaf6;
+  min-height: 100vh;
+  color: #2c1223;
+  display: flex;
+  flex-direction: column;
+}
+
+.institutional-header {
+  height: 72px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #ebdcd5;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.institutional-header-inner {
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.institutional-brand {
+  font-size: 22px;
+  font-weight: 900;
+  color: #2c1223;
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+
+.institutional-brand span {
+  color: #ff5900;
+}
+
+.institutional-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.institutional-nav a {
+  font-size: 13px;
+  font-weight: 700;
+  color: #553549;
+  text-decoration: none;
+}
+
+.institutional-nav a:hover {
+  color: #ff5900;
+}
+
+.institutional-cta {
+  background: #ff5900;
+  color: #ffffff !important;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 800;
+}
+
+.institutional-main {
+  max-width: 860px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+  flex: 1;
+}
+
+.institutional-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #8c7384;
+  margin-bottom: 24px;
+}
+
+.institutional-breadcrumbs a {
+  color: #8c7384;
+  text-decoration: none;
+}
+
+.institutional-breadcrumbs a:hover {
+  color: #ff5900;
+}
+
+.institutional-breadcrumbs span {
+  color: #553549;
+  font-weight: 700;
+}
+
+.institutional-kicker {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  color: #ff5900;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.institutional-title {
+  font-size: 36px;
+  font-weight: 950;
+  line-height: 1.2;
+  color: #2c1223;
+  margin-bottom: 16px;
+  letter-spacing: -0.8px;
+}
+
+.institutional-lead {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #553549;
+  margin-bottom: 32px;
+  font-weight: 500;
+}
+
+.institutional-content {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #381d32;
+}
+
+.institutional-content h2 {
+  font-size: 24px;
+  font-weight: 850;
+  color: #2c1223;
+  margin: 40px 0 16px;
+  letter-spacing: -0.4px;
+  border-bottom: 1px solid #ebdcd5;
+  padding-bottom: 8px;
+}
+
+.institutional-content h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #2c1223;
+  margin: 28px 0 12px;
+}
+
+.institutional-content p {
+  margin-bottom: 18px;
+}
+
+.institutional-content ul,
+.institutional-content ol {
+  margin: 0 0 24px 24px;
+  padding: 0;
+}
+
+.institutional-content li {
+  margin-bottom: 8px;
+}
+
+.institutional-card-box {
+  background: #ffffff;
+  border: 1px solid #ebdcd5;
+  border-radius: 14px;
+  padding: 24px;
+  margin: 28px 0;
+  box-shadow: 0 4px 14px rgba(56, 16, 47, 0.03);
+}
+
+.institutional-highlight-box {
+  background: #fff6ed;
+  border-left: 4px solid #ff5900;
+  padding: 18px 20px;
+  border-radius: 0 12px 12px 0;
+  margin: 28px 0;
+  font-size: 14px;
+}
+
+.institutional-faq-block {
+  margin-top: 36px;
+}
+
+.institutional-faq-item {
+  background: #ffffff;
+  border: 1px solid #ebdcd5;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.institutional-faq-item h3 {
+  font-size: 16px;
+  font-weight: 800;
+  color: #2c1223;
+  margin: 0 0 10px;
+}
+
+.institutional-faq-item p {
+  margin: 0;
+  font-size: 14px;
+  color: #553549;
+  line-height: 1.6;
+}
+
+.institutional-cta-banner {
+  background: linear-gradient(135deg, #2c1223 0%, #441838 100%);
+  color: #ffffff;
+  padding: 36px 32px;
+  border-radius: 16px;
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.institutional-cta-banner h2 {
+  font-size: 24px;
+  font-weight: 850;
+  color: #ffffff;
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+.institutional-cta-banner p {
+  font-size: 14px;
+  color: #e5d2df;
+  margin: 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .institutional-title {
+    font-size: 28px;
+  }
+  .institutional-lead {
+    font-size: 16px;
+  }
+  .institutional-content h2 {
+    font-size: 20px;
+  }
+  .institutional-cta-banner {
+    padding: 24px 20px;
+  }
+}

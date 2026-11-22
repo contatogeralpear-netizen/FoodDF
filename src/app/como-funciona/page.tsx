@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight, ChefHat, MapPin, MessageCircle, Search, Shopping
 import { siteOrigin, ogDefaults, twitterDefaults, indexableRobots } from '@/lib/seo';
 import './how-it-works.css';
 
-const title = 'Como pedir comida pelo WhatsApp | FOODDF';
+const title = 'Como pedir comida pelo WhatsApp — Passo a passo';
 const description = 'Entenda como encontrar restaurantes por região, consultar cardápios e encaminhar seu pedido pelo WhatsApp no FOODDF.';
 
 export const metadata: Metadata = {

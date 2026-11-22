@@ -11,14 +11,14 @@ export async function generateMetadata({ searchParams }: HomeProps): Promise<Met
   const query = await searchParams;
   const legacySlug = typeof query.restaurante === 'string' && /^[a-z0-9-]{1,100}$/.test(query.restaurante) ? query.restaurante : null;
   const privateOrDuplicate = Boolean(query.restaurante || query.pedido);
-  const title = 'Restaurantes e cardápios em Brasília | Peça pelo WhatsApp';
-  const description = 'Encontre restaurantes por estado e cidade, veja os cardápios e peça pelo WhatsApp. Cardápio digital grátis para restaurantes no FOODDF.';
+  const pageTitle = 'FOODDF — Restaurantes e cardápios por cidade | Peça pelo WhatsApp';
+  const description = 'Encontre restaurantes por estado e cidade, conheça os cardápios digitais e combine seu pedido direto pelo WhatsApp no FOODDF.';
   return {
-    title,
+    title: { absolute: pageTitle },
     description,
     keywords: ['restaurantes em Brasília', 'cardápio digital', 'pedir comida pelo WhatsApp', 'delivery Brasília', 'FOODDF'],
     alternates: { canonical: legacySlug ? restaurantPath(legacySlug) : '/' },
-    openGraph: ogDefaults('/', title, description),
+    openGraph: ogDefaults('/', pageTitle, description),
     twitter: twitterDefaults,
     ...(privateOrDuplicate ? { robots: { index: false, follow: true } } : {}),
   };

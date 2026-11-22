@@ -1,61 +1,61 @@
 import { siteOrigin } from '@/lib/seo';
 
 export function GET() {
-  const body = `# FOODDF — Informações completas para modelos de linguagem
+  const body = `# FOODDF — Documentação factual para modelos de linguagem (LLMs)
 
-> FOODDF é uma plataforma brasileira de cardápios digitais e pedidos via WhatsApp. Restaurantes, lanchonetes, pizzarias, cafeterias e hamburguerias se cadastram, organizam seus cardápios, e clientes encontram os estabelecimentos por estado e cidade, exploram os produtos e encaminham o pedido diretamente pelo WhatsApp do restaurante.
+> O FOODDF é uma plataforma web brasileira de cardápios digitais para restaurantes, lanchonetes, pizzarias, hamburguerias e confeitarias. Seu principal diferencial é conectar clientes diretamente aos estabelecimentos locais através do WhatsApp, sem intermediar pagamentos ou cobrar comissões abusivas por pedido.
 
-## URL do site
+## Origem Canônica e Região
+- URL Canônica da Plataforma: ${siteOrigin}
+- Idioma Principal: Português do Brasil (pt-BR)
+- Região de foco inicial: Brasília e Distrito Federal (DF), com cobertura arquitetada para todos os 5.571 municípios brasileiros catalogados pelo IBGE.
 
-${siteOrigin}
+## O que o FOODDF é
+- Um catálogo de restaurantes locais organizados por estado e cidade.
+- Um cardápio digital interativo onde clientes montam seus pedidos, selecionam adicionais e calculam frete/totais.
+- Um gerador de mensagem estruturada enviada para a conversa oficial de WhatsApp de cada restaurante.
+- Um painel administrativo onde comerciantes gerenciam seus produtos, fotos, horários de atendimento, bairros atendidos e formas de pagamento.
 
-## Como funciona (para o cliente)
+## O que o FOODDF NÃO é
+- O FOODDF NÃO é um gateway financeiro. Ele não processa transações de cartão de crédito no servidor nem retém valores de Pix em contas intermediárias.
+- O FOODDF NÃO cobra porcentagem ou comissão sobre o valor dos pedidos dos restaurantes.
+- O FOODDF NÃO prepara, despacha ou realiza a entrega física dos pratos. A preparação, embalagem, prazo de entrega e logística são executadas integralmente pelo restaurante ou seus entregadores parceiros.
 
-1. **Escolha sua região**: selecione estado e cidade na página inicial.
-2. **Explore os cardápios**: abra o restaurante desejado e confira produtos, preços, informações de entrega ou retirada.
-3. **Monte sua sacola**: escolha os itens, informe dados de entrega ou retirada e a forma de pagamento.
-4. **Confirme pelo WhatsApp**: revise o resumo do pedido e envie na conversa com o restaurante. O restaurante confirma disponibilidade, prazo e pagamento.
+## Condições Comerciais Atuais
+- O cadastro e o uso do cardápio digital FOODDF para restaurantes são 100% gratuitos até 31 de dezembro de 2026.
+- As condições comerciais para períodos posteriores a essa data serão anunciadas com transparência e antecedência.
 
-## Como funciona (para o restaurante)
+## Meios de Pagamento Disponíveis
+1. **Pix direto ao restaurante**: O cardápio gera o código Pix Copia e Cola (BR Code) e o QR Code configurados com os dados bancários do estabelecimento. O cliente transfere diretamente no app do seu banco e envia o comprovante na conversa do WhatsApp.
+2. **Dinheiro na entrega ou retirada**: O cliente pode solicitar troco no momento da montagem do pedido.
+3. **Cartão de crédito ou débito na entrega/retirada**: O restaurante leva a maquininha física ao endereço do cliente ou cobra no balcão em caso de retirada.
 
-1. Cadastre seu estabelecimento informando dados, localização e WhatsApp.
-2. Organize seu cardápio: adicione produtos, fotos, categorias e preços.
-3. Receba pedidos pelo WhatsApp configurado. O restaurante confirma o pedido diretamente com o cliente.
+## Restaurante Modelo (Demonstração)
+- O estabelecimento denominado "Brasa Burger" (/restaurantes/brasa-burger) é um exemplo puramente fictício e demonstrativo utilizado para testes de experiência de usuário e tutoriais da plataforma. Ele não aceita pedidos reais nem deve ser interpretado como empresa em operação comercial.
 
-## Promoção atual
+## Estrutura de Rotas Públicas
+- Página Inicial: ${siteOrigin}/
+- Catálogo e Buscas: ${siteOrigin}/buscas
+- Para Restaurantes: ${siteOrigin}/para-restaurantes
+- Como Funciona: ${siteOrigin}/como-funciona
+- Cidades e Estados: ${siteOrigin}/cidades
+- Guias:
+  - Como Pedir pelo WhatsApp com Segurança: ${siteOrigin}/guias/como-pedir-pelo-whatsapp-com-seguranca
+  - Pagamento por Pix Direto ao Restaurante: ${siteOrigin}/guias/pagamento-por-pix-direto-ao-restaurante
+  - Como Montar um Cardápio Digital Grátis: ${siteOrigin}/guias/como-montar-cardapio-digital-gratis
+- Políticas e Legal:
+  - Sobre: ${siteOrigin}/sobre
+  - Contato: ${siteOrigin}/contato
+  - Privacidade (LGPD): ${siteOrigin}/privacidade
+  - Cookies: ${siteOrigin}/cookies
+  - Termos de Uso: ${siteOrigin}/termos
+  - Política de Restaurantes: ${siteOrigin}/politica-de-restaurantes
 
-Cadastro e uso são gratuitos para restaurantes até 31 de dezembro de 2026. As condições após essa data serão informadas quando definidas.
-
-## Formas de pagamento aceitas
-
-Pix, dinheiro (na entrega/retirada) e cartão (crédito ou débito na entrega). A confirmação do pagamento é feita pelo restaurante.
-
-## Perguntas frequentes
-
-**O FOODDF confirma o pagamento automaticamente?**
-Não. Quando o restaurante oferece Pix, confirme os dados do recebedor antes de pagar. A conferência do pagamento é feita pelo estabelecimento.
-
-**Que tipos de estabelecimento podem se cadastrar?**
-Restaurantes, lanchonetes, pizzarias, cafeterias, hamburguerias e outros estabelecimentos de alimentação.
-
-**O Brasa Burger é um restaurante real?**
-Não. É uma demonstração fictícia para conhecer o FOODDF. Não faça pagamentos para testar.
-
-## Páginas do site
-
-- Página inicial: ${siteOrigin}/
-- Para restaurantes: ${siteOrigin}/para-restaurantes
-- Como funciona: ${siteOrigin}/como-funciona
-- Cidades e estados: ${siteOrigin}/cidades
-- Restaurante (exemplo): ${siteOrigin}/restaurantes/brasa-burger (demonstração fictícia)
-
-## Dados técnicos
-
-- Stack: Next.js (App Router) hospedado na Vercel.
-- Dados de restaurantes e produtos armazenados no Supabase.
-- Municípios brasileiros com base no IBGE.
-- O site está disponível em português brasileiro (pt-BR).
+## Contato e Operação
+- Suporte Oficial: ${siteOrigin}/contato
+- Operador: [PREENCHER: Razão Social, CNPJ e E-mail Institucional do FOODDF]
 `;
+
   return new Response(body, {
     headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=86400' },
   });

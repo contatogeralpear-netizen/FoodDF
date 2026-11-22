@@ -46,7 +46,7 @@ export default function RestaurantsLanding() {
     <a className="skip-link" href="#conteudo">Pular para o conteúdo</a>
     <header className="business-header">
       <a className="business-brand" href="/" aria-label="FOODDF, início"><ChefHat size={28}/>FOODDF</a>
-      <nav aria-label="Navegação"><a href="/">Encontrar restaurantes</a><a className="business-header-cta" href="/paineladministativo?cadastro=1">Cadastrar restaurante <ArrowRight size={16}/></a></nav>
+      <nav aria-label="Navegação"><a href="/">Encontrar restaurantes</a><a className="business-header-cta" href="/painel?cadastro=1">Cadastrar restaurante <ArrowRight size={16}/></a></nav>
     </header>
     <main id="conteudo" className="business-main">
       <section className="business-hero">
@@ -55,8 +55,8 @@ export default function RestaurantsLanding() {
           {free && <div className="business-offer-badge"><CheckCircle2 size={16}/> Cadastro e uso grátis até 31/12/2026</div>}
           <h1>Seu cardápio mais perto de quem tem fome.</h1>
           <p>Cadastre seu estabelecimento, organize seus produtos e apresente seu cardápio para clientes da sua região. O cliente escolhe os itens e encaminha o pedido para o WhatsApp da sua loja.</p>
-          <a className="button primary" href="/paineladministativo?cadastro=1">{free?'Cadastrar meu restaurante grátis':'Criar conta para meu restaurante'} <ArrowRight size={19}/></a>
-          <a className="business-login" href="/paineladministativo">Já tenho uma conta</a>
+          <a className="button primary" href="/painel?cadastro=1">{free?'Cadastrar meu restaurante grátis':'Criar conta para meu restaurante'} <ArrowRight size={19}/></a>
+          <a className="business-login" href="/painel">Já tenho uma conta</a>
         </div>
         <aside className="business-hero-card"><span><Store size={29}/></span><h2>Seu restaurante, do seu jeito.</h2><p>Uma página para apresentar seu cardápio, com informações de entrega, retirada e contato.</p><div><CheckCircle2 size={19}/> Seu estabelecimento no FOODDF</div><div><CheckCircle2 size={19}/> Produtos e categorias</div><div><CheckCircle2 size={19}/> Pedidos pelo WhatsApp</div></aside>
       </section>
@@ -68,7 +68,7 @@ export default function RestaurantsLanding() {
           <article><span><MessageCircle size={23}/></span><h3>Converse com o cliente</h3><p>O cliente revisa o pedido e o encaminha ao WhatsApp configurado pela loja.</p></article>
         </div>
       </section>
-      <section className="business-information"><h2>Você acompanha o seu estabelecimento</h2><p>Cada restaurante possui acesso ao próprio painel. O estabelecimento é responsável por confirmar a disponibilidade, o pedido e o pagamento com o cliente.</p>{free?<p><strong>Cadastro e uso gratuitos até 31 de dezembro de 2026.</strong> As condições após essa data serão informadas quando definidas.</p>:<p>Consulte as condições e os recursos disponíveis para seu estabelecimento.</p>}<a className="button primary" href="/paineladministativo?cadastro=1">{free?'Começar meu cadastro grátis':'Começar cadastro'} <ArrowRight size={18}/></a></section>
+      <section className="business-information"><h2>Você acompanha o seu estabelecimento</h2><p>Cada restaurante possui acesso ao próprio painel. O estabelecimento é responsável por confirmar a disponibilidade, o pedido e o pagamento com o cliente.</p>{free?<p><strong>Cadastro e uso gratuitos até 31 de dezembro de 2026.</strong> As condições após essa data serão informadas quando definidas.</p>:<p>Consulte as condições e os recursos disponíveis para seu estabelecimento.</p>}<a className="button primary" href="/painel?cadastro=1">{free?'Começar meu cadastro grátis':'Começar cadastro'} <ArrowRight size={18}/></a></section>
       <section className="business-faq" aria-labelledby="perguntas-frequentes"><p className="business-eyebrow">TIRE SUAS DÚVIDAS</p><h2 id="perguntas-frequentes">Perguntas frequentes</h2><div className="business-faq-grid">
         {free&&<article><h3>O FOODDF é gratuito para restaurantes?</h3><p>O cadastro e o uso são gratuitos até 31 de dezembro de 2026. As condições após essa data serão informadas quando definidas.</p></article>}
         <article><h3>Que tipos de estabelecimento podem se cadastrar?</h3><p>Restaurantes, lanchonetes, pizzarias, cafeterias, hamburguerias e outros estabelecimentos de alimentação podem iniciar o cadastro.</p></article>

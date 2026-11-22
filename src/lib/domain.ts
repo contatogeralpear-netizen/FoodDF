@@ -4,7 +4,7 @@ export type Restaurant = { id: string; slug: string; name: string; state: string
 export type Customer = { name: string; phone: string; address: string; neighborhood: string; complement: string; notes: string };
 export type PublicCatalog = { products: Product[]; restaurant: Restaurant; mode: 'demo' | 'live' };
 export const restaurantPath = (slug: string) => `/restaurantes/${encodeURIComponent(slug)}`;
-export const demoRestaurant: Restaurant = { id: 'brasa-burger', slug: 'brasa-burger', name: 'Brasa Burger', state: 'DF', city: 'Brasília', address: 'CLS 308, Bloco B, Loja 12 — Asa Sul', deliveryFee: 500, isDemo: true, acceptingOrders: true, description: 'Hambúrgueres artesanais, refeições e bebidas na brasa.', cuisine: 'Hambúrguer Artesanal', cover: 'hero', logo: 'logo', isOpen: true, rating: 4.9, reviewCount: 28 };
+export const demoRestaurant: Restaurant = { id: 'brasa-burger', slug: 'brasa-burger', name: 'Brasa Burger', state: 'DF', city: 'Brasília', address: 'CLS 308, Bloco B, Loja 12 — Asa Sul', deliveryFee: 500, isDemo: true, acceptingOrders: false, description: 'Hambúrgueres artesanais, refeições e bebidas na brasa.', cuisine: 'Hambúrguer Artesanal', cover: 'hero', logo: 'logo', isOpen: true, rating: undefined, reviewCount: 0 };
 export const demoProducts: Product[] = [
  { id: 'brasa-bacon', name: 'Brasa Bacon', description: 'Burger 180 g, cheddar cremoso, bacon e salada no pão brioche.', price: 3490, category: 'Lanches', image: 'burger' },
  { id: 'prato-da-casa', name: 'Prato da casa', description: 'Arroz soltinho, feijão, bife na brasa e salada fresquinha.', price: 2990, category: 'Refeições', image: 'meal' },

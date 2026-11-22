@@ -69,6 +69,9 @@ export default async function CityPage({ params }: Props) {
       <section className="location-content">
         <a href={statePath(state[0])}>← Cidades de {state[1]}</a>
         <h1>Restaurantes em {city.name} / {city.state}</h1>
+        <h2 style={{ fontSize: '18px', fontWeight: 600, color: '#7a6072', marginTop: '6px', marginBottom: '16px' }}>
+          Cardápios digitais e pedidos pelo WhatsApp em {city.name}
+        </h2>
 
         {restaurants.length > 0 ? (
           <>
@@ -78,9 +81,15 @@ export default async function CityPage({ params }: Props) {
                 <a className="location-card" href={restaurantPath(store.slug)} key={store.slug}>
                   <span>
                     <strong>{store.name}</strong>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px', color: '#ff9d00', fontWeight: 800 }}>
-                      ★ {(store.rating ?? 4.9).toFixed(1)} <small style={{ color: '#7a6072', fontWeight: 600 }}>({store.reviewCount ?? 1} avaliações)</small>
-                    </span>
+                    {store.reviewCount && store.reviewCount > 0 ? (
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px', color: '#ff9d00', fontWeight: 800 }}>
+                        ★ {store.rating?.toFixed(1)} <small style={{ color: '#7a6072', fontWeight: 600 }}>({store.reviewCount} {store.reviewCount === 1 ? 'avaliação' : 'avaliações'})</small>
+                      </span>
+                    ) : (
+                      <span style={{ display: 'block', marginTop: '4px', fontSize: '12px', color: '#7a6072', fontWeight: 600 }}>
+                        Novo no FOODDF
+                      </span>
+                    )}
                     <small style={{ display: 'block', fontWeight: 400, marginTop: 4, color: '#666' }}>
                       {store.description || store.cuisine || 'Ver cardápio'}
                     </small>

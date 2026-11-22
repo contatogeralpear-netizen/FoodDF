@@ -17,8 +17,8 @@ export async function generateMetadata({ params }: RestaurantPageProps): Promise
   try {
     const { restaurant } = await loadCatalog(slug);
     const title = restaurant.isDemo
-      ? `${restaurant.name} — demonstração | FOODDF`
-      : `${restaurant.name} em ${restaurant.city}/${restaurant.state} | FOODDF`;
+      ? `${restaurant.name} — Demonstração Ilustrativa`
+      : `${restaurant.name} em ${restaurant.city}/${restaurant.state}`;
     const description = restaurant.isDemo
       ? 'Conheça um cardápio fictício e veja como funciona o FOODDF. Não há cobrança na demonstração.'
       : `${restaurant.description || `Conheça o cardápio de ${restaurant.name}`} · ${restaurant.city}/${restaurant.state}.`;
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: RestaurantPageProps): Promise
     };
   } catch (error) {
     if (!(error instanceof RestaurantNotFoundError)) throw error;
-    return { title: 'Restaurante não encontrado | FOODDF', robots: { index: false, follow: true } };
+    return { title: 'Restaurante não encontrado', robots: { index: false, follow: true } };
   }
 }
 

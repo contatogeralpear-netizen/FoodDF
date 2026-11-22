@@ -1,5 +1,7 @@
 'use client';
 
+import SiteFooter from './footer';
+
 import { useMemo, useState } from 'react';
 import { ArrowRight, Bike, ChefHat, CheckCircle2, ChevronDown, MapPin, Search, Star, Store, X, ArrowLeft, Filter } from 'lucide-react';
 import { FoodImage } from './food-image';
@@ -113,7 +115,7 @@ export default function RestaurantCatalog({
             <span className="catalog-eyebrow">RESTAURANTES E CARDÁPIOS</span>
             <h1 className="catalog-title">Escolha seu restaurante e peça direto pelo WhatsApp</h1>
             <p className="catalog-subtitle">
-              Filtre por estado, cidades e ordene por maior avaliação para saborear o melhor da gastronomia sem taxas abusivas.
+              Filtre por estado e cidade para explorar cardápios digitais atualizados e combinar seu pedido diretamente com o restaurante pelo WhatsApp.
             </p>
           </div>
         </section>
@@ -216,13 +218,16 @@ export default function RestaurantCatalog({
 
         {/* Grid de Restaurantes */}
         <section className="catalog-list-section" aria-label="Lista de restaurantes">
+          <h2 className="catalog-section-heading" style={{ fontSize: '18px', fontWeight: 800, color: '#38102f', marginBottom: '16px' }}>
+            Restaurantes disponíveis {selectedCity ? `em ${selectedCity}` : selectedUf ? `no estado ${selectedUf}` : ''}
+          </h2>
           {filteredAndSortedRestaurants.length > 0 ? (
             <div className="restaurant-grid">
               {filteredAndSortedRestaurants.map(r => (
                 <a className="restaurant-card" key={r.id} href={restaurantPath(r.slug)}>
                   <div className="restaurant-photo">
                     <FoodImage kind={r.cover || 'hero'} label={`Cardápio de ${r.name}`} />
-                    {r.isDemo && <span className="demo-label">Restaurante modelo</span>}
+                    {r.isDemo && <span className="demo-label" style={{ background: '#78350f', color: '#fef3c7', fontWeight: 800 }}>Exemplo ilustrativo</span>}
                     <span className="restaurant-photo-arrow"><ArrowRight size={21} /></span>
                   </div>
 
@@ -245,15 +250,23 @@ export default function RestaurantCatalog({
                   </div>
 
                   <div className="restaurant-bottom">
-                    <div className="restaurant-rating-badge" aria-label={`Avaliação ${r.rating ?? 4.9} estrelas`}>
-                      <Star size={15} fill="#ffb800" color="#ffb800" />
-                      <strong>{(r.rating ?? 4.9).toFixed(1)}</strong>
-                      <small>({r.reviewCount ?? 1})</small>
-                    </div>
-                    <span className="open-status">
-                      <span className="open-dot" />
-                      {r.isOpen !== false ? 'Aberto agora' : 'Fechado'}
-                    </span>
+                    {r.isDemo ? (
+                      <span style={{ fontSize: '11px', color: '#b45309', fontWeight: 700 }}>Cardápio de exemplo</span>
+                    ) : r.reviewCount && r.reviewCount > 0 ? (
+                      <div className="restaurant-rating-badge" aria-label={`Avaliação ${r.rating?.toFixed(1)} estrelas`}>
+                        <Star size={15} fill="#ffb800" color="#ffb800" />
+                        <strong>{r.rating?.toFixed(1)}</strong>
+                        <small>({r.reviewCount})</small>
+                      </div>
+                    ) : (
+                      <span style={{ fontSize: '11px', color: '#6b7280', fontWeight: 600 }}>Novo no FOODDF</span>
+                    )}
+                    {!r.isDemo && (
+                      <span className="open-status">
+                        <span className="open-dot" />
+                        {r.isOpen !== false ? 'Aberto agora' : 'Fechado'}
+                      </span>
+                    )}
                     <span className="view-menu-link">
                       Ver cardápio <ArrowRight size={14} />
                     </span>
@@ -267,24 +280,22 @@ export default function RestaurantCatalog({
               <h3>Ainda não há restaurantes nesta região</h3>
               <p>
                 {selectedCity
-                  ? `Não encontramos estabelecimentos cadastrados em ${selectedCity} (${selectedUf}).`
-                  : `Não encontramos estabelecimentos cadastrados no estado ${selectedUf}.`}
+                  ? `Estamos cadastrando os primeiros estabelecimentos em ${selectedCity} (${selectedUf}). Você tem um restaurante na região?`
+                  : `Estamos cadastrando os primeiros estabelecimentos no estado ${selectedUf}. Você tem um restaurante na região?`}
               </p>
-              <div className="empty-actions">
-                <button
-                  className="button primary"
-                  onClick={() => { setSelectedUf('DF'); setSelectedCity('Brasília'); setSearch(''); }}
-                >
-                  Ver Restaurantes no Distrito Federal (DF)
-                </button>
-                <a className="button outline" href="/para-restaurantes">
-                  Cadastrar Meu Restaurante Grátis
+              <div className="empty-actions" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                <a className="button primary" href="/painel?cadastro=1">
+                  Cadastrar meu restaurante grátis
+                </a>
+                <a className="button outline" href="/restaurantes/brasa-burger">
+                  Ver cardápio de demonstração
                 </a>
               </div>
             </div>
           )}
         </section>
       </main>
+      <SiteFooter />
 
       <footer className="footer">
         <a className="brand" href="/">FOOD<span>DF</span><i /></a>

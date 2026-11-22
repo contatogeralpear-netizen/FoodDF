@@ -1005,3 +1005,135 @@
 }
 
 
+
+/* ==========================================================================
+   Site Global Footer (Conformidade Legal, LGPD e Navegação AEO)
+   ========================================================================== */
+.site-global-footer {
+  background: #250f1f;
+  color: #d1b8ca;
+  padding: 56px 20px 32px;
+  margin-top: 64px;
+  border-top: 2px solid #3c1e34;
+  font-family: inherit;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-columns {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1.3fr 1.1fr;
+  gap: 36px;
+  margin-bottom: 48px;
+}
+
+.footer-brand {
+  font-size: 26px;
+  font-weight: 900;
+  color: #ffffff;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.footer-brand span {
+  color: #ff5900;
+}
+
+.footer-tagline {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #c0a3b8;
+  margin-bottom: 16px;
+}
+
+.footer-transparency-pill {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #a7f3d0;
+}
+
+.footer-heading {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 18px;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-links li a {
+  font-size: 13px;
+  color: #baa0b2;
+  text-decoration: none;
+  transition: color 0.15s ease;
+  display: inline-block;
+}
+
+.footer-links li a:hover {
+  color: #ff5900;
+  text-decoration: underline;
+}
+
+.footer-bottom-bar {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 24px;
+  font-size: 12px;
+  color: #9c8094;
+  line-height: 1.6;
+}
+
+.footer-legal-notice {
+  margin-bottom: 14px;
+}
+
+.footer-copyright-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+  .footer-columns {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .brand-col {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-columns {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .site-global-footer {
+    padding: 40px 16px 28px;
+  }
+  .footer-copyright-row {
+    flex-direction: column;
+    gap: 6px;
+  }
+}

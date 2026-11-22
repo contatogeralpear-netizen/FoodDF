@@ -1,19 +1,24 @@
-const productionOrigin = 'https://fooddf.com.br';
+/**
+ * Configuração canônica de origem e SEO para o FOODDF.
+ * Enquanto o domínio definitivo (fooddf.com.br) não tiver DNS configurado e respondendo,
+ * utilizamos o host em produção funcional (fooddf.vercel.app) para evitar canonicals quebrados.
+ */
+const defaultFunctionalOrigin = 'https://fooddf.vercel.app';
 
-/** Canonical URLs always use the configured public origin, never a request Host header. */
 export const siteOrigin = (() => {
   try {
-    const url = new URL(process.env.NEXT_PUBLIC_SITE_URL || process.env.FOODDF_SITE_URL || productionOrigin);
-    return url.protocol === 'https:' ? url.origin : productionOrigin;
+    const configured = process.env.NEXT_PUBLIC_SITE_URL || process.env.FOODDF_SITE_URL || defaultFunctionalOrigin;
+    const url = new URL(configured);
+    return url.origin;
   } catch {
-    return productionOrigin;
+    return defaultFunctionalOrigin;
   }
 })();
 
-/** Default Open Graph / SEO image (1200×630). */
+/** Imagem padrão Open Graph (1200×630). */
 export const defaultOgImage = `${siteOrigin}/og-image.png`;
 
-/** Shared robots config for indexable pages. */
+/** Configuração padrão de indexação para páginas públicas. */
 export const indexableRobots = {
   index: true as const,
   follow: true as const,
@@ -26,15 +31,16 @@ export const indexableRobots = {
   },
 };
 
-/** Site name used in OG metadata. */
+/** Nome da plataforma. */
 export const siteName = 'FOODDF';
 
-/** Shared OG defaults. */
+/** Padrões compartilhados de Open Graph. */
 export function ogDefaults(path: string, title: string, description: string) {
+  const absoluteUrl = path.startsWith('http') ? path : `${siteOrigin}${path.startsWith('/') ? path : `/${path}`}`;
   return {
     title,
     description,
-    url: path,
+    url: absoluteUrl,
     siteName,
     locale: 'pt_BR',
     type: 'website' as const,
@@ -42,9 +48,8 @@ export function ogDefaults(path: string, title: string, description: string) {
   };
 }
 
-/** Shared Twitter card defaults. */
+/** Configuração compartilhada do Twitter Card. */
 export const twitterDefaults = {
   card: 'summary_large_image' as const,
-  site: '@fooddf',
   images: [defaultOgImage],
 };
