@@ -5,6 +5,7 @@ import FoodApp from '@/components/food-app';
 import { restaurantPath } from '@/lib/domain';
 import { getCatalog, RestaurantNotFoundError } from '@/lib/server/catalog';
 import { isFreePromotionActive } from '@/lib/promotion';
+import { indexableRobots, ogDefaults, twitterDefaults } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,9 +25,13 @@ export async function generateMetadata({ params }: RestaurantPageProps): Promise
     return {
       title,
       description,
+      keywords: restaurant.isDemo
+        ? ['restaurante demonstração', 'cardápio digital', 'FOODDF']
+        : [`${restaurant.name}`, `restaurante em ${restaurant.city}`, `cardápio ${restaurant.name}`, `delivery ${restaurant.city}`],
       alternates: { canonical: restaurantPath(restaurant.slug) },
-      ...(restaurant.isDemo ? { robots: { index: false, follow: true } } : {}),
-      openGraph: { title, description, url: restaurantPath(restaurant.slug), type: 'website' },
+      ...(restaurant.isDemo ? { robots: { index: false, follow: true } } : { robots: indexableRobots }),
+      openGraph: ogDefaults(restaurantPath(restaurant.slug), title, description),
+      twitter: twitterDefaults,
     };
   } catch (error) {
     if (!(error instanceof RestaurantNotFoundError)) throw error;

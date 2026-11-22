@@ -1,15 +1,42 @@
 import type { Metadata } from 'next';
 import { ArrowLeft, ArrowRight, ChefHat, MapPin, MessageCircle, Search, ShoppingBag } from 'lucide-react';
+import { siteOrigin, ogDefaults, twitterDefaults, indexableRobots } from '@/lib/seo';
 import './how-it-works.css';
 
+const title = 'Como pedir comida pelo WhatsApp | FOODDF';
+const description = 'Entenda como encontrar restaurantes por região, consultar cardápios e encaminhar seu pedido pelo WhatsApp no FOODDF.';
+
 export const metadata: Metadata = {
-  title: 'Como funciona o FOODDF | Cardápios e pedidos',
-  description: 'Entenda como encontrar restaurantes por região, consultar cardápios e encaminhar seu pedido pelo WhatsApp.',
+  title,
+  description,
+  keywords: ['como funciona', 'pedir comida pelo WhatsApp', 'cardápio digital', 'pedido online', 'FOODDF'],
   alternates: { canonical: '/como-funciona' },
+  robots: indexableRobots,
+  openGraph: ogDefaults('/como-funciona', title, description),
+  twitter: twitterDefaults,
 };
 
 export default function HowItWorks() {
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      { '@type': 'Question', name: 'O FOODDF confirma o pagamento automaticamente?', acceptedAnswer: { '@type': 'Answer', text: 'Não. Quando o restaurante oferece Pix, confirme os dados do recebedor antes de pagar. A conferência do pagamento é feita pelo estabelecimento.' } },
+      { '@type': 'Question', name: 'Como acompanho um pedido?', acceptedAnswer: { '@type': 'Answer', text: 'Quando um pedido for registrado com número de acompanhamento, use a opção "Acompanhar" na página inicial e informe o número e o WhatsApp utilizado na compra.' } },
+      { '@type': 'Question', name: 'O Brasa Burger é um restaurante real?', acceptedAnswer: { '@type': 'Answer', text: 'Não. O Brasa Burger é uma demonstração fictícia: preços, prazos e pedidos são exemplos. Não faça pagamentos para testar o modelo.' } },
+      { '@type': 'Question', name: 'Como cadastrar meu estabelecimento?', acceptedAnswer: { '@type': 'Answer', text: 'Conheça a página FOODDF para restaurantes e use a opção de criar conta para iniciar o cadastro.' } },
+    ],
+  };
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'FOODDF', item: siteOrigin },
+      { '@type': 'ListItem', position: 2, name: 'Como funciona' },
+    ],
+  };
   return <div className="how-page">
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([faqSchema, breadcrumbSchema]).replace(/</g, '\\u003c') }} />
     <a className="skip-link" href="#conteudo">Pular para o conteúdo</a>
     <header className="how-header"><a className="how-brand" href="/" aria-label="FOODDF, início"><ChefHat size={28}/>FOODDF</a><nav aria-label="Navegação"><a href="/">Encontrar restaurantes</a><a href="/para-restaurantes">Para restaurantes</a></nav></header>
     <main id="conteudo" className="how-main">

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ArrowRight, CheckCircle2, ChefHat, MessageCircle, Store, UtensilsCrossed } from 'lucide-react';
 import { isFreePromotionActive } from '@/lib/promotion';
+import { siteOrigin, ogDefaults, twitterDefaults, indexableRobots } from '@/lib/seo';
 import './restaurant-landing.css';
 import './restaurant-offer.css';
 
@@ -8,16 +9,40 @@ export const dynamic = 'force-dynamic';
 
 export function generateMetadata(): Metadata {
   const free = isFreePromotionActive();
-  const title = free ? 'Cardápio digital grátis para restaurantes | FOODDF' : 'Cardápio digital para restaurantes | FOODDF';
+  const title = free ? 'Cardápio digital grátis para restaurantes' : 'Cardápio digital para restaurantes';
   const description = free
     ? 'Cadastre seu restaurante e use o cardápio digital FOODDF gratuitamente até 31 de dezembro de 2026. Apresente seus produtos e receba pedidos pelo WhatsApp.'
     : 'Conheça o FOODDF, cadastre seu estabelecimento e organize seu cardápio para clientes da sua região.';
-  return { title, description, alternates: { canonical: '/para-restaurantes' }, openGraph: { title, description, url: '/para-restaurantes', type: 'website' } };
+  return {
+    title,
+    description,
+    keywords: ['cardápio digital grátis', 'cadastrar restaurante', 'pedidos pelo WhatsApp', 'FOODDF para restaurantes'],
+    alternates: { canonical: '/para-restaurantes' },
+    robots: indexableRobots,
+    openGraph: ogDefaults('/para-restaurantes', title, description),
+    twitter: twitterDefaults,
+  };
 }
 
 export default function RestaurantsLanding() {
   const free = isFreePromotionActive();
+  const faqItems = [
+    ...(free ? [{ '@type': 'Question' as const, name: 'O FOODDF é gratuito para restaurantes?', acceptedAnswer: { '@type': 'Answer' as const, text: 'O cadastro e o uso são gratuitos até 31 de dezembro de 2026. As condições após essa data serão informadas quando definidas.' } }] : []),
+    { '@type': 'Question' as const, name: 'Que tipos de estabelecimento podem se cadastrar?', acceptedAnswer: { '@type': 'Answer' as const, text: 'Restaurantes, lanchonetes, pizzarias, cafeterias, hamburguerias e outros estabelecimentos de alimentação podem iniciar o cadastro.' } },
+    { '@type': 'Question' as const, name: 'Como recebo os pedidos?', acceptedAnswer: { '@type': 'Answer' as const, text: 'O cliente monta e revisa o pedido, depois escolhe enviá-lo pelo WhatsApp informado pela sua loja. A confirmação é feita pelo estabelecimento.' } },
+    { '@type': 'Question' as const, name: 'Como os clientes encontram meu restaurante?', acceptedAnswer: { '@type': 'Answer' as const, text: 'Depois que o estabelecimento estiver publicado, os clientes podem encontrá-lo pela seleção de estado e cidade do FOODDF e acessar seu cardápio.' } },
+  ];
+  const faqSchema = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqItems };
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'FOODDF', item: siteOrigin },
+      { '@type': 'ListItem', position: 2, name: 'Para restaurantes' },
+    ],
+  };
   return <div className="business-page">
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([faqSchema, breadcrumbSchema]).replace(/</g, '\\u003c') }} />
     <a className="skip-link" href="#conteudo">Pular para o conteúdo</a>
     <header className="business-header">
       <a className="business-brand" href="/" aria-label="FOODDF, início"><ChefHat size={28}/>FOODDF</a>
