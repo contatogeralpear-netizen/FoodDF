@@ -35,7 +35,7 @@ export default function TermosPage() {
       />
       <header className="institutional-header">
         <div className="institutional-header-inner">
-          <a href="/" className="institutional-brand"><ChefHat size={24} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 6, color: '#ff5900' }} />FOOD<span>DF</span></a>
+          <a href="/" className="institutional-brand"><img src="/images/fooddf-logo.png" alt="FOODDF" style={{ height: "36px", width: "auto", display: "inline-block", verticalAlign: "middle" }} /></a>
           <nav className="institutional-nav">
             <a href="/buscas">Restaurantes</a>
             <a href="/como-funciona">Como Funciona</a>

@@ -125,14 +125,14 @@ export default function FoodApp({initialRestaurants=[],initialCatalog,initialCat
 
  return <>
   <a href="#main" className="skip-link">Pular para o conteúdo</a>
-  <header className="header"><div className="header-inner"><button className="brand" aria-label="FOODDF, início" onClick={goHome}><span className="brand-icon"><ChefHat/></span>FOOD<span>DF.</span></button><nav className="header-nav"><a className="header-nav-link" href="/como-funciona">Como funciona</a><a className="header-nav-link" href="#vantagens">Vantagens</a><a className="header-nav-link" href="/para-restaurantes">Para restaurantes</a><a className="header-cta-button" href="/buscas">Pedir agora</a><button className="location-button" onClick={()=>setLocation(true)}><MapPin size={18}/><span><small>Você está em</small><b>{city||'Brasília'} <span>• {state}</span></b></span><ChevronDown size={14}/></button>{restaurant&&<button className="bag-button" aria-label={`Abrir sacola com ${count} itens`} onClick={()=>{if(step!=='menu')go('menu');setCartOpen(true)}}><ShoppingBag size={23}/>{count>0&&<b>{count}</b>}</button>}</nav></div></header>
+  <header className="header"><div className="header-inner"><button className="brand" aria-label="FOODDF, início" onClick={goHome}><img src="/images/fooddf-logo.png" alt="FOODDF" className="brand-logo-img" /></button><nav className="header-nav"><a className="header-nav-link" href="/como-funciona">Como funciona</a><a className="header-nav-link" href="#vantagens">Vantagens</a><a className="header-nav-link" href="/para-restaurantes">Para restaurantes</a><a className="header-cta-button" href="/buscas">Pedir agora</a><button className="location-button" onClick={()=>setLocation(true)}><MapPin size={18}/><span><small>Você está em</small><b>{city||'Brasília'} <span>• {state}</span></b></span><ChevronDown size={14}/></button>{restaurant&&<button className="bag-button" aria-label={`Abrir sacola com ${count} itens`} onClick={()=>{if(step!=='menu')go('menu');setCartOpen(true)}}><ShoppingBag size={23}/>{count>0&&<b>{count}</b>}</button>}</nav></div></header>
   <main id="main" className={`main ${restaurant?'store-main':'market-main'}`}>
    {loading&&<div className="loading-bar" role="status">Preparando seu cardápio…</div>}
    {error&&<div className="error-banner" role="alert"><Info size={19}/>{error}<button onClick={()=>setError('')} aria-label="Fechar aviso"><X size={16}/></button></div>}
    {!restaurant?<div key="marketplace" className="step-transition">
     <section className="new-hero-section">
      <div className="new-hero-left">
-      <h1 className="new-hero-title">O sabor da sua cidade,<br/>direto na sua mesa.<br/><span>Peça pelo <strong className="whatsapp-highlight">WhatsApp</strong>.</span></h1>
+      <h1 className="new-hero-title">O sabor da sua cidade,<br/>a um <strong className="whatsapp-highlight">WhatsApp</strong> de distância.</h1>
       <p className="new-hero-desc">O FOODDF é a plataforma de cardápios digitais que conecta clientes a restaurantes locais em Brasília e em todo o Brasil. Você explora pratos, seleciona seus itens e envia o pedido pronto diretamente para o WhatsApp do estabelecimento, combinando pagamento, entrega ou retirada sem intermediários.</p>
       <div className="new-hero-buttons">
        <a className="primary-cta" href="/buscas">Quero Pedir Agora</a>
@@ -211,6 +211,31 @@ export default function FoodApp({initialRestaurants=[],initialCatalog,initialCat
         <img src="/images/chef-ref.png" alt="Chef e proprietário de restaurante FOODDF" />
        </div>
       </div>
+     </div>
+    </section>
+    <section className="fastfood-chains-section" aria-label="As principais redes de fast-food do Brasil">
+     <h2 className="fastfood-chains-title">AS PRINCIPAIS REDES DE FAST-FOOD DO BRASIL</h2>
+     <div className="fastfood-chains-row">
+      {[
+       { id: 'mcdonalds', name: "McDonald's", image: '/images/fastfood-mcdonalds.png' },
+       { id: 'burger-king', name: 'Burger King', image: '/images/fastfood-burger-king.png' },
+       { id: 'subway', name: 'Subway', image: '/images/fastfood-subway.png' },
+       { id: 'bobs', name: "Bob's", image: '/images/fastfood-bobs.png' },
+       { id: 'habibs', name: "Habib's", image: '/images/fastfood-habibs.png' },
+       { id: 'giraffas', name: 'Giraffas', image: '/images/fastfood-giraffas.png' },
+       { id: 'pizza-hut', name: 'Pizza Hut', image: '/images/fastfood-pizza-hut.png' },
+       { id: 'kfc', name: 'KFC', image: '/images/fastfood-kfc.png' }
+      ].map(chain => (
+       <a
+        key={chain.id}
+        href="https://fooddf.vercel.app/buscas"
+        className="fastfood-chain-circle"
+        title={`Ver opções de ${chain.name} no FOODDF`}
+        aria-label={`Buscar ${chain.name}`}
+       >
+        <img src={chain.image} alt={chain.name} />
+       </a>
+      ))}
      </div>
     </section>
    </div>:step==='menu'?<div key={`menu-${restaurant.id}`} className="step-transition">
