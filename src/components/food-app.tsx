@@ -132,7 +132,7 @@ export default function FoodApp({initialRestaurants=[],initialCatalog,initialCat
    {!restaurant?<div key="marketplace" className="step-transition">
     <section className="new-hero-section">
      <div className="new-hero-left">
-      <h1 className="new-hero-title">O sabor da sua cidade,<br/>direto na sua mesa.<br/><span>Peça pelo <span className="whatsapp-highlight">WhatsApp</span>.</span></h1>
+      <h1 className="new-hero-title">O sabor da sua cidade,<br/>direto na sua mesa.<br/><span>Peça pelo <strong className="whatsapp-highlight">WhatsApp</strong>.</span></h1>
       <p className="new-hero-desc">O FOODDF é a plataforma de cardápios digitais que conecta clientes a restaurantes locais em Brasília e em todo o Brasil. Você explora pratos, seleciona seus itens e envia o pedido pronto diretamente para o WhatsApp do estabelecimento, combinando pagamento, entrega ou retirada sem intermediários.</p>
       <div className="new-hero-buttons">
        <a className="primary-cta" href="/buscas">Quero Pedir Agora</a>
