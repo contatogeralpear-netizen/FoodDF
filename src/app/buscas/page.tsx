@@ -71,6 +71,7 @@ export default async function BuscasPage({ searchParams }: Props) {
         initialRestaurants={result.restaurants}
         initialUf={initialUf}
         initialCity={initialCity}
+        initialQuery={query.q?.trim() || ''}
       />
     </>
   );

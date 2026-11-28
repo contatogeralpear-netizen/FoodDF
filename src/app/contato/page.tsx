@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { ChefHat, ArrowRight, Mail, Phone, Clock, MessageSquare, ShieldCheck } from 'lucide-react';
 import SiteFooter from '@/components/footer';
 import { siteOrigin, ogDefaults, twitterDefaults, indexableRobots } from '@/lib/seo';
@@ -35,7 +36,7 @@ export default function ContatoPage() {
       />
       <header className="institutional-header">
         <div className="institutional-header-inner">
-          <a href="/" className="institutional-brand"><img src="/images/fooddf-logo-hd.png" alt="FOODDF" style={{ height: "36px", width: "auto", display: "inline-block", verticalAlign: "middle" }} /></a>
+          <a href="/" className="institutional-brand" aria-label="FOODDF, início"><Image src="/images/home/fooddf-logo-hd.webp" alt="FOODDF" width={156} height={42} quality={95} preload className="brand-logo-img" /></a>
           <nav className="institutional-nav">
             <a href="/buscas">Restaurantes</a>
             <a href="/como-funciona">Como Funciona</a>

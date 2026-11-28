@@ -1,7 +1,19 @@
+import Image from 'next/image';
+
 export default function NotFound() {
   return (
     <main className="not-found-page">
-      <a href="/" className="not-found-logo">FOODDF</a>
+      <a href="/" className="not-found-logo" aria-label="FOODDF, início">
+        <Image
+          src="/images/home/fooddf-logo-hd.webp"
+          alt="FOODDF"
+          width={168}
+          height={45}
+          quality={95}
+          preload
+          className="brand-logo-img"
+        />
+      </a>
       <div>
         <p>OPS! NÃO ENCONTRAMOS ESSA PÁGINA (404)</p>
         <h1>Esse caminho não está no cardápio.</h1>

@@ -1,1 +1,843 @@
-.business-page{min-height:100vh;background:#fffaf5}.business-header{max-width:1360px;margin:auto;padding:24px 48px;display:flex;align-items:center;justify-content:space-between;gap:20px}.business-brand{display:inline-flex;align-items:center;gap:8px;color:#ff5900;font-size:27px;font-weight:950;letter-spacing:-1.5px;text-decoration:none}.business-header nav{display:flex;align-items:center;gap:25px;font-size:13px;font-weight:800}.business-header nav a{text-decoration:none}.business-header-cta{display:inline-flex;align-items:center;gap:8px;color:#ff5900}.business-main{max-width:1264px;margin:auto;padding:35px 48px 80px}.business-hero{display:grid;grid-template-columns:1.25fr .8fr;gap:75px;align-items:center;padding:65px 0 85px}.business-eyebrow{color:#f25708;font-weight:900;letter-spacing:.16em;font-size:11px}.business-hero h1{font-size:clamp(38px,4.3vw,62px);line-height:1.08;max-width:670px;margin:17px 0}.business-hero>div>p:not(.business-eyebrow){max-width:570px;color:#765f73;font-size:17px;line-height:1.7;margin-bottom:28px}.business-login{display:inline-block;margin-left:20px;font-weight:800;font-size:13px;color:#663b66}.business-hero-card{border-radius:24px;background:#f2e7f8;padding:34px;box-shadow:0 14px 45px #38102f0d}.business-hero-card>span,.business-benefit-grid article>span{width:54px;height:54px;border-radius:15px;display:grid;place-items:center;background:#fff;color:#ff5900}.business-hero-card h2{font-size:25px;margin:19px 0 12px}.business-hero-card p{color:#765f73;margin-bottom:18px}.business-hero-card div{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid #dfcfe6;font-weight:800;font-size:13px}.business-hero-card div svg{color:#38a657}.business-benefits{border-top:1px solid #ecdee5;padding:60px 0}.business-benefits>h2{font-size:35px;margin:10px 0 25px}.business-benefit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.business-benefit-grid article{background:white;border:1px solid #efe3e5;border-radius:18px;padding:25px}.business-benefit-grid article>span{background:#fff1e6}.business-benefit-grid h3{margin:18px 0 8px}.business-benefit-grid p,.business-information p{color:#765f73;line-height:1.7}.business-information{border-radius:20px;background:#fff0e5;padding:38px}.business-information h2{margin-bottom:14px}.business-information p{max-width:850px;margin:8px 0}.business-information .button{margin-top:20px}.business-footer{max-width:1264px;margin:auto;border-top:1px solid #ecdee5;padding:25px 48px;display:flex;align-items:center;gap:25px;font-size:12px;color:#856b80}.business-footer>a:last-child{margin-left:auto;font-weight:800}@media(max-width:750px){.business-header{padding:20px;gap:12px}.business-header nav{gap:10px}.business-header nav>a:first-child{display:none}.business-header-cta{font-size:11px}.business-main{padding:20px 20px 55px}.business-hero{grid-template-columns:1fr;gap:30px;padding:35px 0 55px}.business-hero h1{font-size:40px}.business-hero>div>p:not(.business-eyebrow){font-size:15px}.business-hero .button{width:100%}.business-login{display:block;text-align:center;margin:17px 0 0}.business-benefits{padding:45px 0}.business-benefits>h2{font-size:29px}.business-benefit-grid{grid-template-columns:1fr}.business-information{padding:25px}.business-footer{padding:24px 20px;align-items:flex-start;flex-direction:column;gap:8px}.business-footer>a:last-child{margin-left:0}}
+/* =========================================================
+   PÁGINA PARA RESTAURANTES — LAYOUT EDITORIAL HD WEBP
+   ========================================================= */
+
+.rest-page {
+  min-height: 100vh;
+  background: #fcf6f0;
+  color: #3f1229;
+  display: flex;
+  flex-direction: column;
+}
+
+.rest-page .site-global-footer {
+  margin-top: 0;
+  background: #2b091c;
+  border-top: 4px solid #fcf6f0;
+}
+
+.rest-container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* Cabeçalho Superior */
+.rest-topbar {
+  height: 82px;
+  background: rgba(252, 246, 240, 0.96);
+  border-bottom: 1px solid #ede0d4;
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.rest-topbar-inner {
+  max-width: 1240px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.rest-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.rest-brand-link {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.rest-brand-logo {
+  height: 42px;
+  width: auto;
+  display: block;
+}
+
+.rest-topbar-divider {
+  width: 1px;
+  height: 26px;
+  background: #dfd0c3;
+}
+
+.rest-topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.rest-topbar-nav a,
+.rest-login-link {
+  font-size: 15px;
+  font-weight: 800;
+  color: #3f1229;
+  text-decoration: none;
+  padding: 8px 10px;
+  border-radius: 8px;
+  transition: color 0.16s ease, background-color 0.16s ease;
+}
+
+.rest-topbar-nav a:hover,
+.rest-login-link:hover {
+  color: #f25c05;
+  background: rgba(242, 92, 5, 0.07);
+}
+
+.rest-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.rest-register-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f25c05;
+  color: #ffffff;
+  font-size: 14.5px;
+  font-weight: 800;
+  padding: 11px 22px;
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(242, 92, 5, 0.25);
+  transition: background-color 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.rest-register-pill:hover {
+  background: #df5200;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(242, 92, 5, 0.34);
+}
+
+.rest-main {
+  flex: 1;
+  width: 100%;
+}
+
+/* Seção 1: Hero Full-Bleed */
+.rest-hero {
+  position: relative;
+  width: 100%;
+  min-height: 495px;
+  background: #4a0b25;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.rest-hero-photo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 60%;
+  z-index: 1;
+}
+
+.rest-hero-img {
+  object-fit: cover;
+  object-position: 62% center;
+}
+
+.rest-hero-wave {
+  position: absolute;
+  top: 0;
+  left: -1px;
+  height: 100%;
+  width: 175px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.rest-hero-container {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 52px 36px 58px;
+}
+
+.rest-hero-copy {
+  max-width: 470px;
+}
+
+.rest-hero-kicker {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f8ebe2;
+  margin: 0 0 14px;
+  letter-spacing: -0.01em;
+}
+
+.rest-hero-title {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  font-size: clamp(40px, 4.1vw, 56px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  margin: 0 0 20px;
+}
+
+.rest-hero-title > span {
+  display: block;
+  color: #f59d52;
+  margin-top: 2px;
+}
+
+.rest-hero-subtitle {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.48;
+  color: #f8ece4;
+  margin: 0 0 28px;
+}
+
+.rest-primary-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #f25c05;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 800;
+  padding: 15px 28px;
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.24);
+  transition: background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.rest-primary-pill:hover {
+  background: #df5200;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.32);
+}
+
+/* Tipografia Editorial Compartilhada */
+.rest-display-heading {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  font-weight: 800;
+  color: #4a0e27;
+  line-height: 1.08;
+  letter-spacing: -0.022em;
+  margin: 0;
+}
+
+.rest-sparks {
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 5px;
+  margin-top: -8px;
+}
+
+/* Seção 2: Um cardápio que abre o apetite + Mockup 3D do Smartphone */
+.rest-appetite-section {
+  position: relative;
+  background: #fcf6f0;
+  overflow: hidden;
+  padding: 0 0 0;
+}
+
+.rest-appetite-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: 440px minmax(0, 1fr);
+  gap: 56px;
+  align-items: center;
+}
+
+/* Palco e Mockup 3D do Smartphone */
+.rest-phone-stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding-top: 14px;
+  margin-bottom: -44px;
+  perspective: 1400px;
+  z-index: 4;
+}
+
+.rest-phone-foliage {
+  position: absolute;
+  left: -58px;
+  bottom: 24px;
+  width: 170px;
+  height: 190px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(114, 158, 52, 0.65) 0%, rgba(74, 118, 28, 0.45) 45%, rgba(74, 118, 28, 0) 74%),
+    radial-gradient(circle at 65% 70%, rgba(145, 184, 72, 0.55) 0%, rgba(89, 134, 38, 0) 70%);
+  filter: blur(12px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.rest-phone-chassis {
+  position: relative;
+  z-index: 2;
+  width: 326px;
+  border-radius: 48px;
+  padding: 6px 6px 6px 12px;
+  background: linear-gradient(135deg, #f3f1ee 0%, #c6c2bc 35%, #8f8b85 70%, #d8d4ce 100%);
+  box-shadow:
+    -18px 26px 48px rgba(46, 14, 31, 0.24),
+    -4px 6px 14px rgba(46, 14, 31, 0.14),
+    inset 2px 2px 3px rgba(255, 255, 255, 0.85);
+  transform: rotateZ(-6.5deg) rotateY(15deg) rotateX(4deg);
+  transform-style: preserve-3d;
+}
+
+.rest-phone-bezel {
+  background: #141215;
+  border-radius: 43px;
+  padding: 10px;
+  box-shadow: inset 0 0 0 1.5px #2e2a30;
+}
+
+.rest-phone-screen {
+  background: #fcf7f2;
+  border-radius: 34px;
+  padding: 12px 14px 28px;
+  overflow: hidden;
+  color: #381028;
+}
+
+.rest-phone-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #1f141b;
+}
+
+.rest-phone-island {
+  width: 74px;
+  height: 20px;
+  border-radius: 999px;
+  background: #0e0d10;
+}
+
+.rest-phone-signals {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rest-phone-signals i {
+  width: 9px;
+  height: 7px;
+  border-radius: 2px;
+  background: #1f141b;
+  opacity: 0.85;
+}
+
+.rest-phone-signals b {
+  width: 15px;
+  height: 8px;
+  border-radius: 2.5px;
+  border: 1.4px solid #1f141b;
+  background: #1f141b;
+}
+
+.rest-phone-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 2px 12px;
+}
+
+.rest-phone-header strong {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-variation-settings: "SOFT" 100;
+  font-size: 18px;
+  font-weight: 800;
+  color: #430b23;
+}
+
+.rest-phone-header-icons {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: #430b23;
+}
+
+.rest-phone-bag {
+  position: relative;
+  display: inline-flex;
+}
+
+.rest-phone-bag em {
+  position: absolute;
+  top: -6px;
+  right: -7px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #f25c05;
+  color: #ffffff;
+  font-style: normal;
+  font-size: 9px;
+  font-weight: 900;
+  display: grid;
+  place-items: center;
+}
+
+.rest-phone-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.rest-phone-tabs span {
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #f3e6da;
+  color: #5b3749;
+  white-space: nowrap;
+}
+
+.rest-phone-tabs span.active {
+  background: #f25c05;
+  color: #ffffff;
+}
+
+.rest-phone-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rest-phone-item {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #f0e3d8;
+  border-radius: 14px;
+  padding: 7px;
+  box-shadow: 0 4px 12px rgba(56, 16, 40, 0.05);
+}
+
+.rest-phone-item-img {
+  width: 88px;
+  height: 84px;
+  border-radius: 10px;
+  object-fit: cover;
+  display: block;
+}
+
+.rest-phone-item-body {
+  min-width: 0;
+  padding-right: 2px;
+}
+
+.rest-phone-item-body strong {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 900;
+  line-height: 1.18;
+  color: #330c1f;
+}
+
+.rest-phone-item-body small {
+  display: block;
+  font-size: 9.5px;
+  line-height: 1.3;
+  color: #7c6270;
+  margin-top: 3px;
+}
+
+.rest-phone-item-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+.rest-phone-item-foot span {
+  font-size: 12.5px;
+  font-weight: 900;
+  color: #e65100;
+}
+
+.rest-phone-item-foot i {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fde5d2;
+  color: #ef5a0c;
+  display: grid;
+  place-items: center;
+}
+
+/* Coluna Direita: Benefícios */
+.rest-appetite-copy {
+  padding: 54px 0 58px;
+}
+
+.rest-appetite-heading {
+  font-size: clamp(34px, 3.6vw, 48px);
+  margin-bottom: 30px;
+}
+
+.rest-feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.rest-feature-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.rest-feature-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 15px;
+  background: #fbe4d0;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.rest-feature-list h3 {
+  font-size: 19px;
+  font-weight: 900;
+  color: #3f1229;
+  margin: 0 0 4px;
+  letter-spacing: -0.02em;
+}
+
+.rest-feature-list p {
+  font-size: 15.5px;
+  line-height: 1.45;
+  color: #563748;
+  margin: 0;
+}
+
+.rest-feature-list p strong {
+  font-weight: 800;
+  color: #3f1229;
+}
+
+/* Seção 3: Cadastro fácil, em três passos */
+.rest-steps-band {
+  position: relative;
+  z-index: 5;
+  background: #fde5d0;
+  padding: 46px 0 52px;
+}
+
+.rest-centered-title-wrap {
+  text-align: center;
+  margin-bottom: 34px;
+}
+
+.rest-steps-heading {
+  display: inline-flex;
+  align-items: flex-start;
+  font-size: clamp(28px, 3vw, 39px);
+}
+
+.rest-three-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.rest-step-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.rest-step-badge {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: #fffaf6;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 18px rgba(74, 14, 39, 0.06);
+  flex-shrink: 0;
+}
+
+.rest-step-copy h3 {
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1.2;
+  color: #3f1229;
+  margin: 0 0 4px;
+}
+
+.rest-step-copy p {
+  font-size: 13.5px;
+  line-height: 1.42;
+  color: #5b3b4c;
+  margin: 0;
+}
+
+.rest-step-arrow {
+  color: #f26716;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Seção 4 & 5: Card do Painel + Perguntas Frequentes */
+.rest-middle-zone {
+  background: #fcf6f0;
+  padding: 50px 0 64px;
+}
+
+.rest-panel-card {
+  background: #fde7d4;
+  border-radius: 22px;
+  padding: 34px 46px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 56px;
+}
+
+.rest-panel-art {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rest-panel-text h2 {
+  font-size: clamp(25px, 2.6vw, 33px);
+  margin-bottom: 12px;
+}
+
+.rest-panel-text p {
+  font-size: 16.5px;
+  line-height: 1.56;
+  color: #4b2a3c;
+  margin: 0;
+  max-width: 680px;
+}
+
+/* Perguntas Frequentes */
+.rest-faq-heading {
+  display: inline-flex;
+  align-items: flex-start;
+  font-size: clamp(29px, 3vw, 40px);
+  margin-bottom: 26px;
+}
+
+.rest-faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.rest-faq-card {
+  background: #fffcf9;
+  border: 1px solid #eee1d5;
+  border-radius: 16px;
+  padding: 26px 28px;
+  box-shadow: 0 4px 16px rgba(58, 16, 39, 0.03);
+}
+
+.rest-faq-card h3 {
+  font-size: 17.5px;
+  font-weight: 900;
+  line-height: 1.28;
+  color: #3a1026;
+  margin: 0 0 10px;
+  letter-spacing: -0.015em;
+}
+
+.rest-faq-card p {
+  font-size: 15px;
+  line-height: 1.52;
+  color: #543847;
+  margin: 0;
+}
+
+/* Seção 6: CTA Final R$ 0 */
+.rest-bottom-cta {
+  background: radial-gradient(circle at 50% 50%, #590e2d 0%, #3e071e 100%);
+  padding: 58px 0 64px;
+  text-align: center;
+}
+
+.rest-zero-title {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  font-size: clamp(34px, 4vw, 52px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  margin: 0 0 26px;
+}
+
+.rest-zero-title span {
+  color: #f59d52;
+}
+
+.rest-bottom-pill {
+  font-size: 18px;
+  padding: 16px 34px;
+}
+
+/* Responsividade */
+@media (max-width: 1020px) {
+  .rest-appetite-inner {
+    grid-template-columns: 370px minmax(0, 1fr);
+    gap: 36px;
+  }
+  .rest-phone-chassis {
+    width: 300px;
+  }
+  .rest-three-steps {
+    flex-wrap: wrap;
+    gap: 22px;
+  }
+  .rest-step-arrow {
+    display: none;
+  }
+  .rest-step-item {
+    flex: 1 1 260px;
+  }
+}
+
+@media (max-width: 920px) {
+  .rest-topbar-inner {
+    padding: 0 22px;
+  }
+  .rest-topbar-divider {
+    display: none;
+  }
+  .rest-hero {
+    flex-direction: column;
+    min-height: auto;
+  }
+  .rest-hero-container {
+    padding: 40px 24px 32px;
+    text-align: center;
+  }
+  .rest-hero-copy {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .rest-hero-photo {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    order: 2;
+  }
+  .rest-hero-wave {
+    display: none;
+  }
+  .rest-appetite-inner {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .rest-phone-stage {
+    order: 2;
+    padding-top: 8px;
+    margin-bottom: -36px;
+  }
+  .rest-appetite-copy {
+    order: 1;
+    padding: 44px 0 20px;
+  }
+  .rest-panel-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 30px 26px;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 680px) {
+  .rest-topbar {
+    height: 70px;
+  }
+  .rest-topbar-inner {
+    padding: 0 16px;
+    gap: 10px;
+  }
+  .rest-brand-logo {
+    height: 33px;
+  }
+  .rest-topbar-nav {
+    display: none;
+  }
+  .rest-topbar-right {
+    gap: 10px;
+  }
+  .rest-login-link {
+    font-size: 13.5px;
+    padding: 6px 8px;
+  }
+  .rest-register-pill {
+    font-size: 13px;
+    padding: 9px 15px;
+  }
+  .rest-container,
+  .rest-appetite-inner {
+    padding: 0 18px;
+  }
+  .rest-hero-subtitle {
+    font-size: 16px;
+  }
+  .rest-primary-pill {
+    width: 100%;
+    justify-content: center;
+    font-size: 15.5px;
+    padding: 14px 20px;
+  }
+  .rest-phone-chassis {
+    width: 286px;
+    transform: rotateZ(-4deg) rotateY(10deg) rotateX(3deg);
+  }
+  .rest-faq-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .rest-faq-card {
+    padding: 22px 20px;
+  }
+  .rest-bottom-cta {
+    padding: 46px 0 52px;
+  }
+}

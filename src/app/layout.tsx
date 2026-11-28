@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Nunito_Sans } from 'next/font/google';
+import { Fraunces, Nunito_Sans } from 'next/font/google';
 import { siteOrigin, indexableRobots, defaultOgImage, siteName, twitterDefaults } from '@/lib/seo';
 import CookieConsent from '@/components/cookie-consent';
 import './globals.css';
@@ -7,6 +7,7 @@ import './discovery.css';
 import './support.css';
 
 const nunito = Nunito_Sans({ subsets: ['latin'], display: 'swap', variable: '--font-nunito' });
+const fraunces = Fraunces({ subsets: ['latin'], display: 'swap', variable: '--font-fraunces', axes: ['SOFT', 'WONK', 'opsz'] });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteOrigin),
@@ -58,7 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <html lang="pt-BR" className={nunito.variable}>
+    <html lang="pt-BR" className={`${nunito.variable} ${fraunces.variable}`}>
       <head>
         <meta name="view-transition" content="same-origin" />
         <style>{'@view-transition { navigation: auto; }'}</style>

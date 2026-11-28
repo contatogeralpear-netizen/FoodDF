@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { states } from '@/lib/domain';
 import { allMunicipalities, statePath } from '@/lib/locations';
 import { ogDefaults, twitterDefaults, indexableRobots, siteOrigin } from '@/lib/seo';
@@ -33,7 +34,9 @@ export default function Cities() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema).replace(/</g, '\\u003c') }}
       />
       <nav className="location-nav">
-        <a className="location-brand" href="/">FOODDF</a>
+        <a className="location-brand" href="/" aria-label="FOODDF, início">
+          <Image src="/images/home/fooddf-logo-hd.webp" alt="FOODDF" width={164} height={44} quality={95} preload className="brand-logo-img" />
+        </a>
         <a href="/para-restaurantes">Cadastrar meu restaurante</a>
       </nav>
       <section className="location-content">

@@ -32,11 +32,19 @@
 }
 
 .institutional-brand {
+  display: inline-flex;
+  align-items: center;
   font-size: 22px;
   font-weight: 900;
   color: #2c1223;
   text-decoration: none;
   letter-spacing: -0.5px;
+}
+
+.institutional-brand .brand-logo-img {
+  height: 38px;
+  width: auto;
+  display: block;
 }
 
 .institutional-brand span {

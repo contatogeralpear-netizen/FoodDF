@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { ChefHat, ArrowRight, ShieldCheck } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowRight, ShieldCheck } from 'lucide-react';
 import SiteFooter from '@/components/footer';
 import { siteOrigin, ogDefaults, twitterDefaults, indexableRobots } from '@/lib/seo';
 import '@/app/institutional.css';
@@ -67,7 +68,7 @@ export default function GuiaPixRestaurantePage() {
       />
       <header className="institutional-header">
         <div className="institutional-header-inner">
-          <a href="/" className="institutional-brand"><ChefHat size={24} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 6, color: '#ff5900' }} />FOOD<span>DF</span></a>
+          <a href="/" className="institutional-brand" aria-label="FOODDF, início"><Image src="/images/home/fooddf-logo-hd.webp" alt="FOODDF" width={156} height={42} quality={95} preload className="brand-logo-img" /></a>
           <nav className="institutional-nav">
             <a href="/buscas">Restaurantes</a>
             <a href="/como-funciona">Como Funciona</a>

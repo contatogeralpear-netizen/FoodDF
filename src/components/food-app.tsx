@@ -1,16 +1,99 @@
 'use client';
 
+import Image from 'next/image';
 import SiteFooter from './footer';
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, Bike, Check, ChevronDown, CircleHelp, Clock3, Copy, CreditCard, Flame, Heart, Info, MapPin, MessageCircle, Minus, Banknote, Paperclip, Pencil, Plus, QrCode, Search, ShieldCheck, ShoppingBag, Sparkles, Star, Store, Trash2, UserRound, UtensilsCrossed, X, ChefHat, CheckCircle2, Coins, Zap, Calendar, Percent, Users, Share2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Bike, Check, ChevronDown, ChevronRight, CircleHelp, Clock3, Copy, CreditCard, Flame, Info, MapPin, MessageCircle, Minus, Banknote, Paperclip, Pencil, Plus, QrCode, Search, ShieldCheck, ShoppingBag, Sparkles, Star, Store, Trash2, UserRound, UtensilsCrossed, X, CheckCircle2, Share2 } from 'lucide-react';
 import QRCode from 'qrcode';
 import { cartItems, trackCatalog } from '@/lib/cart';
 import { FoodImage } from './food-image';
 import TrackOrder from './track-order';
-import { CountdownTimer } from './countdown-timer';
-import { cityPath, statePath } from '@/lib/locations';
 import { demoProducts, formatPhone, money, pixPayload, restaurantPath, states, type Customer, type Product, type PublicCatalog, type Restaurant } from '@/lib/domain';
+
+const HOME_CATEGORIES = [
+  { id: 'hamburgueres', label: 'Hambúrgueres', query: 'Hambúrguer', image: '/images/home/cat-hamburgueres.webp', alt: 'Hambúrguer artesanal com queijo cheddar derretido e bacon crocante' },
+  { id: 'pizzas', label: 'Pizzas', query: 'Pizza', image: '/images/home/cat-pizzas.webp', alt: 'Pizza artesanal assada no forno a lenha com queijo puxando' },
+  { id: 'comida-brasileira', label: 'Comida brasileira', query: 'Brasileira', image: '/images/home/cat-comida-brasileira.webp', alt: 'Prato típico de comida brasileira com arroz, feijão, couve, farofa e laranja' },
+  { id: 'acai', label: 'Açaí', query: 'Açaí', image: '/images/home/cat-acai.webp', alt: 'Tigela de açaí cremoso com banana, granola e morangos frescos' },
+  { id: 'doces', label: 'Doces', query: 'Doces', image: '/images/home/cat-doces.webp', alt: 'Fatia de bolo de chocolate com recheio cremoso e granulado de brigadeiro' },
+] as const;
+
+function SparkBurst() {
+  return (
+    <svg className="home-heading-sparks" width="28" height="26" viewBox="0 0 28 26" fill="none" aria-hidden="true">
+      <line x1="5" y1="14" x2="9" y2="3" stroke="#f26716" strokeWidth="3.2" strokeLinecap="round" />
+      <line x1="12" y1="18" x2="21" y2="9" stroke="#f26716" strokeWidth="3.2" strokeLinecap="round" />
+      <line x1="15" y1="23" x2="25" y2="20" stroke="#f26716" strokeWidth="3.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function StepRegionIcon() {
+  return (
+    <svg width="46" height="46" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <path d="M9 33L16 28L24 31L32 28L39 33L31 39L24 36.5L17 39L9 33Z" stroke="#ef5a0c" strokeWidth="2.4" strokeLinejoin="round" fill="#fff3eb" />
+      <path d="M24 31C24 31 33 22.2 33 15.5C33 10.5294 28.9706 6.5 24 6.5C19.0294 6.5 15 10.5294 15 15.5C15 22.2 24 31 24 31Z" fill="#ef5a0c" />
+      <circle cx="24" cy="15.5" r="3.6" fill="#ffffff" />
+    </svg>
+  );
+}
+
+function StepRestaurantIcon() {
+  return (
+    <svg width="46" height="46" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <path d="M11 22V38C11 39.1 11.9 40 13 40H35C36.1 40 37 39.1 37 38V22" stroke="#4a0e27" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" fill="#fffaf6" />
+      <path d="M20 40V29H28V40" stroke="#4a0e27" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8 18L11.5 10H36.5L40 18" fill="#ef5a0c" stroke="#ef5a0c" strokeWidth="2.2" strokeLinejoin="round" />
+      <path d="M8 18C8 20.5 9.8 22.5 12 22.5C14.2 22.5 16 20.5 16 18C16 20.5 17.8 22.5 20 22.5C22.2 22.5 24 20.5 24 18C24 20.5 25.8 22.5 28 22.5C30.2 22.5 32 20.5 32 18C32 20.5 33.8 22.5 36 22.5C38.2 22.5 40 20.5 40 18H8Z" fill="#ef5a0c" />
+      <line x1="16.5" y1="10" x2="15.5" y2="19" stroke="#ffffff" strokeWidth="1.8" strokeLinecap="round" />
+      <line x1="24" y1="10" x2="24" y2="19" stroke="#ffffff" strokeWidth="1.8" strokeLinecap="round" />
+      <line x1="31.5" y1="10" x2="32.5" y2="19" stroke="#ffffff" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function StepMenuIcon() {
+  return (
+    <svg width="46" height="46" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <rect x="10" y="10" width="28" height="30" rx="4" fill="#fffaf6" stroke="#4a0e27" strokeWidth="2.5" />
+      <path d="M19 8H29C29.8 8 30.5 8.7 30.5 9.5V12.5C30.5 13.3 29.8 14 29 14H19C18.2 14 17.5 13.3 17.5 12.5V9.5C17.5 8.7 18.2 8 19 8Z" fill="#fffaf6" stroke="#4a0e27" strokeWidth="2.3" />
+      <path d="M15.5 18V23.5M18.5 18V23.5M15.5 21.5C15.5 23 18.5 23 18.5 21.5M17 23V33" stroke="#ef5a0c" strokeWidth="2" strokeLinecap="round" />
+      <path d="M22 18V25.5M22 18C23.8 18 24.2 21 22 23V33" stroke="#ef5a0c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <line x1="27" y1="20" x2="33.5" y2="20" stroke="#4a0e27" strokeWidth="2.4" strokeLinecap="round" />
+      <line x1="27" y1="25.5" x2="33.5" y2="25.5" stroke="#4a0e27" strokeWidth="2.4" strokeLinecap="round" />
+      <line x1="27" y1="31" x2="32" y2="31" stroke="#4a0e27" strokeWidth="2.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function StepWhatsappIcon() {
+  return (
+    <svg width="46" height="46" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <path d="M24.2 8C15.36 8 8.2 15.12 8.2 23.9C8.2 26.82 9 29.55 10.38 31.9L8 40L16.35 37.68C18.64 38.94 21.33 39.8 24.2 39.8C33.04 39.8 40.2 32.68 40.2 23.9C40.2 15.12 33.04 8 24.2 8Z" stroke="#25d366" strokeWidth="3.1" strokeLinejoin="round" fill="#f3fdf6" />
+      <path d="M19.3 16.8C18.9 15.9 18.45 15.88 18.05 15.86C17.72 15.84 17.35 15.84 16.98 15.84C16.6 15.84 16 15.98 15.5 16.52C14.98 17.08 13.55 18.42 13.55 21.15C13.55 23.88 15.55 26.52 15.82 26.9C16.1 27.26 19.68 33.08 25.35 35.3C30.06 37.15 31.02 36.78 32.04 36.68C33.06 36.58 35.34 35.34 35.8 34.04C36.26 32.74 36.26 31.62 36.12 31.38C35.98 31.15 35.61 31.01 35.05 30.73C34.5 30.45 31.76 29.1 31.25 28.92C30.74 28.73 30.37 28.64 30 29.2C29.63 29.75 28.56 31.01 28.24 31.38C27.91 31.75 27.59 31.8 27.03 31.52C26.47 31.24 24.68 30.65 22.55 28.76C20.9 27.28 19.78 25.46 19.45 24.9C19.13 24.34 19.42 24.04 19.7 23.76C19.95 23.51 20.26 23.11 20.54 22.79C20.82 22.46 20.91 22.23 21.1 21.86C21.28 21.48 21.19 21.16 21.05 20.88C20.91 20.6 19.83 17.85 19.3 16.8Z" fill="#25d366" transform="scale(0.84) translate(4.5 4.2)" />
+    </svg>
+  );
+}
+
+function StepReceiveIcon() {
+  return (
+    <svg width="46" height="46" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <path d="M8 22.5L24 9.5L40 22.5" stroke="#4a0e27" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M12.5 19.5V37.5C12.5 38.6 13.4 39.5 14.5 39.5H33.5C34.6 39.5 35.5 38.6 35.5 37.5V19.5" stroke="#4a0e27" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M21 25H31L32.2 38.5H19.8L21 25Z" fill="#ef5a0c" stroke="#ef5a0c" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M23.5 25V23C23.5 21.5 24.6 20.3 26 20.3C27.4 20.3 28.5 21.5 28.5 23V25" stroke="#4a0e27" strokeWidth="2.1" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+const HOME_STEPS = [
+  { id: 'regiao', lines: ['Escolha', 'sua região'], Icon: StepRegionIcon },
+  { id: 'restaurante', lines: ['Escolha o melhor', 'restaurante', 'para você'], Icon: StepRestaurantIcon },
+  { id: 'cardapio', lines: ['Monte seu pedido', 'pelo cardápio', 'digital'], Icon: StepMenuIcon },
+  { id: 'whatsapp', lines: ['Envie o pedido', 'pelo', 'WhatsApp'], Icon: StepWhatsappIcon },
+  { id: 'receba', lines: ['Receba em casa', 'ou retire no', 'restaurante'], Icon: StepReceiveIcon },
+] as const;
 
 type Step = 'menu'|'details'|'payment'|'pix'|'review';
 type Cart = Record<string,number>;
@@ -123,119 +206,126 @@ export default function FoodApp({initialRestaurants=[],initialCatalog,initialCat
  function Steps(){const index=step==='details'?1:step==='review'?3:2;return <nav className="steps" aria-label="Etapas do pedido">{['Pedido','Pagamento','Revisão'].map((label,i)=><div key={label} className={`step ${index===i+1?'active':''} ${index>i+1?'complete':''}`} aria-current={index===i+1?'step':undefined}><span>{index>i+1?<Check size={18}/>:i+1}</span><b>{label}</b>{i<2&&<i/>}</div>)}</nav>}
  function Back({to,label}:{to:Step;label:string}){return <button className="text-button back-button" onClick={()=>go(to)}><ArrowLeft size={18}/>{label}</button>}
 
- return <>
+ const isDefaultRegion = state === 'DF' && (!city || city === 'Brasília');
+ const exploreHref = isDefaultRegion ? '/buscas' : `/buscas?uf=${encodeURIComponent(state)}${city ? `&cidade=${encodeURIComponent(city)}` : ''}`;
+ const categoryHref = (q: string) => isDefaultRegion ? `/buscas?q=${encodeURIComponent(q)}` : `/buscas?uf=${encodeURIComponent(state)}${city ? `&cidade=${encodeURIComponent(city)}` : ''}&q=${encodeURIComponent(q)}`;
+
+ return <div className={!restaurant ? 'home-landing-shell' : undefined}>
   <a href="#main" className="skip-link">Pular para o conteúdo</a>
-  <header className="header"><div className="header-inner"><button className="brand" aria-label="FOODDF, início" onClick={goHome}><img src="/images/fooddf-logo-hd.png" alt="FOODDF" className="brand-logo-img" /></button><nav className="header-nav"><a className="header-nav-link" href="/como-funciona">Como funciona</a><a className="header-nav-link" href="#vantagens">Vantagens</a><a className="header-nav-link" href="/para-restaurantes">Para restaurantes</a><a className="header-cta-button" href="/buscas">Pedir agora</a><button className="location-button" onClick={()=>setLocation(true)}><MapPin size={18}/><span><small>Você está em</small><b>{city||'Brasília'} <span>• {state}</span></b></span><ChevronDown size={14}/></button>{restaurant&&<button className="bag-button" aria-label={`Abrir sacola com ${count} itens`} onClick={()=>{if(step!=='menu')go('menu');setCartOpen(true)}}><ShoppingBag size={23}/>{count>0&&<b>{count}</b>}</button>}</nav></div></header>
-  <main id="main" className={`main ${restaurant?'store-main':'market-main'}`}>
+  <header className="header home-topbar">
+   <div className="header-inner home-topbar-inner">
+    <button className="brand home-brand-btn" aria-label="FOODDF, início" onClick={goHome}>
+     <Image src="/images/home/fooddf-logo-hd.webp" alt="FOODDF" width={176} height={47} quality={95} preload className="brand-logo-img" />
+    </button>
+    <span className="home-topbar-divider" aria-hidden="true" />
+    <nav className="header-nav home-topbar-nav" aria-label="Navegação principal">
+     <a className="home-nav-link" href={exploreHref}>Explorar cardápios</a>
+     <a className="home-nav-link" href="/como-funciona">Como funciona</a>
+     <a className="home-nav-link" href="/para-restaurantes">Para restaurantes</a>
+    </nav>
+    <div className="home-topbar-actions">
+     <button className="home-location-pill" type="button" onClick={()=>setLocation(true)} aria-label={`Localização atual: ${city||'Brasília'}, ${state}. Clique para alterar`}>
+      <MapPin size={17} strokeWidth={2.4} />
+      <span>{city||'Brasília'} · {state}</span>
+      <ChevronDown size={15} strokeWidth={2.5} />
+     </button>
+     {restaurant&&<button className="bag-button" aria-label={`Abrir sacola com ${count} itens`} onClick={()=>{if(step!=='menu')go('menu');setCartOpen(true)}}><ShoppingBag size={23}/>{count>0&&<b>{count}</b>}</button>}
+    </div>
+   </div>
+  </header>
+  <main id="main" className={restaurant ? 'main store-main' : 'home-main'}>
    {loading&&<div className="loading-bar" role="status">Preparando seu cardápio…</div>}
    {error&&<div className="error-banner" role="alert"><Info size={19}/>{error}<button onClick={()=>setError('')} aria-label="Fechar aviso"><X size={16}/></button></div>}
-   {!restaurant?<div key="marketplace" className="step-transition">
-    <section className="new-hero-section">
-     <div className="new-hero-left">
-      <h1 className="new-hero-title">O sabor da sua cidade,<br/>a um <strong className="whatsapp-highlight">WhatsApp</strong> de distância.</h1>
-      <p className="new-hero-desc">O FOODDF é a plataforma de cardápios digitais que conecta clientes a restaurantes locais em Brasília e em todo o Brasil. Você explora pratos, seleciona seus itens e envia o pedido pronto diretamente para o WhatsApp do estabelecimento, combinando pagamento, entrega ou retirada sem intermediários.</p>
-      <div className="new-hero-buttons">
-       <a className="primary-cta" href="/buscas">Quero Pedir Agora</a>
-       <a className="outline-cta" href="/para-restaurantes">Sou um Restaurante</a>
-      </div>
+   {!restaurant?<div key="marketplace" className="step-transition home-landing">
+    <section className="home-hero" aria-label="Destaque principal">
+     <div className="home-hero-photo">
+      <Image
+       src="/images/home/hero-couple-brasilia.webp"
+       alt="Casal saboreando hambúrguer artesanal e pizza ao ar livre em Brasília com a Catedral ao fundo"
+       fill
+       sizes="(max-width: 920px) 100vw, 65vw"
+       quality={90}
+       preload
+       className="home-hero-img"
+      />
+      <svg className="home-hero-curve" viewBox="0 0 180 540" preserveAspectRatio="none" aria-hidden="true">
+       <path d="M0 0L132 0Q172 195 48 540L0 540Z" fill="#4f0b27" />
+      </svg>
      </div>
-     <div className="new-hero-right">
-      <div className="hero-mosaic-card">
-       <img src="/images/hero-food-mosaic-hd.png" alt="Cardápios de Brasília: hambúrgueres artesanais, pizza e saladas" />
-      </div>
-      <div className="floating-sticker sticker-scooter"><Bike size={18} color="#ff5900"/><span>Entrega Rápida</span></div>
-      <div className="floating-sticker sticker-bsb"><Sparkles size={16} color="#ff5900"/><span>Catedral • BSB</span></div>
-      <div className="floating-sticker sticker-ponte"><MapPin size={16} color="#ff5900"/><span>Ponte JK</span></div>
-     </div>
-    </section>
-
-    <section className="audiences-section" id="vantagens">
-     <div className="audience-card audience-customer">
-      <div className="audience-content">
-       <div className="audience-header">
-        <h2>Para quem pede</h2>
-        <span className="tag">(Clientes)</span>
-       </div>
-       <div className="audience-features">
-        <div className="audience-feature-item">
-         <div className="feature-icon-bubble customer-icon"><Coins size={20}/></div>
-         <div><h3>Preço Direto do Cardápio</h3><p>Valores informados pelo restaurante, sem taxas surpresas de intermediação.</p></div>
-        </div>
-        <div className="audience-feature-item">
-         <div className="feature-icon-bubble customer-icon"><Zap size={20}/></div>
-         <div><h3>Rápido e Direto</h3><p>Seu pedido vai direto e sem intermediários.</p></div>
-        </div>
-        <div className="audience-feature-item">
-         <div className="feature-icon-bubble customer-icon"><MapPin size={20}/></div>
-         <div><h3>Apoie o Local</h3><p>Fortaleça os restaurantes da sua vizinhança.</p></div>
-        </div>
-       </div>
-      </div>
-      <div className="audience-visual">
-       <div className="customer-photo-wrapper">
-        <img src="/images/customer-ref-hd.png" alt="Clientes satisfeitos pedindo no FOODDF" />
-       </div>
-      </div>
-     </div>
-
-     <div className="audience-card audience-restaurant">
-      <div className="audience-content">
-       <div className="audience-header">
-        <h2>Para quem vende</h2>
-        <span className="tag">(Restaurantes)</span>
-       </div>
-       <div className="audience-features">
-        <div className="audience-feature-item">
-         <div className="feature-icon-bubble restaurant-icon"><Percent size={20}/></div>
-         <div><h3>Zero Comissão até 31/12/2026</h3><p>Uso e cadastro gratuitos até 31/12/2026. Condições futuras serão anunciadas com antecedência.</p></div>
-        </div>
-        <div className="audience-feature-item audience-countdown-item">
-         <div className="feature-icon-bubble restaurant-icon"><Clock3 size={20}/></div>
-         <div className="audience-countdown-body">
-          <h3>Cadastro Grátis encerra em:</h3>
-          <CountdownTimer />
-          <p>Aproveite o período promocional sem custo de adesão.</p>
-         </div>
-        </div>
-        <div className="audience-feature-item">
-         <div className="feature-icon-bubble restaurant-icon"><Users size={20}/></div>
-         <div><h3>Mais Visibilidade</h3><p>Sua marca em destaque para quem busca restaurantes na sua região.</p></div>
-        </div>
-       </div>
-       <div className="audience-restaurant-cta">
-        <a className="btn-white" href="/painel?cadastro=1">Cadastrar Meu Restaurante</a>
-       </div>
-      </div>
-      <div className="audience-visual">
-       <div className="chef-photo-wrapper">
-        <img src="/images/chef-ref-hd.png" alt="Chef e proprietário de restaurante FOODDF" />
-       </div>
-      </div>
-     </div>
-    </section>
-    <section className="fastfood-chains-section" aria-label="As principais redes de fast-food do Brasil">
-     <h2 className="fastfood-chains-title">AS PRINCIPAIS REDES DE FAST-FOOD DO BRASIL</h2>
-     <div className="fastfood-chains-row">
-      {[
-       { id: 'mcdonalds', name: "McDonald's", image: '/images/fastfood-mcdonalds.png' },
-       { id: 'burger-king', name: 'Burger King', image: '/images/fastfood-burger-king.png' },
-       { id: 'subway', name: 'Subway', image: '/images/fastfood-subway.png' },
-       { id: 'bobs', name: "Bob's", image: '/images/fastfood-bobs.png' },
-       { id: 'habibs', name: "Habib's", image: '/images/fastfood-habibs.png' },
-       { id: 'giraffas', name: 'Giraffas', image: '/images/fastfood-giraffas.png' },
-       { id: 'pizza-hut', name: 'Pizza Hut', image: '/images/fastfood-pizza-hut.png' },
-       { id: 'kfc', name: 'KFC', image: '/images/fastfood-kfc.png' }
-      ].map(chain => (
-       <a
-        key={chain.id}
-        href="https://fooddf.vercel.app/buscas"
-        className="fastfood-chain-circle"
-        title={`Ver opções de ${chain.name} no FOODDF`}
-        aria-label={`Buscar ${chain.name}`}
-       >
-        <img src={chain.image} alt={chain.name} />
+     <div className="home-hero-container">
+      <div className="home-hero-copy">
+       <h1 className="home-hero-title">
+        Hoje a fome
+        <span>pede o quê?</span>
+       </h1>
+       <p className="home-hero-subtitle">
+        Explore os cardápios da sua região<br />
+        e peça direto pelo WhatsApp.
+       </p>
+       <a className="home-hero-cta" href={exploreHref}>
+        <span>Ver restaurantes disponíveis</span>
+        <ArrowRight size={20} strokeWidth={2.4} />
        </a>
-      ))}
+      </div>
+     </div>
+    </section>
+
+    <section className="home-cravings-section" aria-labelledby="cravings-heading">
+     <div className="home-section-inner">
+      <h2 id="cravings-heading" className="home-section-heading">
+       <span>Escolha pelo que deu vontade</span>
+       <SparkBurst />
+      </h2>
+      <div className="home-categories-grid">
+       {HOME_CATEGORIES.map(cat => (
+        <a key={cat.id} href={categoryHref(cat.query)} className="home-category-card">
+         <Image
+          src={cat.image}
+          alt={cat.alt}
+          width={540}
+          height={540}
+          sizes="(max-width: 640px) 46vw, (max-width: 1024px) 30vw, 240px"
+          quality={90}
+          className="home-category-img"
+         />
+         <span className="home-category-shade" aria-hidden="true" />
+         <strong className="home-category-label">{cat.label}</strong>
+        </a>
+       ))}
+      </div>
+     </div>
+    </section>
+
+    <section className="home-steps-section" aria-labelledby="steps-heading">
+     <div className="home-section-inner">
+      <h2 id="steps-heading" className="home-section-heading">
+       <span>Como pedir pelo FOODDF</span>
+       <SparkBurst />
+      </h2>
+      <ol className="home-steps-list">
+       {HOME_STEPS.map((item, idx) => (
+        <li key={item.id} className="home-step-entry">
+         <div className="home-step-card">
+          <div className="home-step-circle">
+           <item.Icon />
+          </div>
+          <p className="home-step-text">
+           {item.lines.map((line, i) => (
+            <span key={line}>
+             {line}
+             {i < item.lines.length - 1 && <br />}
+            </span>
+           ))}
+          </p>
+         </div>
+         {idx < HOME_STEPS.length - 1 && (
+          <span className="home-step-chevron" aria-hidden="true">
+           <ChevronRight size={26} strokeWidth={2.6} />
+          </span>
+         )}
+        </li>
+       ))}
+      </ol>
      </div>
     </section>
    </div>:step==='menu'?<div key={`menu-${restaurant.id}`} className="step-transition">
@@ -263,5 +353,5 @@ export default function FoodApp({initialRestaurants=[],initialCatalog,initialCat
   {tracking&&<TrackOrder initialReference={orderReference} onClose={()=>setTracking(false)}/>}
   {shareOpen&&restaurant&&<div className="modal-backdrop" onClick={()=>setShareOpen(false)}><section className="modal share-modal" role="dialog" aria-modal="true" aria-labelledby="share-title" onClick={e=>e.stopPropagation()}><button autoFocus className="modal-close icon-button" onClick={()=>setShareOpen(false)} aria-label="Fechar compartilhamento"><X/></button><div className="share-preview-card"><div className="share-logo-1x1-wrapper"><FoodImage kind={restaurant.logo||"logo"} label={restaurant.name}/></div><span className="share-badge-1x1">Imagem de divulgação (1:1)</span><h2 id="share-title">Compartilhar {restaurant.name}</h2><p>Envie o cardápio para amigos ou divulgue nas suas redes sociais.</p></div><div className="share-link-box"><input readOnly value={typeof window!=='undefined'?`${window.location.origin}${restaurantPath(restaurant.slug)}`:`https://fooddf.vercel.app${restaurantPath(restaurant.slug)}`}/><button type="button" className="button outline small" onClick={async()=>{const u=typeof window!=='undefined'?`${window.location.origin}${restaurantPath(restaurant.slug)}`:`https://fooddf.vercel.app${restaurantPath(restaurant.slug)}`;try{await navigator.clipboard.writeText(u);setToast('Link copiado!');}catch{}}}><Copy size={15}/>Copiar</button></div><div className="share-actions-grid"><a href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`Confira o cardápio de ${restaurant.name} no FOODDF:\n${typeof window!=='undefined'?window.location.origin:'https://fooddf.vercel.app'}${restaurantPath(restaurant.slug)}`)}`} target="_blank" rel="noopener noreferrer" className="button whatsapp wide"><MessageCircle size={20}/>Compartilhar no WhatsApp</a><a href={`/api/og/restaurant?slug=${encodeURIComponent(restaurant.slug)}`} target="_blank" rel="noopener noreferrer" className="button outline wide"><Share2 size={16}/>Ver imagem 1:1 de divulgação</a></div></section></div>}
   {toast&&<div className="toast" role="status"><CheckCircle2 size={19}/>{toast}</div>}
- </>;
+ </div>;
 }

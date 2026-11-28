@@ -1,5 +1,6 @@
 import { cache } from 'react';
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { restaurantPath, money } from '@/lib/domain';
 import { allMunicipalities, cityPath, getState, locationSlug, restaurantsInCity, statePath } from '@/lib/locations';
@@ -59,7 +60,9 @@ export default async function CityPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema).replace(/</g, '\\u003c') }}
       />
       <nav className="location-nav">
-        <a className="location-brand" href="/">FOODDF</a>
+        <a className="location-brand" href="/" aria-label="FOODDF, início">
+          <Image src="/images/home/fooddf-logo-hd.webp" alt="FOODDF" width={164} height={44} quality={95} preload className="brand-logo-img" />
+        </a>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           <a href="/buscas" style={{ fontWeight: 700, color: '#ff5900' }}>Explorar Todos os Restaurantes</a>
           <a href="/para-restaurantes">Cadastrar meu restaurante</a>
