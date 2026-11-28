@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { ArrowRight, ChevronDown, ChevronRight, ChevronUp, MapPin, X } from 'lucide-react';
 import SiteFooter from '@/components/footer';
 import { states } from '@/lib/domain';
-import { allMunicipalities } from '@/lib/locations';
+import { getCitiesForState } from '@/lib/locations';
 
 export type FaqItem = {
   question: string;
@@ -96,10 +96,7 @@ export default function HowItWorksClient({ faqs }: { faqs: readonly FaqItem[] })
     Object.fromEntries(faqs.map((_, idx) => [idx, true]))
   );
 
-  const cities = allMunicipalities
-    .filter(m => m.state.toUpperCase() === uf.toUpperCase())
-    .map(m => m.name)
-    .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  const cities = getCitiesForState(uf);
 
   const isDefaultRegion = uf === 'DF' && (!city || city === 'Brasília');
   const exploreHref = isDefaultRegion
@@ -269,7 +266,7 @@ export default function HowItWorksClient({ faqs }: { faqs: readonly FaqItem[] })
       <SiteFooter />
 
       {locationOpen && (
-        <div className="modal-backdrop" onClick={() => setLocationOpen(false)}>
+        <div className="modal-backdrop modal-backdrop-top" onClick={() => setLocationOpen(false)}>
           <section
             className="modal location-modal"
             role="dialog"
@@ -295,8 +292,9 @@ export default function HowItWorksClient({ faqs }: { faqs: readonly FaqItem[] })
               <select
                 value={uf}
                 onChange={e => {
-                  setUf(e.target.value);
-                  setCity('');
+                  const nextUf = e.target.value;
+                  setUf(nextUf);
+                  setCity(nextUf === 'DF' ? 'Brasília' : '');
                 }}
               >
                 {states.map(([code, name]) => (

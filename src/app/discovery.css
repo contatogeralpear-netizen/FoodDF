@@ -890,14 +890,25 @@
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
 
 .page-transition {
-  animation: pageFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
-  will-change: opacity, transform;
+  animation: pageFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   width: 100%;
+}
+
+.modal-backdrop-top {
+  align-items: flex-start !important;
+  padding-top: 68px !important;
+  overflow-y: auto;
+}
+
+@media (max-width: 640px) {
+  .modal-backdrop-top {
+    padding-top: 28px !important;
+  }
 }
 
 /* ==========================================================================

@@ -1,10 +1,11 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { ArrowLeft, ChevronDown, Eye, EyeOff } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowLeft, ChevronDown, Eye, EyeOff, LoaderCircle } from 'lucide-react';
 import { adminClient, formatContactPhone } from '@/lib/admin';
 import { states } from '@/lib/domain';
+import { getCitiesForState } from '@/lib/locations';
 
 type Mode = 'login' | 'signup' | 'forgot' | 'recovery';
 
@@ -18,8 +19,12 @@ export function AuthScreen({ recovery, onRecoveryDone }: { recovery: boolean; on
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [cepLoading, setCepLoading] = useState(false);
+  const [cepNote, setCepNote] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const lastLookedUpCep = useRef('');
+
   const [company, setCompany] = useState({
     name: '',
     cuisine: 'Restaurante',
@@ -28,8 +33,10 @@ export function AuthScreen({ recovery, onRecoveryDone }: { recovery: boolean; on
     complement: '',
     whatsapp: '',
     state: 'DF',
-    city: '',
+    city: 'Brasília',
   });
+
+  const availableCities = useMemo(() => getCitiesForState(company.state), [company.state]);
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get('cadastro') === '1') {
@@ -44,6 +51,7 @@ export function AuthScreen({ recovery, onRecoveryDone }: { recovery: boolean; on
     setMode(next);
     setMessage('');
     setError('');
+    setCepNote('');
     setPassword('');
     setConfirm('');
     setShowPassword(false);
@@ -51,6 +59,61 @@ export function AuthScreen({ recovery, onRecoveryDone }: { recovery: boolean; on
     if (typeof window !== 'undefined' && !recovery) {
       const targetUrl = next === 'signup' ? `${window.location.pathname}?cadastro=1` : window.location.pathname;
       window.history.replaceState({}, '', targetUrl);
+    }
+  }
+
+  const update = (key: keyof typeof company, value: string) => setCompany(c => ({ ...c, [key]: value }));
+
+  function handleStateChange(newUf: string) {
+    const list = getCitiesForState(newUf);
+    const defaultCity = newUf === 'DF' ? 'Brasília' : list[0] || '';
+    setCompany(prev => ({ ...prev, state: newUf, city: defaultCity }));
+  }
+
+  async function lookupCep(digits: string) {
+    if (digits.length !== 8 || lastLookedUpCep.current === digits) return;
+    lastLookedUpCep.current = digits;
+    setCepLoading(true);
+    setCepNote('');
+    try {
+      const res = await fetch(`/api/cep?cep=${digits}`);
+      if (!res.ok) {
+        if (res.status === 404) setCepNote('CEP não encontrado. Preencha manualmente.');
+        return;
+      }
+      const data = (await res.json()) as {
+        uf: string;
+        city: string;
+        neighborhood: string;
+        street: string;
+        complement: string;
+      };
+      setCompany(prev => {
+        const streetAndNeighborhood = [data.street, data.neighborhood].filter(Boolean).join(', ');
+        return {
+          ...prev,
+          state: data.uf || prev.state,
+          city: data.city || prev.city,
+          address: streetAndNeighborhood || prev.address,
+          complement: prev.complement || data.complement || '',
+        };
+      });
+    } catch {
+      // Silencioso: usuário continua podendo preencher manualmente
+    } finally {
+      setCepLoading(false);
+    }
+  }
+
+  function handleCepChange(rawValue: string) {
+    const digits = rawValue.replace(/\D/g, '').slice(0, 8);
+    const formatted = digits.length > 5 ? `${digits.slice(0, 5)}-${digits.slice(5)}` : digits;
+    update('postal_code', formatted);
+    if (digits.length < 8) {
+      lastLookedUpCep.current = '';
+      setCepNote('');
+    } else {
+      void lookupCep(digits);
     }
   }
 
@@ -77,6 +140,7 @@ export function AuthScreen({ recovery, onRecoveryDone }: { recovery: boolean; on
       if (current === 'signup') {
         if (password !== confirm) throw Error('As senhas não coincidem.');
         if (!/^\d{8}$/.test(company.postal_code.replace(/\D/g, ''))) throw Error('Informe um CEP válido.');
+        if (!company.city.trim()) throw Error('Selecione a cidade do estabelecimento.');
         if (!/^\d{10,11}$/.test(company.whatsapp.replace(/\D/g, ''))) throw Error('Informe o WhatsApp com DDD.');
         const { error } = await db.auth.signUp({
           email: email.trim(),
@@ -102,8 +166,6 @@ export function AuthScreen({ recovery, onRecoveryDone }: { recovery: boolean; on
       setBusy(false);
     }
   }
-
-  const update = (key: keyof typeof company, value: string) => setCompany(c => ({ ...c, [key]: value }));
 
   return (
     <div className="auth-page-shell">
@@ -277,21 +339,23 @@ export function AuthScreen({ recovery, onRecoveryDone }: { recovery: boolean; on
                       />
                     </label>
 
-                    <label className="auth-field">
-                      <span className="auth-label">
+                    <div className="auth-field">
+                      <label htmlFor="signup-cep" className="auth-label">
                         CEP <em aria-hidden="true">*</em>
-                      </span>
-                      <input
-                        required
-                        inputMode="numeric"
-                        placeholder="00000-000"
-                        value={company.postal_code}
-                        onChange={e => {
-                          const d = e.target.value.replace(/\D/g, '').slice(0, 8);
-                          update('postal_code', d.length > 5 ? d.slice(0, 5) + '-' + d.slice(5) : d);
-                        }}
-                      />
-                    </label>
+                      </label>
+                      <div className="auth-cep-box">
+                        <input
+                          id="signup-cep"
+                          required
+                          inputMode="numeric"
+                          placeholder="00000-000"
+                          value={company.postal_code}
+                          onChange={e => handleCepChange(e.target.value)}
+                        />
+                        {cepLoading && <LoaderCircle size={16} className="admin-spin auth-cep-spinner" aria-label="Consultando CEP" />}
+                      </div>
+                      {cepNote && <small className="auth-field-hint">{cepNote}</small>}
+                    </div>
                   </div>
 
                   <div className="auth-row auth-row-region">
@@ -300,7 +364,7 @@ export function AuthScreen({ recovery, onRecoveryDone }: { recovery: boolean; on
                         Estado <em aria-hidden="true">*</em>
                       </span>
                       <div className="auth-select-box">
-                        <select value={company.state} onChange={e => update('state', e.target.value)}>
+                        <select value={company.state} onChange={e => handleStateChange(e.target.value)}>
                           {states.map(([uf, name]) => (
                             <option value={uf} key={uf}>
                               {name}
@@ -315,14 +379,20 @@ export function AuthScreen({ recovery, onRecoveryDone }: { recovery: boolean; on
                       <span className="auth-label">
                         Cidade <em aria-hidden="true">*</em>
                       </span>
-                      <input
-                        required
-                        minLength={2}
-                        maxLength={100}
-                        placeholder="Digite a cidade"
-                        value={company.city}
-                        onChange={e => update('city', e.target.value)}
-                      />
+                      <div className="auth-select-box">
+                        <select
+                          required
+                          value={availableCities.includes(company.city) ? company.city : availableCities[0] || ''}
+                          onChange={e => update('city', e.target.value)}
+                        >
+                          {availableCities.map(cityName => (
+                            <option key={cityName} value={cityName}>
+                              {cityName}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown size={17} strokeWidth={2.3} aria-hidden="true" />
+                      </div>
                     </label>
                   </div>
 

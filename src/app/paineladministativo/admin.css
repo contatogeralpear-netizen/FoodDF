@@ -338,6 +338,23 @@
   align-items: center;
 }
 
+.auth-cep-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-cep-box input {
+  padding-right: 34px;
+}
+
+.auth-cep-spinner {
+  position: absolute;
+  right: 10px;
+  color: #e85600;
+  pointer-events: none;
+}
+
 .auth-password-box input {
   padding-right: 42px;
 }

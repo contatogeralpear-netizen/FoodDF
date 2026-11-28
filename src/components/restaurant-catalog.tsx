@@ -6,7 +6,7 @@ import SiteFooter from './footer';
 import { useMemo, useRef, useState } from 'react';
 import { ArrowRight, ChevronDown, MapPin, Search, Star, X } from 'lucide-react';
 import { states, money, restaurantPath, type Restaurant } from '@/lib/domain';
-import { allMunicipalities } from '@/lib/locations';
+import { getCitiesForState } from '@/lib/locations';
 
 const BROWSE_CATEGORIES = [
   {
@@ -114,10 +114,7 @@ export default function RestaurantCatalog({
     if (!selectedUf) {
       return [...new Set(initialRestaurants.map(r => r.city))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
     }
-    return allMunicipalities
-      .filter(m => m.state.toUpperCase() === selectedUf.toUpperCase())
-      .map(m => m.name)
-      .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+    return getCitiesForState(selectedUf);
   }, [selectedUf, initialRestaurants]);
 
   // Restaurantes reais publicados (não-demo)
@@ -162,9 +159,7 @@ export default function RestaurantCatalog({
 
   function handleUfChange(newUf: string) {
     setSelectedUf(newUf);
-    const nextCities = allMunicipalities
-      .filter(m => m.state.toUpperCase() === newUf.toUpperCase())
-      .map(m => m.name);
+    const nextCities = getCitiesForState(newUf);
     if (newUf === 'DF' && nextCities.includes('Brasília')) {
       setSelectedCity('Brasília');
     } else {
