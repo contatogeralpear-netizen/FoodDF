@@ -682,3 +682,569 @@
 }
 
 
+
+/* Gestão avançada de Pedidos, Faturamento, Cancelados e Compartilhar Andamento */
+.admin-stats.six {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.admin-stat.is-revenue {
+  background: linear-gradient(145deg, #eefaf2 0%, #ffffff 100%);
+  border-color: #9be0b1;
+}
+
+.admin-stat.is-revenue > span {
+  background: #d8f5e1;
+  color: #15803d;
+}
+
+.admin-stat.is-revenue strong {
+  color: #15803d;
+}
+
+.admin-stat.is-cancelled {
+  background: linear-gradient(145deg, #fff1f2 0%, #ffffff 100%);
+  border-color: #fda4af;
+}
+
+.admin-stat.is-cancelled > span {
+  background: #ffe4e6;
+  color: #be123c;
+}
+
+.admin-stat.is-cancelled strong {
+  color: #be123c;
+}
+
+.orders-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 20px;
+  margin-bottom: 18px;
+}
+
+.orders-toolbar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.orders-period-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.orders-filter-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #5b3854;
+}
+
+.orders-period-pills,
+.orders-status-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.orders-period-pills button,
+.orders-status-pills button {
+  padding: 7px 13px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  background: #f6eff7;
+  color: #5a3852;
+  border: 1px solid #e7d9ea;
+  transition: all 0.15s ease;
+}
+
+.orders-period-pills button:hover,
+.orders-status-pills button:hover {
+  border-color: #ff9c66;
+  color: #e85600;
+}
+
+.orders-period-pills button.active,
+.orders-status-pills button.active {
+  background: #ff5900;
+  border-color: #ff5900;
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(255, 89, 0, 0.25);
+}
+
+.orders-custom-dates {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #fbf7fc;
+  border: 1px solid #eaddeb;
+}
+
+.orders-custom-dates label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #5a3852;
+}
+
+.orders-custom-dates input {
+  height: 38px;
+  padding: 0 11px;
+  border-radius: 8px;
+  border: 1px solid #d9c9dc;
+  background: #ffffff;
+  font-size: 13px;
+  color: #2b1126;
+}
+
+.orders-filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  border-top: 1px solid #f1e7f3;
+}
+
+.orders-search-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 260px;
+  max-width: 380px;
+}
+
+.orders-search-input svg:first-child {
+  position: absolute;
+  left: 12px;
+  color: #8b6c86;
+  pointer-events: none;
+}
+
+.orders-search-input input {
+  width: 100%;
+  height: 38px;
+  padding: 0 32px 0 36px;
+  border-radius: 9px;
+  border: 1px solid #dfd0e2;
+  background: #fcf9fd;
+  font-size: 13px;
+  color: #2b1126;
+}
+
+.orders-search-input button {
+  position: absolute;
+  right: 8px;
+  color: #8b6c86;
+  display: grid;
+  place-items: center;
+}
+
+.orders-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.orders-kpi-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid #eaddeb;
+  box-shadow: 0 4px 14px rgba(56, 16, 47, 0.04);
+}
+
+.orders-kpi-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: #f5ebf7;
+  color: #5b2248;
+  flex-shrink: 0;
+}
+
+.orders-kpi-card p {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 800;
+  color: #775974;
+}
+
+.orders-kpi-card strong {
+  display: block;
+  font-size: 23px;
+  font-weight: 900;
+  color: #2a0d22;
+  line-height: 1.2;
+  margin: 2px 0;
+}
+
+.orders-kpi-card small {
+  display: block;
+  font-size: 11px;
+  color: #8c6f89;
+}
+
+.orders-kpi-card.is-revenue {
+  background: linear-gradient(145deg, #edfaf2 0%, #ffffff 100%);
+  border-color: #9be0b1;
+}
+
+.orders-kpi-card.is-revenue .orders-kpi-icon {
+  background: #d6f5e0;
+  color: #15803d;
+}
+
+.orders-kpi-card.is-revenue strong {
+  color: #15803d;
+}
+
+.orders-kpi-card.is-pending {
+  background: linear-gradient(145deg, #fff5ee 0%, #ffffff 100%);
+  border-color: #ffa776;
+}
+
+.orders-kpi-card.is-pending .orders-kpi-icon {
+  background: #ffe3d1;
+  color: #e85600;
+}
+
+.orders-kpi-card.is-pending strong {
+  color: #e85600;
+}
+
+.orders-kpi-card.is-cancelled {
+  background: linear-gradient(145deg, #fff1f2 0%, #ffffff 100%);
+  border-color: #fda4af;
+}
+
+.orders-kpi-card.is-cancelled .orders-kpi-icon {
+  background: #ffe4e6;
+  color: #be123c;
+}
+
+.orders-kpi-card.is-cancelled strong {
+  color: #be123c;
+}
+
+.order-card.is-cancelled {
+  opacity: 0.84;
+  border-color: #fecdd3;
+  background: #fffafb;
+}
+
+.order-status-pill.status-cancelled {
+  background: #ffe4e6;
+  color: #be123c;
+}
+
+.order-status-pill.status-completed {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.order-card ul li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.order-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.button.whatsapp-share {
+  background: #1da851;
+  color: #ffffff;
+  border: 1px solid #199447;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(29, 168, 81, 0.22);
+}
+
+.button.whatsapp-share:hover:not(:disabled) {
+  background: #178c43;
+}
+
+.order-secondary-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.order-secondary-actions > .button {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+.order-cancel-btn {
+  color: #b45309;
+  border-color: #fcd34d;
+}
+
+.order-delete-btn {
+  color: #be123c;
+  border-color: #fecdd3;
+}
+
+.order-delete-btn:hover:not(:disabled) {
+  background: #fff1f2;
+}
+
+.admin-modal.order-modal-wide {
+  width: min(640px, 95vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  text-align: left;
+  padding: 26px;
+}
+
+.share-modal-head h2 {
+  margin: 6px 0 4px;
+}
+
+.share-modal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: #e9f9ef;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.share-status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.share-status-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1.5px solid #e7d9ea;
+  background: #fcf9fd;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.share-status-option:hover {
+  border-color: #86efac;
+  background: #f4fdf7;
+}
+
+.share-status-option.selected {
+  border-color: #1da851;
+  background: #eefbf3;
+  box-shadow: 0 3px 10px rgba(29, 168, 81, 0.12);
+}
+
+.share-status-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: #ffffff;
+  color: #3b1332;
+  border: 1px solid #eaddeb;
+  flex-shrink: 0;
+}
+
+.share-status-option.selected .share-status-icon {
+  background: #1da851;
+  color: #ffffff;
+  border-color: #1da851;
+}
+
+.share-status-info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.share-status-info strong {
+  display: block;
+  font-size: 13.5px;
+  color: #260d20;
+}
+
+.share-status-info small {
+  display: block;
+  font-size: 11.5px;
+  color: #745670;
+}
+
+.share-quick-wa-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 11px;
+  border-radius: 8px;
+  background: #1da851;
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.share-quick-wa-btn:hover {
+  background: #15803d;
+}
+
+.share-message-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #4f2d49;
+}
+
+.share-message-preview textarea {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #d9c8dc;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  background: #ffffff;
+  color: #240d1e;
+}
+
+.share-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.edit-order-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.edit-order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #fbf7fc;
+  border: 1px solid #eaddeb;
+}
+
+.edit-order-items-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.edit-order-item-row {
+  display: grid;
+  grid-template-columns: 1fr 78px 110px auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.edit-order-item-row input {
+  height: 38px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid #d8c7db;
+  background: #ffffff;
+  font-size: 13px;
+}
+
+.edit-order-totals {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f4ecf6;
+  color: #36112d;
+}
+
+.edit-order-totals > div {
+  display: flex;
+  gap: 16px;
+  font-size: 12.5px;
+  color: #6b4b66;
+}
+
+.edit-order-totals strong {
+  font-size: 17px;
+  color: #260a1f;
+}
+
+.cancelled-revenue-warn {
+  color: #be123c;
+  font-weight: 700;
+  font-size: 11.5px;
+}
+
+@media (max-width: 1120px) {
+  .orders-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .admin-stats.six {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .orders-kpi-grid,
+  .admin-stats.six {
+    grid-template-columns: 1fr;
+  }
+  .share-status-option {
+    flex-wrap: wrap;
+  }
+  .share-quick-wa-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .edit-order-item-row {
+    grid-template-columns: 1fr 70px 95px auto;
+  }
+}

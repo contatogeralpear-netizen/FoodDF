@@ -1,5 +1,4 @@
 import { createHmac } from 'node:crypto';
-import { isOpenNowByHours, type ScheduleHour } from '@/lib/domain';
 import { database, canCreateOrders } from '@/lib/server/supabase';
 import { orderInputSchema, priceOrder } from '@/lib/server/order-validation';
 import { checkOrigin, jsonError, tokenHash } from '@/lib/server/http';
@@ -28,8 +27,7 @@ export async function POST(request: Request) {
   try {
     const restaurantResult = await db.from('restaurants').select('id,delivery_fee,whatsapp,pix_key,pix_name,pix_city,accepting_orders,is_demo,is_open,opening_hours,delivery_enabled,pickup_enabled,payment_methods,min_order').eq('id', input.restaurantId).eq('active', true).eq('status', 'published').single();
     const restaurant = restaurantResult.data;
-    const currentlyOpen = restaurant ? isOpenNowByHours(restaurant.opening_hours as ScheduleHour[] | undefined, restaurant.is_open) : false;
-    if (restaurantResult.error || !restaurant?.accepting_orders || !restaurant.whatsapp || !currentlyOpen) {
+    if (restaurantResult.error || !restaurant?.whatsapp) {
       return jsonError('O restaurante ainda não está recebendo pedidos.', 409);
     }
     if (!restaurant.payment_methods.includes(input.paymentMethod) || (input.fulfillment === 'delivery' ? !restaurant.delivery_enabled : !restaurant.pickup_enabled)) {

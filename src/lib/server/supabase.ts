@@ -6,7 +6,7 @@ export function hasDatabase() {
 }
 
 export function canCreateOrders() {
-  return Boolean(hasDatabase() && process.env.FOODDF_ACCEPT_ORDERS === 'true');
+  return Boolean(hasDatabase() && process.env.FOODDF_ACCEPT_ORDERS !== 'false');
 }
 
 export function database(privileged = false) {
