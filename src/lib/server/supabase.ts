@@ -6,7 +6,7 @@ export function hasDatabase() {
 }
 
 export function canCreateOrders() {
-  return Boolean((process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL) && process.env.SUPABASE_SECRET_KEY && process.env.FOODDF_ACCEPT_ORDERS === 'true');
+  return Boolean(hasDatabase() && process.env.FOODDF_ACCEPT_ORDERS === 'true');
 }
 
 export function database(privileged = false) {

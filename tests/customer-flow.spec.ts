@@ -26,7 +26,7 @@ test('localização, busca, carrinho persistente e pedido Pix fictício', async 
  await page.getByLabel('Nome',{exact:true}).fill('Cliente Teste');
  await page.getByLabel('WhatsApp',{exact:true}).fill('61999990000');
  await page.getByLabel('Rua, quadra e número').fill('SQS 308, Bloco B, 12');
- await page.getByLabel('Bairro',{exact:true}).fill('Asa Sul');
+ await page.getByLabel('Cidade',{exact:true}).selectOption('Asa Sul');
  await page.getByLabel('Observações').fill('Sem cebola, por favor');
  await expect(page.locator('.checkout-summary .total')).toContainText('39,90');
  await page.screenshot({path:`artifacts/details-${info.project.name}.png`,fullPage:true});

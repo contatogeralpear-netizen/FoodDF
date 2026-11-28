@@ -905,6 +905,24 @@
   overflow-y: auto;
 }
 
+.store-main {
+  padding-top: 38px;
+}
+
+.closed-dot {
+  background: #b55464 !important;
+}
+
+.delivery-cep-spin {
+  animation: deliverySpin 0.9s linear infinite;
+}
+
+@keyframes deliverySpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 640px) {
   .modal-backdrop-top {
     padding-top: 28px !important;

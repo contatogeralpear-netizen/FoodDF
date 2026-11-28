@@ -1,6 +1,8 @@
+import { createHmac } from 'node:crypto';
+import { isOpenNowByHours, type ScheduleHour } from '@/lib/domain';
 import { database, canCreateOrders } from '@/lib/server/supabase';
 import { orderInputSchema, priceOrder } from '@/lib/server/order-validation';
-import { checkOrigin, jsonError, rateLimit, tokenHash } from '@/lib/server/http';
+import { checkOrigin, jsonError, tokenHash } from '@/lib/server/http';
 
 export const runtime = 'nodejs';
 export async function POST(request: Request) {
@@ -17,39 +19,64 @@ export async function POST(request: Request) {
   const parsed = orderInputSchema.safeParse(raw);
   if (!parsed.success) return jsonError(parsed.error.issues[0]?.message || 'Confira os dados do pedido.');
   const input = parsed.data;
-  const db = database(true);
+  const db = database();
   const accessHash = tokenHash(input.accessToken);
   const fingerprint = tokenHash(JSON.stringify({ ...input, accessToken: undefined }));
-  const responseFor = (order: { id: string; reference: number; subtotal: number; delivery_fee: number; total: number; status: string; payment_status: string }) => Response.json({ orderId: order.id, reference: `FD${order.reference}`, subtotal: order.subtotal, deliveryFee: order.delivery_fee, total: order.total, status: order.status, paymentStatus: order.payment_status, accessToken: input.accessToken }, { headers: { 'Cache-Control': 'no-store' } });
+  const ip = request.headers.get('x-vercel-forwarded-for') || request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'local';
+  const bucketKey = createHmac('sha256', process.env.SUPABASE_SECRET_KEY || 'fooddf-orders-rate').update(`orders:${ip}`).digest('hex');
+
   try {
-    const previous = await db.from('orders').select('id,reference,subtotal,delivery_fee,total,status,payment_status,access_token_hash,request_hash').eq('request_id', input.requestId).maybeSingle();
-    if (previous.error) throw new Error('Database unavailable');
-    if (previous.data) {
-      if (previous.data.access_token_hash !== accessHash || previous.data.request_hash !== fingerprint) return jsonError('Este pedido já foi registrado com outros dados. Revise e inicie um novo envio.', 409);
-      return responseFor(previous.data);
-    }
-    if (!(await rateLimit(request, 'orders', 10))) return jsonError('Muitas tentativas. Aguarde um minuto e tente novamente.', 429);
-    const restaurantResult = await db.from('restaurants').select('id,delivery_fee,whatsapp,pix_key,pix_name,pix_city,accepting_orders,is_demo,is_open,delivery_enabled,pickup_enabled,payment_methods,min_order').eq('id', input.restaurantId).eq('active', true).eq('status', 'published').single();
+    const restaurantResult = await db.from('restaurants').select('id,delivery_fee,whatsapp,pix_key,pix_name,pix_city,accepting_orders,is_demo,is_open,opening_hours,delivery_enabled,pickup_enabled,payment_methods,min_order').eq('id', input.restaurantId).eq('active', true).eq('status', 'published').single();
     const restaurant = restaurantResult.data;
-    if (restaurantResult.error || !restaurant?.accepting_orders || !restaurant.whatsapp || restaurant.is_demo || !restaurant.is_open) return jsonError('O restaurante ainda não está recebendo pedidos.', 409);
-    if(!restaurant.payment_methods.includes(input.paymentMethod)||(input.fulfillment==='delivery'?!restaurant.delivery_enabled:!restaurant.pickup_enabled))return jsonError('Forma de pagamento ou entrega indisponível.',409);
-    if (input.paymentMethod === 'pix' && (!restaurant.pix_key || !restaurant.pix_name || !restaurant.pix_city)) return jsonError('Pix indisponível. Escolha outra forma de pagamento.', 409);
+    const currentlyOpen = restaurant ? isOpenNowByHours(restaurant.opening_hours as ScheduleHour[] | undefined, restaurant.is_open) : false;
+    if (restaurantResult.error || !restaurant?.accepting_orders || !restaurant.whatsapp || !currentlyOpen) {
+      return jsonError('O restaurante ainda não está recebendo pedidos.', 409);
+    }
+    if (!restaurant.payment_methods.includes(input.paymentMethod) || (input.fulfillment === 'delivery' ? !restaurant.delivery_enabled : !restaurant.pickup_enabled)) {
+      return jsonError('Forma de pagamento ou entrega indisponível.', 409);
+    }
+    if (input.paymentMethod === 'pix' && !restaurant.is_demo && (!restaurant.pix_key || !restaurant.pix_name)) {
+      return jsonError('Pix indisponível. Escolha outra forma de pagamento.', 409);
+    }
     const productResult = await db.from('products').select('id,name,price,promo_price,extras').eq('restaurant_id', input.restaurantId).eq('active', true).in('id', input.items.map(item => item.productId));
     if (productResult.error) throw new Error('Catalog unavailable');
     let priced;
     try { priced = priceOrder(input, productResult.data, restaurant.delivery_fee); }
     catch (error) { return jsonError(error instanceof Error ? error.message : 'Não foi possível calcular o pedido.', 409); }
-    if(priced.subtotal<restaurant.min_order)return jsonError('O pedido não atingiu o valor mínimo do restaurante.',409);
-    const created = await db.from('orders').insert({
-      request_id: input.requestId, access_token_hash: accessHash, request_hash: fingerprint,
-      restaurant_id: input.restaurantId, customer_name: input.customer.name, customer_phone: input.customer.phone,
-      fulfillment: input.fulfillment, address: input.fulfillment === 'delivery' ? input.address : null,
-      notes: input.notes, payment_method: input.paymentMethod, change_for: input.changeFor,
-      items: priced.items, subtotal: priced.subtotal, delivery_fee: priced.deliveryFee, total: priced.total,
-    }).select('id,reference,subtotal,delivery_fee,total,status,payment_status').single();
-    if (created.error?.code === '23505') return jsonError('Pedido em processamento. Tente novamente com os mesmos dados.', 409);
-    if (created.error || !created.data) throw new Error('Order insert failed');
-    return responseFor(created.data);
+    if (priced.subtotal < restaurant.min_order) return jsonError('O pedido não atingiu o valor mínimo do restaurante.', 409);
+
+    const { data: rpcData, error: rpcError } = await db.rpc('fooddf_place_order', {
+      p_bucket_key: bucketKey,
+      p_request_id: input.requestId,
+      p_access_token_hash: accessHash,
+      p_request_hash: fingerprint,
+      p_restaurant_id: input.restaurantId,
+      p_customer_name: input.customer.name,
+      p_customer_phone: input.customer.phone,
+      p_fulfillment: input.fulfillment,
+      p_address: input.fulfillment === 'delivery' ? input.address : '',
+      p_notes: input.notes,
+      p_payment_method: input.paymentMethod,
+      p_change_for: input.changeFor,
+      p_items: priced.items,
+      p_subtotal: priced.subtotal,
+      p_delivery_fee: priced.deliveryFee,
+      p_total: priced.total,
+    });
+    if (rpcError || !rpcData) throw new Error('Order insert failed');
+    const order = rpcData as { error?: string; status_code?: number; id: string; reference: number; subtotal: number; delivery_fee: number; total: number; status: string; payment_status: string };
+    if (order.error) return jsonError(order.error, order.status_code || 409);
+
+    return Response.json({
+      orderId: order.id,
+      reference: `FD${order.reference}`,
+      subtotal: order.subtotal,
+      deliveryFee: order.delivery_fee,
+      total: order.total,
+      status: order.status,
+      paymentStatus: order.payment_status,
+      accessToken: input.accessToken,
+    }, { headers: { 'Cache-Control': 'no-store' } });
   } catch {
     return jsonError('Não foi possível registrar o pedido. Tente novamente; seu carrinho foi mantido.', 503);
   }
