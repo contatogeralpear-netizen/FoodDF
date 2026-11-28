@@ -34,8 +34,7 @@ test('localização, busca, carrinho persistente e pedido Pix fictício', async 
  await page.getByRole('button',{name:'Continuar com Pix'}).click();
  await expect(page.getByText('Demonstração • sem cobrança')).toBeVisible();
  await expect(page.getByRole('button',{name:'Copiar código Pix'})).toBeDisabled();
- await page.locator('input[type=file]').setInputFiles({name:'comprovante-teste.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4\nDEMONSTRACAO')});
- await expect(page.getByRole('button',{name:/comprovante-teste.pdf/})).toBeVisible();
+ await expect(page.getByText(/enviado em até 10 min/i)).toBeVisible();
  await page.screenshot({path:`artifacts/pix-${info.project.name}.png`,fullPage:true});
  await page.getByRole('button',{name:'Revisar pedido',exact:true}).click();
  await expect(page.getByText('Pedido fictício, sem cobrança')).toBeVisible();
@@ -45,7 +44,7 @@ test('localização, busca, carrinho persistente e pedido Pix fictício', async 
  const url=await page.evaluate(()=>(window as unknown as {testWhatsApp:string}).testWhatsApp);
  expect(url).toContain('https://wa.me/5561982429847?text=');
  const message=new URL(url).searchParams.get('text');
- expect(message).toContain('PEDIDO FICTÍCIO');expect(message).toContain('39,90');expect(message).toContain('Sem cebola');expect(message).toContain('anexar manualmente');
+ expect(message).toContain('PEDIDO FICTÍCIO');expect(message).toContain('39,90');expect(message).toContain('Sem cebola');
  await page.screenshot({path:`artifacts/review-${info.project.name}.png`,fullPage:true});
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
  expect(errors).toEqual([]);

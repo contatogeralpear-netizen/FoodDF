@@ -7,6 +7,7 @@ import {
   Check,
   CheckCircle2,
   Clock3,
+  Copy,
   DollarSign,
   Edit3,
   ExternalLink,
@@ -898,9 +899,42 @@ export default function OrdersPanel({
                 </div>
 
                 <div className="order-customer">
-                  <strong>{o.customer_name}</strong>
-                  <span>WhatsApp: {formatContactPhone(o.customer_phone)}</span>
-                  {o.address && <span>{o.address}</span>}
+                  <strong className="order-customer-name">{o.customer_name}</strong>
+                  <div className="order-whatsapp-highlight">
+                    <span className="order-wa-icon" aria-hidden="true">
+                      <MessageCircle size={17} />
+                    </span>
+                    <div className="order-wa-text">
+                      <small>WhatsApp do cliente</small>
+                      <strong>{formatContactPhone(o.customer_phone)}</strong>
+                    </div>
+                    <div className="order-wa-actions">
+                      <button
+                        type="button"
+                        className="order-wa-mini-btn"
+                        title="Copiar WhatsApp do cliente"
+                        onClick={async () => {
+                          try {
+                            await navigator.clipboard.writeText(formatContactPhone(o.customer_phone));
+                            setToast(`WhatsApp ${formatContactPhone(o.customer_phone)} copiado!`);
+                          } catch {}
+                        }}
+                      >
+                        <Copy size={13} />
+                        Copiar
+                      </button>
+                      <a
+                        className="order-wa-mini-btn is-chat"
+                        href={`https://wa.me/${toWhatsappPhone(o.customer_phone)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Abrir conversa no WhatsApp"
+                      >
+                        Abrir
+                      </a>
+                    </div>
+                  </div>
+                  {o.address && <span className="order-customer-address">{o.address}</span>}
                 </div>
 
                 <ul>

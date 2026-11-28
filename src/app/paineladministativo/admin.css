@@ -4351,3 +4351,113 @@
   font-weight: 800;
   vertical-align: middle;
 }
+
+/* Destaque visual do WhatsApp do cliente nos cards de Pedidos */
+.order-customer-name {
+  display: block;
+  font-size: 15.5px;
+  font-weight: 900;
+  color: #2b0e24;
+  margin-bottom: 4px;
+}
+
+.order-whatsapp-highlight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 8px;
+  padding: 9px 12px;
+  border-radius: 11px;
+  background: linear-gradient(90deg, #e8fbf0 0%, #f3fdf7 100%);
+  border: 1.5px solid #4ade80;
+  box-shadow: 0 3px 10px rgba(22, 163, 74, 0.08);
+}
+
+.order-wa-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: #16a34a;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.order-wa-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.order-wa-text small {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #15803d;
+  line-height: 1.1;
+}
+
+.order-wa-text strong {
+  display: block;
+  font-size: 15.5px;
+  font-weight: 900;
+  color: #064e3b;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+  margin-top: 1px;
+}
+
+.order-wa-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.order-wa-mini-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 9px;
+  border-radius: 7px;
+  background: #ffffff;
+  border: 1px solid #86efac;
+  color: #166534;
+  font-size: 11.5px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: all 0.14s ease;
+}
+
+.order-wa-mini-btn:hover {
+  background: #dcfce7;
+}
+
+.order-wa-mini-btn.is-chat {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #ffffff;
+}
+
+.order-wa-mini-btn.is-chat:hover {
+  background: #15803d;
+}
+
+.order-customer-address {
+  display: block;
+  font-size: 12.5px;
+  color: #6b5169;
+  line-height: 1.4;
+}
+
+@media (max-width: 540px) {
+  .order-whatsapp-highlight {
+    flex-wrap: wrap;
+  }
+  .order-wa-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
