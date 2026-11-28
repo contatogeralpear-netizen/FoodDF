@@ -2380,3 +2380,626 @@
   margin-left: 4px;
   color: #8f4f00;
 }
+
+/* =========================================================
+   NOVO LAYOUT DO CARDÁPIO DO RESTAURANTE (BANNER + PROMOÇÃO + CARDS ALINHADOS)
+   ========================================================= */
+
+.store-redesign-page {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.store-top-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.store-top-logo {
+  width: 78px;
+  height: 78px;
+  border-radius: 18px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #3d0c28;
+  box-shadow: 0 6px 18px rgba(56, 16, 47, 0.12);
+}
+
+.store-top-logo .food-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.store-top-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.store-top-info h1 {
+  font-size: clamp(28px, 3vw, 38px);
+  font-weight: 900;
+  color: #3f0b27;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.store-top-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.store-kind-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 13px;
+  border-radius: 8px;
+  background: #f0e6f3;
+  color: #553754;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.store-open-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #5b4358;
+}
+
+.store-open-pill.is-open {
+  color: #1f7a38;
+}
+
+.store-meta-divider {
+  width: 1px;
+  height: 16px;
+  background: #dfd0e1;
+}
+
+.store-city-inline,
+.store-rating-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #6b4e67;
+}
+
+.store-share-btn-new {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 15px;
+  border-radius: 10px;
+  border: 1.5px solid #ed6c27;
+  background: #fffdfb;
+  color: #e25306;
+  font-size: 13.5px;
+  font-weight: 800;
+  transition: all 0.16s ease;
+}
+
+.store-share-btn-new:hover {
+  background: #fff3eb;
+  transform: translateY(-1px);
+}
+
+/* BANNER PROMOCIONAL PANORÂMICO (IDÊNTICO AO LAYOUT DE REFERÊNCIA) */
+.store-promo-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 296px;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #490b27;
+  margin-bottom: 26px;
+  text-decoration: none;
+  color: #ffffff;
+  box-shadow: 0 12px 32px rgba(56, 16, 47, 0.12);
+}
+
+.store-promo-banner.is-clickable {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.store-promo-banner.is-clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px rgba(56, 16, 47, 0.18);
+}
+
+.store-promo-photo {
+  position: absolute;
+  inset: 0 0 0 28%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.store-promo-photo .food-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center right;
+}
+
+.store-promo-curve {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 49%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.store-promo-copy {
+  position: relative;
+  z-index: 3;
+  width: 46%;
+  padding: 28px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.store-promo-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.store-promo-kicker em {
+  font-family: var(--font-nunito), sans-serif;
+  font-style: italic;
+  font-size: clamp(20px, 2vw, 27px);
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.promo-banner-sparks {
+  margin-top: -10px;
+}
+
+.store-promo-title {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: clamp(32px, 3.6vw, 48px);
+  font-weight: 800;
+  color: #f6b06b;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.store-promo-info {
+  font-size: clamp(14px, 1.35vw, 18px);
+  font-weight: 500;
+  color: #fff6f0;
+  line-height: 1.35;
+  margin: 8px 0 14px;
+  max-width: 390px;
+}
+
+.store-promo-from {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  font-size: 19px;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.store-promo-from span {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.store-promo-from del {
+  position: relative;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 24px;
+  color: #ffffff;
+}
+
+.store-promo-from del::after {
+  content: '';
+  position: absolute;
+  left: -3px;
+  right: -3px;
+  top: 52%;
+  height: 3.2px;
+  background: #ff2a2a;
+  border-radius: 99px;
+  transform: rotate(-4deg);
+}
+
+.store-promo-to-pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 26px 9px;
+  border-radius: 999px;
+  background: #f25c05;
+  color: #ffffff;
+  box-shadow: 0 8px 22px rgba(242, 92, 5, 0.36);
+}
+
+.store-promo-to-pill span {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: clamp(20px, 2vw, 26px);
+  font-weight: 800;
+}
+
+.store-promo-to-pill strong {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: clamp(24px, 2.5vw, 33px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.store-hero-full {
+  margin-bottom: 26px;
+}
+
+/* CORPO DO CARDÁPIO E FILTROS */
+.store-layout-aligned {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+.menu-tools-clean {
+  margin: 0 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.menu-tools-clean > .search-field {
+  flex: 1 1 230px;
+  background: #f1e8f2;
+  border-radius: 10px;
+  height: 44px;
+  padding: 0 14px;
+}
+
+.menu-tools-clean .category-tabs {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.menu-tools-clean .category-tabs button {
+  height: 40px;
+  padding: 0 15px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  font-weight: 800;
+  background: #f1e8f2;
+  color: #3d112d;
+  transition: all 0.15s ease;
+}
+
+.menu-tools-clean .category-tabs button.selected {
+  background: #f25c05;
+  color: #ffffff;
+}
+
+/* CARDS DE REFEIÇÕES TODOS DO MESMO TAMANHO E ESTRITAMENTE ALINHADOS */
+.product-grid-uniform {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+.uniform-meal-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f4ecf7;
+  border: 1.5px solid #e9dfec;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.uniform-meal-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(56, 16, 47, 0.1);
+}
+
+.uniform-meal-card.is-promo-card {
+  background: #fff7ef;
+  border-color: #f3a163;
+}
+
+.uniform-meal-card.is-highlighted-meal {
+  box-shadow: 0 0 0 3px #f25c05, 0 12px 28px rgba(242, 92, 5, 0.25);
+}
+
+.uniform-meal-photo {
+  position: relative;
+  width: 100%;
+  height: 174px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #2b1124;
+}
+
+.uniform-meal-photo .food-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* SELO PROMOÇÃO NO CANTO SUPERIOR DIREITO DO CARD */
+.promo-corner-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  padding: 5px 13px;
+  border-radius: 999px;
+  background: #f25c05;
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 800;
+  line-height: 1.1;
+  box-shadow: 0 4px 12px rgba(242, 92, 5, 0.38);
+}
+
+.uniform-meal-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: 14px 16px 15px;
+}
+
+.uniform-meal-info h3 {
+  font-size: 18.5px;
+  font-weight: 900;
+  color: #350d26;
+  line-height: 1.22;
+  min-height: 23px;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.uniform-meal-info > p {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #745972;
+  margin: 5px 0 0;
+  height: 35px;
+  min-height: 35px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.uniform-meal-info .product-rating-row {
+  margin: 8px 0 10px;
+}
+
+.uniform-meal-bottom {
+  margin-top: auto;
+  min-height: 46px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.meal-price-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  line-height: 1.15;
+}
+
+.meal-price-from {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #5f455c;
+  margin-bottom: 2px;
+}
+
+.meal-price-from del.old-price {
+  display: inline;
+  font-size: 13px;
+  font-weight: 800;
+  color: #4f374c;
+  text-decoration: line-through;
+  text-decoration-color: #e02424;
+  text-decoration-thickness: 2px;
+}
+
+.meal-price-to,
+.meal-price-regular {
+  font-size: 21px;
+  font-weight: 900;
+  color: #f25c05;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.uniform-meal-bottom .add-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: #f25c05;
+  color: #ffffff;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(242, 92, 5, 0.24);
+}
+
+.uniform-meal-bottom .add-button:hover {
+  background: #dc4f00;
+}
+
+/* COLUNA LATERAL DIREITA ALINHADA AO NOVO LAYOUT */
+.store-aside-aligned .cart-panel {
+  position: static;
+}
+
+.delivery-card-clean {
+  margin-top: 16px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: #f3eaf6;
+  border: 1px solid #e6d7ea;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.delivery-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+}
+
+.delivery-card-top > svg {
+  color: #591c48;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.delivery-card-top strong {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 900;
+  color: #350d26;
+}
+
+.delivery-card-top p {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  color: #70536d;
+}
+
+.delivery-card-metrics {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e2d1e6;
+}
+
+.delivery-card-metrics span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13.5px;
+  color: #3a102b;
+}
+
+.delivery-card-metrics i {
+  width: 1px;
+  height: 18px;
+  background: #d8c3dd;
+}
+
+.store-aside-footnote {
+  margin-top: 14px;
+  font-size: 11.5px;
+  color: #7b6078;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+@media (max-width: 1120px) {
+  .store-layout-aligned {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+  .product-grid-uniform {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .store-promo-copy {
+    width: 52%;
+    padding: 24px 28px;
+  }
+  .store-promo-curve {
+    width: 55%;
+  }
+}
+
+@media (max-width: 850px) {
+  .store-layout-aligned {
+    grid-template-columns: 1fr;
+  }
+  .product-grid-uniform {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .store-top-header {
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .store-top-logo {
+    width: 62px;
+    height: 62px;
+    border-radius: 14px;
+  }
+  .store-meta-divider {
+    display: none;
+  }
+  .store-promo-banner {
+    flex-direction: column;
+    min-height: auto;
+  }
+  .store-promo-curve {
+    display: none;
+  }
+  .store-promo-copy {
+    width: 100%;
+    padding: 22px 20px 18px;
+    background: #490b27;
+  }
+  .store-promo-photo {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: 200px;
+  }
+  .product-grid-uniform {
+    grid-template-columns: 1fr;
+  }
+  .uniform-meal-photo {
+    height: 190px;
+  }
+}

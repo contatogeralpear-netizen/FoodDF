@@ -4244,3 +4244,110 @@
     flex-wrap: wrap;
   }
 }
+
+/* Editor de Banner Promocional e Selo Promoção no Painel do Restaurante */
+.admin-banner-editor-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-banner-specs-box {
+  margin-top: 16px;
+  padding: 15px 18px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fff6ee 0%, #fcf7fd 100%);
+  border: 1px solid #f5cba7;
+}
+
+.admin-banner-specs-box h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 900;
+  color: #490b27;
+}
+
+.admin-banner-specs-box ul {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 12.5px;
+  color: #5c3a55;
+}
+
+.admin-banner-specs-box code {
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: #ffffff;
+  border: 1px solid #ead7eb;
+  font-weight: 800;
+  color: #c2410c;
+}
+
+.admin-upload.banner-upload .admin-upload-image {
+  width: 100%;
+  max-width: 480px;
+  height: 156px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.admin-banner-link-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-banner-link-row input {
+  flex: 1 1 auto;
+}
+
+.admin-meal-link-box {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 11px;
+  background: #fbf6fc;
+  border: 1px solid #e7d7ea;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 12.5px;
+  color: #4f2d49;
+}
+
+.admin-meal-link-box > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-meal-link-box > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-meal-link-box input {
+  flex: 1 1 auto;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid #dac8dd;
+  background: #ffffff;
+  font-size: 12px;
+  color: #5b3a55;
+}
+
+.admin-promo-mini-tag {
+  display: inline-block;
+  margin-left: 7px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #ff5900;
+  color: #ffffff;
+  font-size: 10.5px;
+  font-weight: 800;
+  vertical-align: middle;
+}

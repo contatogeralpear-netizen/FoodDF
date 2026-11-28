@@ -4,10 +4,11 @@ import Image from 'next/image';
 import SiteFooter from './footer';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, Bike, Check, ChevronDown, ChevronRight, CircleHelp, Clock3, Copy, CreditCard, Flame, Info, LoaderCircle, MapPin, MessageCircle, Minus, Banknote, Paperclip, Pencil, Plus, QrCode, Search, ShieldCheck, ShoppingBag, Sparkles, Star, Store, Trash2, UserRound, UtensilsCrossed, X, CheckCircle2, Share2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Bike, Check, ChevronDown, ChevronRight, CircleHelp, Clock3, Copy, CreditCard, Flame, Info, LoaderCircle, MapPin, MessageCircle, Minus, Banknote, Paperclip, Pencil, Plus, QrCode, Search, ShieldCheck, ShoppingBag, Sparkles, Star, Store, Trash2, Truck, UserRound, UtensilsCrossed, X, CheckCircle2, Share2 } from 'lucide-react';
 import QRCode from 'qrcode';
 import { cartItems, trackCatalog } from '@/lib/cart';
 import { FoodImage } from './food-image';
+import { PromoHeroBanner } from './promo-banner';
 import TrackOrder from './track-order';
 import { getCitiesForState } from '@/lib/locations';
 import { demoProducts, formatPhone, isOpenNowByHours, money, pixPayload, restaurantPath, states, type Customer, type Product, type PublicCatalog, type Restaurant } from '@/lib/domain';
@@ -125,8 +126,8 @@ export default function FoodApp({ initialRestaurants = [], initialCatalog, initi
   const fileInput = useRef<HTMLInputElement>(null); const heading = useRef<HTMLHeadingElement>(null);
   const catalogRequest = useRef(0);
   const orderRequest = useRef<{ requestId: string; accessToken: string } | null>(null);
-  const [customProduct, setCustomProduct] = useState<Product | null>(null); const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
-  const categories = ['Todos', ...new Set(products.map(p => p.category))];
+  const [customProduct, setCustomProduct] = useState<Product | null>(null); const [selectedExtras, setSelectedExtras] = useState<string[]>([]); const [highlightedMealId, setHighlightedMealId] = useState('');
+  const categories = ['Todos', 'Promoção', ...new Set(products.map(p => p.category).filter(c => c !== 'Promoção'))];
   const list = cartItems(products, cart);
   const count = list.reduce((sum, p) => sum + cart[p.id], 0);
   const subtotal = list.reduce((sum, p) => sum + p.price * cart[p.id], 0);
@@ -136,7 +137,7 @@ export default function FoodApp({ initialRestaurants = [], initialCatalog, initi
   const deliveryCities = useMemo(() => { const base = getCitiesForState(deliveryUf || 'DF'); const df = getCitiesForState('DF'); return deliveryUf === 'DF' ? df : [...new Set([...base, ...df])]; }, [deliveryUf]);
   const storeIsOpen = restaurant ? isOpenNowByHours(restaurant.openingHours, restaurant.isOpen !== false) : true;
   const filteredRestaurants = restaurants.filter(r => r.state === state && (!city || r.city === city) && r.name.toLocaleLowerCase('pt-BR').includes(search.toLocaleLowerCase('pt-BR')));
-  const filteredProducts = products.filter(p => (category === 'Todos' || p.category === category) && `${p.name} ${p.description}`.toLocaleLowerCase('pt-BR').includes(search.toLocaleLowerCase('pt-BR')));
+  const filteredProducts = products.filter(p => (category === 'Todos' || (category === 'Promoção' ? Boolean(p.isPromo || p.originalPrice) : p.category === category)) && `${p.name} ${p.description}`.toLocaleLowerCase('pt-BR').includes(search.toLocaleLowerCase('pt-BR')));
   const fullAddress = [customer.address, customer.complement, customer.city || restaurant?.city, deliveryUf || restaurant?.state, customer.cep ? `CEP ${customer.cep}` : ''].filter(Boolean).join(', ');
 
   async function handleShare() {
@@ -150,6 +151,36 @@ export default function FoodApp({ initialRestaurants = [], initialCatalog, initi
     try { await navigator.clipboard.writeText(shareUrl); setToast('Link do cardápio copiado!'); } catch { }
     setShareOpen(true);
   }
+
+  function handleBannerMealLink(link: string): boolean | undefined {
+    const hashMatch = link.match(/#refeicao-([a-zA-Z0-9_-]+)/);
+    if (hashMatch) {
+      const mealId = hashMatch[1];
+      setCategory('Todos');
+      setSearch('');
+      setHighlightedMealId(mealId);
+      setTimeout(() => {
+        const el = document.getElementById(`refeicao-${mealId}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 60);
+      setTimeout(() => setHighlightedMealId(''), 3500);
+      return true;
+    }
+    return undefined;
+  }
+
+  useEffect(() => {
+    const hashMatch = window.location.hash.match(/^#refeicao-([a-zA-Z0-9_-]+)$/);
+    if (hashMatch) {
+      const mealId = hashMatch[1];
+      setHighlightedMealId(mealId);
+      const t1 = setTimeout(() => {
+        document.getElementById(`refeicao-${mealId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 220);
+      const t2 = setTimeout(() => setHighlightedMealId(''), 3800);
+      return () => { clearTimeout(t1); clearTimeout(t2); };
+    }
+  }, [restaurant]);
 
   useEffect(() => {
     try { const saved = JSON.parse(localStorage.getItem('fooddf-cart-v1') || 'null'); if (saved && typeof saved.restaurant === 'string' && saved.items && typeof saved.items === 'object') { const safe: Cart = {}; for (const [id, q] of Object.entries(saved.items)) if (typeof q === 'number' && Number.isInteger(q) && q > 0 && q <= 20) safe[id] = q; if (initialCatalog) { const matching: Cart = {}; if (saved.restaurant === initialCatalog.restaurant.slug) for (const p of cartItems(initialCatalog.products, safe)) matching[p.id] = safe[p.id]; setCart(matching); } else setCart(safe); } }
@@ -350,15 +381,250 @@ export default function FoodApp({ initialRestaurants = [], initialCatalog, initi
             </ol>
           </div>
         </section>
-      </div> : step === 'menu' ? <div key={`menu-${restaurant.id}`} className="step-transition">
-        <button className="text-button breadcrumb" onClick={goHome}><ArrowLeft size={16} />Restaurantes em {restaurant.city}<span>/</span><b>{restaurant.name}</b></button>
-        <div className="store-layout"><div className="store-content"><div className="store-heading"><FoodImage kind={restaurant.logo || "logo"} label={restaurant.name} /><div><div className="store-name-row"><h1 ref={heading} tabIndex={-1}>{restaurant.name}</h1>{restaurant.isDemo && <span className="demo-small">Modelo</span>}<button type="button" className="store-share-btn" onClick={handleShare} aria-label={`Compartilhar cardápio de ${restaurant.name}`} title="Compartilhar cardápio"><Share2 size={16} /><span>Compartilhar</span></button></div><div className="store-meta"><span><Star size={15} fill="currentColor" /> {restaurant.reviewCount && restaurant.rating ? `${restaurant.rating.toFixed(1).replace('.', ',')} · ${restaurant.reviewCount} ${restaurant.reviewCount === 1 ? 'avaliação' : 'avaliações'}` : restaurant.isDemo ? '4,9 · 28 avaliações' : 'Restaurante local'}</span><i /><span><Clock3 size={15} /> {restaurant.estimatedTime || 'Consulte o prazo'}</span><i /><span><Bike size={16} />{restaurant.deliveryFee > 0 ? `Entrega ${money(restaurant.deliveryFee)}` : 'Frete Grátis'}</span></div><div className="store-open"><span className={`open-dot ${!storeIsOpen ? 'closed-dot' : ''}`} />{!storeIsOpen ? 'Fechado' : restaurant.isDemo ? 'Aberto para testar' : 'Aberto agora'}<span>•</span><span>{restaurant.city} / {restaurant.state}</span></div></div></div>
-          <section className="store-hero"><div><span>FOME DE COISA BOA?</span><h2>{restaurant.isDemo ? <>Feito na brasa.<br /><em>Do seu jeito.</em></> : <>Seu próximo<br /><em>favorito.</em></>}</h2><p>{restaurant.description || 'Ingredientes de verdade. Sabor de sobra.'}</p></div><FoodImage kind={restaurant.cover || "hero"} label={restaurant.name} /></section>
-          <div className="menu-tools"><label className="search-field"><Search size={19} /><input aria-label="Buscar no cardápio" placeholder="Buscar no cardápio" value={search} onChange={e => setSearch(e.target.value)} />{search && <button onClick={() => setSearch('')} aria-label="Limpar busca"><X size={15} /></button>}</label><div className="category-tabs" aria-label="Categorias do cardápio">{categories.map(c => <button key={c} aria-pressed={category === c} className={category === c ? 'selected' : ''} onClick={() => setCategory(c)}>{c}</button>)}</div></div>
-          <div className="menu-title"><h2>{category === 'Todos' ? 'Escolha seu favorito' : category}</h2><span>{filteredProducts.length} opções pra você</span></div>
-          <div className="product-grid">{filteredProducts.map(p => <article className="product-card" key={p.id}><div className="product-photo"><FoodImage kind={p.image} label={p.name} />{p.featured && <span className="popular-label"><Flame size={12} />Queridinho da casa</span>}</div><div className="product-info"><h3>{p.name}</h3><p>{p.description}{p.serves && p.serves > 1 && ` · Serve ${p.serves} pessoas`}</p>{p.reviewCount && p.rating ? <div className="product-rating-row" aria-label={`Avaliação média de ${p.name}: ${p.rating.toFixed(1).replace('.', ',')} de 5 estrelas em ${p.reviewCount} avaliações`}><span className="product-rating-stars" aria-hidden="true">{[1, 2, 3, 4, 5].map(s => <Star key={s} size={13} fill={s <= Math.round(p.rating || 0) ? '#ffb800' : 'none'} color={s <= Math.round(p.rating || 0) ? '#ffb800' : '#d7c5d2'} />)}</span><strong className="product-rating-score">{p.rating.toFixed(1).replace('.', ',')}</strong><small className="product-rating-count">({p.reviewCount} {p.reviewCount === 1 ? 'avaliação' : 'avaliações'})</small></div> : <div className="product-rating-row is-empty"><Star size={13} color="#bca5b3" /><small className="product-rating-count">Avalie ao pedir</small></div>}<div className="product-bottom"><strong>{p.originalPrice && <del className="old-price">{money(p.originalPrice)}</del>}{money(p.price)}</strong>{Quantity({ product: p })}</div></div></article>)}</div>{!filteredProducts.length && <div className="empty-results"><Search size={30} /><h3>Nenhum prato encontrado</h3><p>Tente outro termo ou categoria.</p><button className="text-button" onClick={() => { setSearch(''); setCategory('Todos') }}>Ver todo o cardápio</button></div>}
-          <div className="store-note"><Info size={16} />{restaurant.isDemo ? 'Restaurante fictício para você conhecer o FOODDF. Os valores e prazos são exemplos.' : 'Preços e disponibilidade sujeitos à confirmação do restaurante.'}</div></div>
-          <div className="store-aside">{CartPanel()}<div className="delivery-card"><MapPin size={22} /><div><strong>Da cozinha até você</strong><p>Entrega em {restaurant.city} / {restaurant.state}</p><small>O endereço é informado ao finalizar.</small></div></div><div className="store-address"><Store size={17} /><span>{restaurant.address}</span></div>{!!restaurant.minOrder && <p className="field-hint">Pedido mínimo: {money(restaurant.minOrder)}</p>}{!!restaurant.neighborhoods?.length && <p className="field-hint">Entregamos em: {restaurant.neighborhoods.join(", ")}</p>}{!!restaurant.openingHours?.length && <details className="store-hours"><summary>Horários de funcionamento</summary>{restaurant.openingHours.map(h => <p key={h.day}><b>{h.day}</b><span>{h.enabled ? `${h.open} – ${h.close}` : "Fechado"}</span></p>)}</details>}</div></div>
+      </div> : step === 'menu' ? <div key={`menu-${restaurant.id}`} className="step-transition store-redesign-page">
+        <header className="store-top-header">
+          <div className="store-top-logo">
+            <FoodImage kind={restaurant.logo || 'logo'} label={restaurant.name} />
+          </div>
+          <div className="store-top-info">
+            <h1 ref={heading} tabIndex={-1}>{restaurant.name}</h1>
+            <div className="store-top-meta">
+              <span className="store-kind-pill">
+                {restaurant.isDemo ? 'Cardápio demonstrativo' : (restaurant.cuisine || 'Cardápio digital')}
+              </span>
+              <span className={`store-open-pill ${storeIsOpen ? 'is-open' : 'is-closed'}`}>
+                <span className={`open-dot ${!storeIsOpen ? 'closed-dot' : ''}`} />
+                {storeIsOpen ? 'Aberto' : 'Fechado'}
+              </span>
+              <span className="store-meta-divider" aria-hidden="true" />
+              <span className="store-city-inline">
+                <MapPin size={15} />
+                {restaurant.city} · {restaurant.state}
+              </span>
+              {Boolean(restaurant.reviewCount && restaurant.rating && !restaurant.isDemo) && (
+                <>
+                  <span className="store-meta-divider" aria-hidden="true" />
+                  <span className="store-rating-inline">
+                    <Star size={14} fill="#ffb800" color="#ffb800" />
+                    {restaurant.rating?.toFixed(1).replace('.', ',')} ({restaurant.reviewCount})
+                  </span>
+                </>
+              )}
+              <span className="store-meta-divider" aria-hidden="true" />
+              <button
+                type="button"
+                className="store-share-btn-new"
+                onClick={handleShare}
+                aria-label={`Compartilhar cardápio de ${restaurant.name}`}
+              >
+                <Share2 size={15} />
+                <span>Compartilhar</span>
+              </button>
+            </div>
+          </div>
+        </header>
+
+        {restaurant.bannerEnabled && restaurant.bannerTitle ? (
+          <PromoHeroBanner
+            title={restaurant.bannerTitle}
+            info={restaurant.bannerInfo}
+            priceFrom={restaurant.bannerPriceFrom}
+            priceTo={restaurant.bannerPriceTo}
+            image={restaurant.bannerImage}
+            fallbackCover={restaurant.cover}
+            link={restaurant.bannerLink}
+            onActivateLink={handleBannerMealLink}
+          />
+        ) : (
+          <section className="store-hero store-hero-full">
+            <div>
+              <span>FOME DE COISA BOA?</span>
+              <h2>
+                {restaurant.isDemo ? (
+                  <>
+                    Feito na brasa.<br />
+                    <em>Do seu jeito.</em>
+                  </>
+                ) : (
+                  <>
+                    Seu próximo<br />
+                    <em>favorito.</em>
+                  </>
+                )}
+              </h2>
+              <p>{restaurant.description || 'Ingredientes de verdade. Sabor de sobra.'}</p>
+            </div>
+            <FoodImage kind={restaurant.cover || 'hero'} label={restaurant.name} />
+          </section>
+        )}
+
+        <div className="store-layout store-layout-aligned">
+          <div className="store-content">
+            <div className="menu-tools menu-tools-clean">
+              <label className="search-field">
+                <Search size={18} />
+                <input
+                  aria-label="Buscar no cardápio"
+                  placeholder="Buscar no cardápio"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                />
+                {search && (
+                  <button onClick={() => setSearch('')} aria-label="Limpar busca">
+                    <X size={15} />
+                  </button>
+                )}
+              </label>
+              <div className="category-tabs" aria-label="Categorias do cardápio">
+                {categories.map(c => (
+                  <button
+                    key={c}
+                    aria-pressed={category === c}
+                    className={category === c ? 'selected' : ''}
+                    onClick={() => setCategory(c)}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="product-grid product-grid-uniform">
+              {filteredProducts.map(p => {
+                const isPromo = Boolean(p.isPromo || p.originalPrice);
+                return (
+                  <article
+                    id={`refeicao-${p.id}`}
+                    className={`product-card uniform-meal-card ${isPromo ? 'is-promo-card' : ''} ${highlightedMealId === p.id ? 'is-highlighted-meal' : ''}`}
+                    key={p.id}
+                  >
+                    <div className="product-photo uniform-meal-photo">
+                      <FoodImage kind={p.image} label={p.name} />
+                      {isPromo ? (
+                        <span className="promo-corner-badge">Promoção</span>
+                      ) : (
+                        p.featured && (
+                          <span className="popular-label">
+                            <Flame size={12} />
+                            Queridinho da casa
+                          </span>
+                        )
+                      )}
+                    </div>
+
+                    <div className="product-info uniform-meal-info">
+                      <h3>{p.name}</h3>
+                      <p>
+                        {p.description}
+                        {p.serves && p.serves > 1 && ` · Serve ${p.serves} pessoas`}
+                      </p>
+
+                      {p.reviewCount && p.rating ? (
+                        <div
+                          className="product-rating-row"
+                          aria-label={`Avaliação média de ${p.name}: ${p.rating.toFixed(1).replace('.', ',')} de 5 estrelas em ${p.reviewCount} avaliações`}
+                        >
+                          <span className="product-rating-stars" aria-hidden="true">
+                            {[1, 2, 3, 4, 5].map(s => (
+                              <Star
+                                key={s}
+                                size={13}
+                                fill={s <= Math.round(p.rating || 0) ? '#ffb800' : 'none'}
+                                color={s <= Math.round(p.rating || 0) ? '#ffb800' : '#d7c5d2'}
+                              />
+                            ))}
+                          </span>
+                          <strong className="product-rating-score">{p.rating.toFixed(1).replace('.', ',')}</strong>
+                          <small className="product-rating-count">
+                            ({p.reviewCount} {p.reviewCount === 1 ? 'avaliação' : 'avaliações'})
+                          </small>
+                        </div>
+                      ) : (
+                        <div className="product-rating-row is-empty">
+                          <Star size={13} color="#bca5b3" />
+                          <small className="product-rating-count">Avalie ao pedir</small>
+                        </div>
+                      )}
+
+                      <div className="product-bottom uniform-meal-bottom">
+                        <div className="meal-price-block">
+                          {p.originalPrice ? (
+                            <>
+                              <span className="meal-price-from">
+                                De <del className="old-price">{money(p.originalPrice)}</del>
+                              </span>
+                              <strong className="meal-price-to">Por {money(p.price)}</strong>
+                            </>
+                          ) : (
+                            <strong className="meal-price-regular">{money(p.price)}</strong>
+                          )}
+                        </div>
+                        {Quantity({ product: p })}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+
+            {!filteredProducts.length && (
+              <div className="empty-results">
+                <Search size={30} />
+                <h3>{category === 'Promoção' ? 'Nenhuma refeição em promoção no momento' : 'Nenhum prato encontrado'}</h3>
+                <p>Tente outro termo ou categoria do cardápio.</p>
+                <button
+                  className="text-button"
+                  onClick={() => {
+                    setSearch('');
+                    setCategory('Todos');
+                  }}
+                >
+                  Ver todo o cardápio
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="store-aside store-aside-aligned">
+            {CartPanel()}
+            <div className="delivery-card delivery-card-clean">
+              <div className="delivery-card-top">
+                <MapPin size={20} />
+                <div>
+                  <strong>Da cozinha até você</strong>
+                  <p>
+                    Entrega em {restaurant.city} · {restaurant.state}
+                  </p>
+                </div>
+              </div>
+              <div className="delivery-card-metrics">
+                <span>
+                  <Truck size={17} />
+                  <b>{restaurant.estimatedTime || '30 – 45 min'}</b>
+                </span>
+                <i aria-hidden="true" />
+                <span>
+                  <CreditCard size={17} />
+                  <b>{restaurant.deliveryFee > 0 ? money(restaurant.deliveryFee) : 'Frete Grátis'}</b>
+                </span>
+              </div>
+            </div>
+
+            <div className="store-note store-aside-footnote">
+              <Info size={15} />
+              <span>
+                {restaurant.isDemo
+                  ? 'Restaurante fictício. Valores e prazos ilustrativos.'
+                  : 'Preços e disponibilidade sujeitos à confirmação do restaurante.'}
+              </span>
+            </div>
+
+            {!!restaurant.minOrder && <p className="field-hint">Pedido mínimo: {money(restaurant.minOrder)}</p>}
+            {!!restaurant.neighborhoods?.length && !restaurant.isDemo && (
+              <p className="field-hint">Entregamos em: {restaurant.neighborhoods.join(', ')}</p>
+            )}
+          </div>
+        </div>
       </div> : <div key={step} className="step-transition">
         <div className="checkout-heading"><div><div className="eyebrow">{restaurant.name} {restaurant.isDemo && '• PEDIDO DE DEMONSTRAÇÃO'}</div><h1 ref={heading} tabIndex={-1}>{step === 'details' ? 'Finalize seu pedido' : step === 'payment' ? 'Como prefere pagar?' : step === 'pix' ? 'Pague com Pix' : 'Tudo certo com seu pedido?'}</h1>{step === 'details' ? Back({ to: "menu", label: "Voltar ao cardápio" }) : step === 'review' ? <p>Confira antes de enviar ao restaurante.</p> : step === 'pix' ? <p>Rápido, fácil e direto para o restaurante.</p> : <p>Mais um passo para matar essa fome.</p>}</div>{Steps()}</div>
         {!count ? <div className="panel empty-results"><ShoppingBag size={40} /><h2>Sua sacola está vazia</h2><button className="button primary" onClick={() => go('menu')}>Escolher meu pedido</button></div> : step === 'details' ? <form onSubmit={nextDetails} className="checkout-grid"><section className="panel details-panel"><h2>Como deseja receber?</h2><div className="delivery-tabs"><button disabled={restaurant.deliveryEnabled === false} type="button" className={fulfillment === 'delivery' ? 'selected' : ''} onClick={() => setFulfillment('delivery')}><Bike />Entrega</button><button disabled={restaurant.pickupEnabled === false} type="button" className={fulfillment === 'pickup' ? 'selected' : ''} onClick={() => setFulfillment('pickup')}><ShoppingBag />Retirada</button></div><h2>Seus dados</h2><div className="field-grid"><label className="field"><span>Nome</span><div><UserRound size={19} /><input required minLength={2} maxLength={100} name="name" autoComplete="name" placeholder="Como podemos te chamar?" value={customer.name} onChange={e => updateCustomer('name', e.target.value)} /></div></label><label className="field"><span>WhatsApp</span><div><MessageCircle size={19} /><input required type="tel" name="phone" autoComplete="tel" placeholder="(61) 99999-0000" value={customer.phone} onChange={e => updateCustomer('phone', formatPhone(e.target.value))} /></div></label></div>

@@ -3,8 +3,8 @@ import type { AdminRestaurant } from '@/lib/admin';
 import { isOpenNowByHours, type PublicCatalog, type Restaurant } from '@/lib/domain';
 import { getProductRatings, getRestaurantRatings } from './reviews';
 const CATALOG_TIMEOUT_MS = 4000;
-const publicFields='id,slug,name,state,city,address,delivery_fee,whatsapp,pix_key,pix_name,pix_city,accepting_orders,is_demo,description,cuisine,logo_url,cover_url,is_open,opening_hours,delivery_enabled,pickup_enabled,min_order,estimated_time,neighborhoods,payment_methods,receipt_required,neighborhood,complement';
-function publicRestaurant(r:AdminRestaurant):Restaurant{return {id:r.id,slug:r.slug,name:r.name,state:r.state,city:r.city,address:[r.address,...[r.complement,r.neighborhood].filter(v=>v&&!r.address.toLocaleLowerCase('pt-BR').includes(v.toLocaleLowerCase('pt-BR')))].filter(Boolean).join(', '),deliveryFee:r.delivery_fee,whatsapp:r.whatsapp,pixKey:r.pix_key,pixName:r.pix_name,pixCity:r.pix_city,isDemo:r.is_demo,acceptingOrders:canCreateOrders()&&Boolean(r.whatsapp),description:r.description,cuisine:r.cuisine,logo:r.logo_url,cover:r.cover_url,isOpen:isOpenNowByHours(r.opening_hours,r.is_open),openingHours:r.opening_hours,deliveryEnabled:r.delivery_enabled,pickupEnabled:r.pickup_enabled,minOrder:r.min_order,estimatedTime:r.estimated_time,neighborhoods:r.neighborhoods,paymentMethods:r.payment_methods?.filter((method): method is 'pix'|'cash'|'card' => method==='pix'||method==='cash'||method==='card'),receiptRequired:r.receipt_required,rating:undefined,reviewCount:0};}
+const publicFields='id,slug,name,state,city,address,delivery_fee,whatsapp,pix_key,pix_name,pix_city,accepting_orders,is_demo,description,cuisine,logo_url,cover_url,is_open,opening_hours,delivery_enabled,pickup_enabled,min_order,estimated_time,neighborhoods,payment_methods,receipt_required,neighborhood,complement,banner_enabled,banner_image_url,banner_title,banner_info,banner_price_from,banner_price_to,banner_link';
+function publicRestaurant(r:AdminRestaurant):Restaurant{return {id:r.id,slug:r.slug,name:r.name,state:r.state,city:r.city,address:[r.address,...[r.complement,r.neighborhood].filter(v=>v&&!r.address.toLocaleLowerCase('pt-BR').includes(v.toLocaleLowerCase('pt-BR')))].filter(Boolean).join(', '),deliveryFee:r.delivery_fee,whatsapp:r.whatsapp,pixKey:r.pix_key,pixName:r.pix_name,pixCity:r.pix_city,isDemo:r.is_demo,acceptingOrders:canCreateOrders()&&Boolean(r.whatsapp),description:r.description,cuisine:r.cuisine,logo:r.logo_url,cover:r.cover_url,isOpen:isOpenNowByHours(r.opening_hours,r.is_open),openingHours:r.opening_hours,deliveryEnabled:r.delivery_enabled,pickupEnabled:r.pickup_enabled,minOrder:r.min_order,estimatedTime:r.estimated_time,neighborhoods:r.neighborhoods,paymentMethods:r.payment_methods?.filter((method): method is 'pix'|'cash'|'card' => method==='pix'||method==='cash'||method==='card'),receiptRequired:r.receipt_required,rating:undefined,reviewCount:0,bannerEnabled:Boolean(r.banner_enabled),bannerImage:r.banner_image_url||null,bannerTitle:r.banner_title||'',bannerInfo:r.banner_info||'',bannerPriceFrom:r.banner_price_from??null,bannerPriceTo:r.banner_price_to??null,bannerLink:r.banner_link||''};}
 import { canCreateOrders, database, hasDatabase } from './supabase';
 
 export class RestaurantNotFoundError extends Error {
@@ -12,14 +12,14 @@ export class RestaurantNotFoundError extends Error {
 }
 
 export const demoProducts = [
-  { id: 'brasa-bacon', name: 'Brasa Bacon', description: 'Burger 180 g, cheddar e bacon', price: 3490, category: 'Lanches', image: 'burger', rating: 4.9, reviewCount: 38 },
-  { id: 'prato-da-casa', name: 'Prato da casa', description: 'Arroz, feijão, bife e salada', price: 2990, category: 'Refeições', image: 'meal', rating: 4.8, reviewCount: 27 },
-  { id: 'batata-crocante', name: 'Batata crocante', description: 'Porção individual', price: 1200, category: 'Lanches', image: 'fries', rating: 4.7, reviewCount: 19 },
-  { id: 'combo-brasa', name: 'Combo Brasa', description: 'Brasa Bacon, batata e refrigerante', price: 4590, category: 'Combos', image: 'combo', rating: 5.0, reviewCount: 42 },
-  { id: 'refrigerante-lata', name: 'Refrigerante lata', description: 'Lata 350 ml bem gelada', price: 600, category: 'Bebidas', image: 'drink', rating: 4.9, reviewCount: 15 },
+  { id: 'brasa-bacon', name: 'Brasa Bacon', description: 'Burger 180 g, cheddar e bacon.', price: 3490, category: 'Lanches', image: 'burger', rating: 4.9, reviewCount: 38 },
+  { id: 'prato-da-casa', name: 'Prato da casa', description: 'Bife na brasa, arroz, feijão e salada.', price: 2490, originalPrice: 2990, isPromo: true, category: 'Refeições', image: 'meal', rating: 4.8, reviewCount: 27 },
+  { id: 'batata-crocante', name: 'Batata crocante', description: 'Porção individual.', price: 1200, category: 'Lanches', image: 'fries', rating: 4.7, reviewCount: 19 },
+  { id: 'combo-brasa', name: 'Combo Brasa', description: 'Brasa Bacon, batata e refrigerante.', price: 4590, category: 'Combos', image: 'combo', rating: 5.0, reviewCount: 42 },
+  { id: 'refrigerante-lata', name: 'Refrigerante lata', description: 'Lata 350 ml bem gelada.', price: 600, category: 'Bebidas', image: 'drink', rating: 4.9, reviewCount: 15 },
 ];
 
-export const demoRestaurant: Restaurant = { id: 'brasa-burger', slug: 'brasa-burger', name: 'Brasa Burger', state: 'DF', city: 'Brasília', address: 'CLS 308, Bloco B, Loja 12 — Asa Sul', deliveryFee: 500, isDemo: true, whatsapp: '5561982429847', pixKey: null, pixName: null, pixCity: null, description: 'Hambúrgueres artesanais, refeições e bebidas na brasa.', cuisine: 'Hambúrguer Artesanal', cover: 'hero', logo: 'logo', isOpen: true, rating: 4.9, reviewCount: 28, acceptingOrders: false };
+export const demoRestaurant: Restaurant = { id: 'brasa-burger', slug: 'brasa-burger', name: 'Brasa Burger', state: 'DF', city: 'Brasília', address: 'CLS 308, Bloco B, Loja 12 — Asa Sul', deliveryFee: 500, isDemo: true, whatsapp: '5561982429847', pixKey: null, pixName: null, pixCity: null, description: 'Hambúrgueres artesanais, refeições e bebidas na brasa.', cuisine: 'Hambúrguer Artesanal', cover: 'hero', logo: 'logo', isOpen: true, rating: 4.9, reviewCount: 28, acceptingOrders: false, bannerEnabled: true, bannerImage: '/images/store/banner-prato-da-casa.webp', bannerTitle: 'Prato da casa', bannerInfo: 'Bife na brasa, arroz, feijão e salada.', bannerPriceFrom: 2990, bannerPriceTo: 2490, bannerLink: '/restaurantes/brasa-burger#refeicao-prato-da-casa' };
 
 export async function getCatalog(identifier = 'brasa-burger'): Promise<PublicCatalog> {
   if (!hasDatabase()) {
@@ -33,7 +33,7 @@ export async function getCatalog(identifier = 'brasa-burger'): Promise<PublicCat
   if (!restaurantResult.data) throw new RestaurantNotFoundError();
   const r = restaurantResult.data as unknown as AdminRestaurant;
   const [productResult, storeRating, mealRatingsMap] = await Promise.all([
-    db.from('products').select('id,name,description,price,category,image,image_url,promo_price,featured,serves,extras').eq('restaurant_id', r.id).eq('active', true).order('sort_order').abortSignal(AbortSignal.timeout(CATALOG_TIMEOUT_MS)),
+    db.from('products').select('id,name,description,price,category,image,image_url,promo_price,is_promo,featured,serves,extras').eq('restaurant_id', r.id).eq('active', true).order('sort_order').abortSignal(AbortSignal.timeout(CATALOG_TIMEOUT_MS)),
     getRestaurantRatings(r.id, r.is_demo).catch(() => ({ rating: 0, reviewCount: 0 })),
     getProductRatings(r.id, r.is_demo).catch(() => ({} as Record<string, { rating: number; reviewCount: number }>)),
   ]);
@@ -48,6 +48,7 @@ export async function getCatalog(identifier = 'brasa-burger'): Promise<PublicCat
       ...p,
       price: p.promo_price ?? p.price,
       originalPrice: p.promo_price ? p.price : undefined,
+      isPromo: Boolean(p.is_promo || p.promo_price),
       image: p.image_url || p.image,
       rating: mealRatingsMap[p.id]?.rating,
       reviewCount: mealRatingsMap[p.id]?.reviewCount || 0,
