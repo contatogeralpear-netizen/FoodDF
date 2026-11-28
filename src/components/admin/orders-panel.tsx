@@ -1,6 +1,7 @@
 'use client';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
+  Award,
   Ban,
   Calendar,
   Check,
@@ -8,6 +9,7 @@ import {
   Clock3,
   DollarSign,
   Edit3,
+  ExternalLink,
   MessageCircle,
   PackageCheck,
   Plus,
@@ -16,6 +18,7 @@ import {
   Search,
   Share2,
   ShoppingBag,
+  Star,
   Store,
   Trash2,
   Truck,
@@ -32,6 +35,7 @@ import {
   type OrderStatus,
   type StatusEvent,
 } from '@/lib/order-status';
+import { FoodImage } from '../food-image';
 
 export type OrderItemRow = {
   productId?: string;
@@ -62,8 +66,24 @@ export type Order = {
   history: StatusEvent[];
 };
 
+export type OrderReviewSummary = {
+  id: string;
+  order_reference: string;
+  rating: number;
+  comment?: string | null;
+  created_at: string;
+};
+
 type PeriodPreset = 'all' | 'today' | '7d' | '30d' | 'month' | 'custom';
 type StatusFilter = 'all' | 'pending' | 'completed' | 'cancelled';
+
+type ShareContext = {
+  order: Order;
+  restaurantName: string;
+  restaurantSlug: string;
+  restaurantAddress: string;
+  origin: string;
+};
 
 type ShareStatusOption = {
   id: string;
@@ -72,8 +92,23 @@ type ShareStatusOption = {
   orderStatus: OrderStatus;
   paymentStatus?: 'pending' | 'confirmed' | 'rejected';
   Icon: typeof Clock3;
-  buildMessage: (order: Order, restaurantName: string, restaurantAddress: string, origin: string) => string;
+  buildMessage: (ctx: ShareContext) => string;
 };
+
+function buildWhatsappFooter(ctx: ShareContext): string[] {
+  const slugPath = `/restaurantes/${encodeURIComponent(ctx.restaurantSlug || 'brasa-burger')}`;
+  const orderLink = `${ctx.origin}${slugPath}?pedido=FD${ctx.order.reference}`;
+  const menuShareLink = `${ctx.origin}${slugPath}`;
+  return [
+    `🔗 *Dados do pedido e acompanhamento (com nossa logo):*`,
+    orderLink,
+    '',
+    `⭐ *Avalie seu pedido:* Ao acessar os dados do seu pedido pelo link acima, aproveite para realizar a sua avaliação do nosso *Atendimento* e da *Refeição escolhida*!`,
+    '',
+    `💛 *Muito obrigado pela preferência!* É uma alegria preparar o seu pedido no *${ctx.restaurantName}*.`,
+    `📲 *Compartilhe com seus amigos:* Indique nosso cardápio para quem você gosta: ${menuShareLink}`,
+  ];
+}
 
 const SHARE_STATUS_OPTIONS: ShareStatusOption[] = [
   {
@@ -83,15 +118,15 @@ const SHARE_STATUS_OPTIONS: ShareStatusOption[] = [
     orderStatus: 'awaiting_confirmation',
     paymentStatus: 'pending',
     Icon: QrCode,
-    buildMessage: (order, restaurantName, _addr, origin) =>
+    buildMessage: ctx =>
       [
-        `Olá, *${order.customer_name}*! 👋`,
-        `Recebemos o seu pedido *FD${order.reference}* em *${restaurantName}* no valor de *${money(order.total)}*.`,
+        `Olá, *${ctx.order.customer_name}*! 👋`,
+        `Recebemos o seu pedido *FD${ctx.order.reference}* em *${ctx.restaurantName}* no valor de *${money(ctx.order.total)}*.`,
         '',
         `📌 *Status atual:* Aguardando Confirmação do Pagamento Via Pix`,
-        'Assim que o comprovante for confirmado, iniciaremos o preparo imediatamente!',
+        'Assim que confirmarmos o comprovante Pix, iniciaremos o preparo imediatamente!',
         '',
-        `Acompanhe seu pedido: ${origin}/?pedido=FD${order.reference}`,
+        ...buildWhatsappFooter(ctx),
       ].join('\n'),
   },
   {
@@ -101,16 +136,16 @@ const SHARE_STATUS_OPTIONS: ShareStatusOption[] = [
     orderStatus: 'preparing',
     paymentStatus: 'confirmed',
     Icon: UtensilsCrossed,
-    buildMessage: (order, restaurantName, _addr, origin) =>
+    buildMessage: ctx =>
       [
-        `Olá, *${order.customer_name}*! 👨‍🍳🔥`,
-        `O seu pedido *FD${order.reference}* em *${restaurantName}* já está *Em Preparo*!`,
+        `Olá, *${ctx.order.customer_name}*! 👨‍🍳🔥`,
+        `O seu pedido *FD${ctx.order.reference}* em *${ctx.restaurantName}* já está *Em Preparo* com todo capricho!`,
         '',
         `📌 *Status atual:* Pedido em Preparo`,
-        ...order.items.map(i => `• ${i.quantity}× ${i.name}`),
+        ...ctx.order.items.map(i => `• ${i.quantity}× ${i.name}`),
+        `Total: *${money(ctx.order.total)}*`,
         '',
-        `Total: *${money(order.total)}*`,
-        `Acompanhe em tempo real: ${origin}/?pedido=FD${order.reference}`,
+        ...buildWhatsappFooter(ctx),
       ].join('\n'),
   },
   {
@@ -119,15 +154,15 @@ const SHARE_STATUS_OPTIONS: ShareStatusOption[] = [
     subtitle: 'Informa ao cliente que o pedido saiu para entrega',
     orderStatus: 'delivering',
     Icon: Truck,
-    buildMessage: (order, restaurantName, _addr, origin) =>
+    buildMessage: ctx =>
       [
-        `Olá, *${order.customer_name}*! 🛵💨`,
-        `Boa notícia! O seu pedido *FD${order.reference}* de *${restaurantName}* acabou de sair para entrega!`,
+        `Olá, *${ctx.order.customer_name}*! 🛵💨`,
+        `Boa notícia! O seu pedido *FD${ctx.order.reference}* do *${ctx.restaurantName}* acabou de sair para entrega!`,
         '',
         `📌 *Status atual:* Pedido Enviado`,
-        order.address ? `📍 *Endereço:* ${order.address}` : '',
+        ctx.order.address ? `📍 *Endereço:* ${ctx.order.address}` : '',
         '',
-        `Acompanhe seu pedido: ${origin}/?pedido=FD${order.reference}`,
+        ...buildWhatsappFooter(ctx),
       ]
         .filter(Boolean)
         .join('\n'),
@@ -138,15 +173,15 @@ const SHARE_STATUS_OPTIONS: ShareStatusOption[] = [
     subtitle: 'Avise que o pedido está pronto para retirada no balcão',
     orderStatus: 'ready',
     Icon: Store,
-    buildMessage: (order, restaurantName, restaurantAddress, origin) =>
+    buildMessage: ctx =>
       [
-        `Olá, *${order.customer_name}*! 🛍️✨`,
-        `O seu pedido *FD${order.reference}* em *${restaurantName}* já está pronto e *Aguardando Retirada*!`,
+        `Olá, *${ctx.order.customer_name}*! 🛍️✨`,
+        `O seu pedido *FD${ctx.order.reference}* em *${ctx.restaurantName}* já está pronto e *Aguardando Retirada*!`,
         '',
         `📌 *Status atual:* Aguardando Retirada`,
-        restaurantAddress ? `🏪 *Local de retirada:* ${restaurantAddress}` : '',
+        ctx.restaurantAddress ? `🏪 *Local de retirada:* ${ctx.restaurantAddress}` : '',
         '',
-        `Acompanhe seu pedido: ${origin}/?pedido=FD${order.reference}`,
+        ...buildWhatsappFooter(ctx),
       ]
         .filter(Boolean)
         .join('\n'),
@@ -154,16 +189,16 @@ const SHARE_STATUS_OPTIONS: ShareStatusOption[] = [
   {
     id: 'completed',
     title: 'Pedido Concluído / Entregue',
-    subtitle: 'Confirma a entrega e convida o cliente para avaliar',
+    subtitle: 'Agradece o cliente, convida a avaliar e compartilhar com amigos',
     orderStatus: 'completed',
     paymentStatus: 'confirmed',
     Icon: PackageCheck,
-    buildMessage: (order, restaurantName, _addr, origin) =>
+    buildMessage: ctx =>
       [
-        `Olá, *${order.customer_name}*! ✅`,
-        `O seu pedido *FD${order.reference}* em *${restaurantName}* foi concluído. Bom apetite!`,
+        `Olá, *${ctx.order.customer_name}*! ✅`,
+        `O seu pedido *FD${ctx.order.reference}* em *${ctx.restaurantName}* foi concluído. Bom apetite!`,
         '',
-        `Se puder, avalie sua experiência pelo link: ${origin}/?pedido=FD${order.reference}`,
+        ...buildWhatsappFooter(ctx),
       ].join('\n'),
   },
   {
@@ -172,11 +207,12 @@ const SHARE_STATUS_OPTIONS: ShareStatusOption[] = [
     subtitle: 'Comunica o cancelamento do pedido ao cliente',
     orderStatus: 'cancelled',
     Icon: Ban,
-    buildMessage: (order, restaurantName) =>
+    buildMessage: ctx =>
       [
-        `Olá, *${order.customer_name}*.`,
-        `Informamos que o pedido *FD${order.reference}* em *${restaurantName}* foi *Cancelado*.`,
-        'Caso tenha dúvidas ou queira refazer o pedido, fale conosco por aqui.',
+        `Olá, *${ctx.order.customer_name}*.`,
+        `Informamos que o pedido *FD${ctx.order.reference}* em *${ctx.restaurantName}* foi *Cancelado*.`,
+        'Caso tenha dúvidas ou deseje fazer um novo pedido, estamos à disposição por aqui!',
+        `Cardápio: ${ctx.origin}/restaurantes/${encodeURIComponent(ctx.restaurantSlug || 'brasa-burger')}`,
       ].join('\n'),
   },
 ];
@@ -243,15 +279,22 @@ function defaultShareOptionForOrder(order: Order): ShareStatusOption {
 export default function OrdersPanel({
   restaurantId,
   restaurantName = 'Restaurante',
+  restaurantSlug = 'brasa-burger',
+  restaurantLogo = null,
   restaurantAddress = '',
   onOrdersChange,
+  onReviewsChange,
 }: {
   restaurantId: string;
   restaurantName?: string;
+  restaurantSlug?: string;
+  restaurantLogo?: string | null;
   restaurantAddress?: string;
   onOrdersChange?: (orders: Order[]) => void;
+  onReviewsChange?: (reviews: OrderReviewSummary[]) => void;
 }) {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [reviews, setReviews] = useState<OrderReviewSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [toast, setToast] = useState('');
@@ -274,17 +317,30 @@ export default function OrdersPanel({
   const [editDraft, setEditDraft] = useState<EditDraft | null>(null);
 
   const load = useCallback(async () => {
-    const { data, error: rpcErr } = await adminClient().rpc('fooddf_restaurant_orders', { rid: restaurantId });
-    if (rpcErr) {
+    const db = adminClient();
+    const [ordRes, revRes] = await Promise.all([
+      db.rpc('fooddf_restaurant_orders', { rid: restaurantId }),
+      db
+        .from('order_reviews')
+        .select('id,order_reference,rating,comment,created_at')
+        .eq('restaurant_id', restaurantId)
+        .order('created_at', { ascending: false }),
+    ]);
+    if (ordRes.error) {
       setError('Não foi possível carregar os pedidos. Tente novamente.');
     } else {
-      const list = (data as Order[]) || [];
+      const list = (ordRes.data as Order[]) || [];
       setOrders(list);
       onOrdersChange?.(list);
       setError('');
     }
+    if (!revRes.error && Array.isArray(revRes.data)) {
+      const revList = revRes.data as OrderReviewSummary[];
+      setReviews(revList);
+      onReviewsChange?.(revList);
+    }
     setLoading(false);
-  }, [restaurantId, onOrdersChange]);
+  }, [restaurantId, onOrdersChange, onReviewsChange]);
 
   useEffect(() => {
     void load();
@@ -301,37 +357,43 @@ export default function OrdersPanel({
     return () => clearTimeout(id);
   }, [toast]);
 
-  // Pedidos filtrados pelo período selecionado
-  const periodOrders = useMemo(() => {
-    if (period === 'all') return orders;
-    const todayStr = toSaoPauloDateStr(new Date());
-    return orders.filter(order => {
-      const orderDay = toSaoPauloDateStr(order.created_at);
-      if (!orderDay) return true;
-      if (period === 'today') return orderDay === todayStr;
+  const inSelectedPeriod = useCallback(
+    (createdAt: string) => {
+      if (period === 'all') return true;
+      const todayStr = toSaoPauloDateStr(new Date());
+      const itemDay = toSaoPauloDateStr(createdAt);
+      if (!itemDay) return true;
+      if (period === 'today') return itemDay === todayStr;
       if (period === '7d') {
         const d = new Date();
         d.setDate(d.getDate() - 6);
-        return orderDay >= toSaoPauloDateStr(d) && orderDay <= todayStr;
+        return itemDay >= toSaoPauloDateStr(d) && itemDay <= todayStr;
       }
       if (period === '30d') {
         const d = new Date();
         d.setDate(d.getDate() - 29);
-        return orderDay >= toSaoPauloDateStr(d) && orderDay <= todayStr;
+        return itemDay >= toSaoPauloDateStr(d) && itemDay <= todayStr;
       }
-      if (period === 'month') {
-        return orderDay.slice(0, 7) === todayStr.slice(0, 7);
-      }
+      if (period === 'month') return itemDay.slice(0, 7) === todayStr.slice(0, 7);
       if (period === 'custom') {
-        if (dateFrom && orderDay < dateFrom) return false;
-        if (dateTo && orderDay > dateTo) return false;
+        if (dateFrom && itemDay < dateFrom) return false;
+        if (dateTo && itemDay > dateTo) return false;
         return true;
       }
       return true;
-    });
-  }, [orders, period, dateFrom, dateTo]);
+    },
+    [period, dateFrom, dateTo]
+  );
 
-  // Indicadores financeiros e operacionais do período selecionado
+  const periodOrders = useMemo(() => orders.filter(o => inSelectedPeriod(o.created_at)), [orders, inSelectedPeriod]);
+  const periodReviews = useMemo(() => reviews.filter(r => inSelectedPeriod(r.created_at)), [reviews, inSelectedPeriod]);
+
+  const reviewsByRef = useMemo(() => {
+    const map = new Map<string, OrderReviewSummary>();
+    for (const r of reviews) map.set(r.order_reference.toUpperCase(), r);
+    return map;
+  }, [reviews]);
+
   const kpis = useMemo(() => {
     const valid = periodOrders.filter(o => o.status !== 'cancelled');
     const pending = periodOrders.filter(o => o.status !== 'completed' && o.status !== 'cancelled');
@@ -344,6 +406,12 @@ export default function OrdersPanel({
     const cancelledTotal = cancelled.reduce((sum, o) => sum + (o.total || 0), 0);
     const avgTicket = valid.length > 0 ? Math.round(revenue / valid.length) : 0;
 
+    const reviewsCount = periodReviews.length;
+    const avgRating =
+      reviewsCount > 0
+        ? Math.round((periodReviews.reduce((s, r) => s + Number(r.rating || 0), 0) / reviewsCount) * 10) / 10
+        : 0;
+
     return {
       revenue,
       validCount: valid.length,
@@ -354,10 +422,11 @@ export default function OrdersPanel({
       completedRevenue,
       cancelledCount: cancelled.length,
       cancelledTotal,
+      reviewsCount,
+      avgRating,
     };
-  }, [periodOrders]);
+  }, [periodOrders, periodReviews]);
 
-  // Pedidos visíveis após filtro de status e busca textual
   const visibleOrders = useMemo(() => {
     const q = searchTerm.trim().toLocaleLowerCase('pt-BR');
     return periodOrders.filter(o => {
@@ -373,6 +442,17 @@ export default function OrdersPanel({
       );
     });
   }, [periodOrders, statusFilter, searchTerm]);
+
+  function makeShareCtx(order: Order): ShareContext {
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://fooddf.vercel.app';
+    return {
+      order,
+      restaurantName,
+      restaurantSlug,
+      restaurantAddress,
+      origin,
+    };
+  }
 
   async function advance(order: Order) {
     setWorking(order.id);
@@ -390,25 +470,20 @@ export default function OrdersPanel({
 
   function openShareModal(order: Order) {
     const opt = defaultShareOptionForOrder(order);
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://fooddf.vercel.app';
     setShareOrder(order);
     setSelectedShareId(opt.id);
-    setShareMessage(opt.buildMessage(order, restaurantName, restaurantAddress, origin));
+    setShareMessage(opt.buildMessage(makeShareCtx(order)));
   }
 
   function selectShareOption(opt: ShareStatusOption, order: Order) {
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://fooddf.vercel.app';
     setSelectedShareId(opt.id);
-    setShareMessage(opt.buildMessage(order, restaurantName, restaurantAddress, origin));
+    setShareMessage(opt.buildMessage(makeShareCtx(order)));
   }
 
   async function applyShareStatus(sendWhatsapp: boolean, overrideOpt?: ShareStatusOption) {
     if (!shareOrder) return;
     const opt = overrideOpt || SHARE_STATUS_OPTIONS.find(o => o.id === selectedShareId) || SHARE_STATUS_OPTIONS[0];
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://fooddf.vercel.app';
-    const textToSend = overrideOpt
-      ? overrideOpt.buildMessage(shareOrder, restaurantName, restaurantAddress, origin)
-      : shareMessage;
+    const textToSend = overrideOpt ? overrideOpt.buildMessage(makeShareCtx(shareOrder)) : shareMessage;
 
     if (sendWhatsapp) {
       const phone = toWhatsappPhone(shareOrder.customer_phone);
@@ -427,7 +502,7 @@ export default function OrdersPanel({
     if (rpcErr) {
       setError(rpcErr.message);
     } else {
-      setToast(sendWhatsapp ? 'Status atualizado e aberto no WhatsApp do cliente!' : 'Status do pedido atualizado!');
+      setToast(sendWhatsapp ? 'Status atualizado e enviado no WhatsApp com a logo!' : 'Status do pedido atualizado!');
       setShareOrder(null);
       await load();
     }
@@ -435,7 +510,8 @@ export default function OrdersPanel({
   }
 
   async function cancelOrderQuick(order: Order) {
-    if (!window.confirm(`Cancelar o pedido FD${order.reference}? Ele deixará de somar no indicador de faturamento.`)) return;
+    if (!window.confirm(`Cancelar o pedido FD${order.reference}? Ele deixará de somar no indicador de faturamento.`))
+      return;
     setWorking(order.id);
     setError('');
     const { error: rpcErr } = await adminClient().rpc('fooddf_set_order_status', {
@@ -476,11 +552,7 @@ export default function OrdersPanel({
 
   function openEditModal(order: Order) {
     const inferredFee =
-      order.fulfillment === 'pickup'
-        ? 0
-        : typeof order.delivery_fee === 'number'
-          ? order.delivery_fee
-          : 0;
+      order.fulfillment === 'pickup' ? 0 : typeof order.delivery_fee === 'number' ? order.delivery_fee : 0;
     const inferredSubtotal =
       typeof order.subtotal === 'number' && order.subtotal > 0
         ? order.subtotal
@@ -595,7 +667,7 @@ export default function OrdersPanel({
     <div className="order-management">
       <div className="admin-tip">
         <Clock3 size={18} />
-        Todos os pedidos enviados pelo WhatsApp aparecem aqui automaticamente a cada 15 segundos. Use &ldquo;Compartilhar Andamento&rdquo; para avisar o cliente em 1 clique.
+        Todos os pedidos enviados pelo WhatsApp aparecem aqui automaticamente. Use &ldquo;Compartilhar Andamento&rdquo; para enviar o status com a logo, agradecimento e link de avaliação ao cliente.
       </div>
 
       {/* FILTRO POR PERÍODO E BUSCA */}
@@ -684,17 +756,17 @@ export default function OrdersPanel({
         </div>
       </section>
 
-      {/* INDICADORES DE FATURAMENTO, PENDENTES, CONCLUÍDOS E CANCELADOS */}
-      <div className="orders-kpi-grid">
+      {/* INDICADORES DE FATURAMENTO, PENDENTES, CONCLUÍDOS, CANCELADOS E AVALIAÇÕES */}
+      <div className="orders-kpi-grid six">
         <section className="orders-kpi-card is-revenue">
           <span className="orders-kpi-icon">
-            <DollarSign size={24} />
+            <DollarSign size={23} />
           </span>
           <div>
             <p>Faturamento</p>
             <strong>{money(kpis.revenue)}</strong>
             <small>
-              {kpis.validCount} {kpis.validCount === 1 ? 'pedido válido' : 'pedidos válidos'} · Ticket médio{' '}
+              {kpis.validCount} {kpis.validCount === 1 ? 'pedido válido' : 'pedidos válidos'} · Ticket{' '}
               {money(kpis.avgTicket)}
             </small>
           </div>
@@ -702,22 +774,20 @@ export default function OrdersPanel({
 
         <section className={`orders-kpi-card ${kpis.pendingCount > 0 ? 'is-pending' : ''}`}>
           <span className="orders-kpi-icon">
-            <Clock3 size={24} />
+            <Clock3 size={23} />
           </span>
           <div>
             <p>Pedidos pendentes</p>
             <strong>{kpis.pendingCount}</strong>
             <small>
-              {kpis.awaitingCount > 0
-                ? `${kpis.awaitingCount} aguardando confirmação`
-                : 'Em preparo ou entrega'}
+              {kpis.awaitingCount > 0 ? `${kpis.awaitingCount} aguardando confirmação` : 'Em preparo ou entrega'}
             </small>
           </div>
         </section>
 
         <section className="orders-kpi-card is-completed">
           <span className="orders-kpi-icon">
-            <CheckCircle2 size={24} />
+            <CheckCircle2 size={23} />
           </span>
           <div>
             <p>Pedidos concluídos</p>
@@ -728,12 +798,34 @@ export default function OrdersPanel({
 
         <section className={`orders-kpi-card ${kpis.cancelledCount > 0 ? 'is-cancelled' : ''}`}>
           <span className="orders-kpi-icon">
-            <Ban size={24} />
+            <Ban size={23} />
           </span>
           <div>
             <p>Pedidos cancelados</p>
             <strong>{kpis.cancelledCount}</strong>
             <small>{money(kpis.cancelledTotal)} fora do faturamento</small>
+          </div>
+        </section>
+
+        <section className="orders-kpi-card is-rating">
+          <span className="orders-kpi-icon">
+            <Award size={23} />
+          </span>
+          <div>
+            <p>Avaliações recebidas</p>
+            <strong>{kpis.reviewsCount}</strong>
+            <small>Contabilizadas (1 por pedido)</small>
+          </div>
+        </section>
+
+        <section className="orders-kpi-card is-rating">
+          <span className="orders-kpi-icon">
+            <Star size={23} />
+          </span>
+          <div>
+            <p>Média da nota</p>
+            <strong>{kpis.reviewsCount > 0 ? `${kpis.avgRating.toFixed(1).replace('.', ',')} ★` : '—'}</strong>
+            <small>{kpis.reviewsCount > 0 ? 'Nota média do atendimento' : 'Aguardando 1ª avaliação'}</small>
           </div>
         </section>
       </div>
@@ -770,6 +862,7 @@ export default function OrdersPanel({
               o.status === 'awaiting_confirmation' &&
               o.payment_method === 'pix' &&
               o.payment_status === 'pending';
+            const orderRev = reviewsByRef.get(`FD${o.reference}`);
             return (
               <article
                 className={`admin-card order-card ${o.status === 'cancelled' ? 'is-cancelled' : ''}`}
@@ -783,11 +876,16 @@ export default function OrdersPanel({
                     <h3>Pedido FD{o.reference}</h3>
                     <small>{new Date(o.created_at).toLocaleString('pt-BR')}</small>
                   </div>
-                  <strong className={`order-status-pill status-${o.status}`}>
-                    {isPixPending
-                      ? 'Aguardando Pix'
-                      : statusLabel(o.status, o.fulfillment)}
-                  </strong>
+                  <div className="order-head-badges">
+                    <strong className={`order-status-pill status-${o.status}`}>
+                      {isPixPending ? 'Aguardando Pix' : statusLabel(o.status, o.fulfillment)}
+                    </strong>
+                    {orderRev && (
+                      <span className="order-evaluated-badge" title={orderRev.comment || 'Pedido avaliado'}>
+                        <Star size={12} fill="#ffb800" color="#ffb800" /> {orderRev.rating.toFixed(1).replace('.', ',')}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="order-timers">
@@ -822,16 +920,17 @@ export default function OrdersPanel({
                   </p>
                 )}
 
+                {orderRev?.comment && (
+                  <p className="order-review-quote">
+                    <Star size={13} fill="#ffb800" color="#ffb800" /> &ldquo;{orderRev.comment}&rdquo;
+                  </p>
+                )}
+
                 <div className="order-card-footer">
                   <strong>{money(o.total)}</strong>
                   <span>
                     Pagamento:{' '}
-                    {o.payment_method === 'pix'
-                      ? 'Pix'
-                      : o.payment_method === 'cash'
-                        ? 'Dinheiro'
-                        : 'Cartão'}{' '}
-                    ·{' '}
+                    {o.payment_method === 'pix' ? 'Pix' : o.payment_method === 'cash' ? 'Dinheiro' : 'Cartão'} ·{' '}
                     {o.payment_status === 'confirmed'
                       ? 'confirmado'
                       : o.payment_status === 'rejected'
@@ -917,7 +1016,7 @@ export default function OrdersPanel({
         </div>
       )}
 
-      {/* MODAL: COMPARTILHAR ANDAMENTO PELO WHATSAPP */}
+      {/* MODAL: COMPARTILHAR ANDAMENTO PELO WHATSAPP COM LOGO, AGRADECIMENTO E AVALIAÇÃO */}
       {shareOrder && (
         <div className="admin-modal-backdrop" onClick={() => setShareOrder(null)}>
           <section
@@ -942,9 +1041,31 @@ export default function OrdersPanel({
               </span>
               <h2>Compartilhar Andamento</h2>
               <p>
-                Selecione o status atual do pedido para atualizar o painel e enviar pelo WhatsApp para{' '}
-                <strong>{shareOrder.customer_name}</strong> ({formatContactPhone(shareOrder.customer_phone)}).
+                Escolha o status para enviar pelo WhatsApp para <strong>{shareOrder.customer_name}</strong> (
+                {formatContactPhone(shareOrder.customer_phone)}) com sua logo de compartilhamento, mensagem de agradecimento, convite para amigos e link de avaliação.
               </p>
+            </div>
+
+            {/* PRÉVIA DA LOGO DE COMPARTILHAMENTO 1:1 INCLUÍDA NO TEMPLATE */}
+            <div className="share-logo-banner">
+              <div className="share-logo-thumb">
+                <FoodImage kind={restaurantLogo || 'logo'} label={restaurantName} />
+              </div>
+              <div className="share-logo-copy">
+                <strong>Logo de compartilhamento ativa ({restaurantName})</strong>
+                <small>
+                  O link do pedido carrega automaticamente sua logo 1:1 na prévia do WhatsApp do cliente.
+                </small>
+              </div>
+              <a
+                className="button outline small"
+                href={`/api/og/restaurant?slug=${encodeURIComponent(restaurantSlug)}&pedido=FD${shareOrder.reference}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ExternalLink size={14} />
+                Ver logo
+              </a>
             </div>
 
             <div className="share-status-list" role="radiogroup" aria-label="Status do andamento do pedido">
@@ -991,9 +1112,9 @@ export default function OrdersPanel({
             </div>
 
             <label className="share-message-preview">
-              <span>Mensagem que será enviada no WhatsApp do cliente:</span>
+              <span>Template da mensagem para o WhatsApp do cliente (com logo, agradecimento e avaliação):</span>
               <textarea
-                rows={5}
+                rows={8}
                 value={shareMessage}
                 onChange={e => setShareMessage(e.target.value)}
               />
@@ -1126,9 +1247,7 @@ export default function OrdersPanel({
                   <span>Recebimento</span>
                   <select
                     value={editDraft.fulfillment}
-                    onChange={e =>
-                      setEditDraft({ ...editDraft, fulfillment: e.target.value as Fulfillment })
-                    }
+                    onChange={e => setEditDraft({ ...editDraft, fulfillment: e.target.value as Fulfillment })}
                   >
                     <option value="delivery">Entrega</option>
                     <option value="pickup">Retirada no local</option>

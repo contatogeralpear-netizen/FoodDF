@@ -16,7 +16,7 @@ export const siteOrigin = (() => {
 })();
 
 /** Imagem padrão Open Graph (1200×630). */
-export const defaultOgImage = `${siteOrigin}/og-image.png`;
+export const defaultOgImage = `${siteOrigin}/opengraph-image`;
 
 /** Configuração padrão de indexação para páginas públicas. */
 export const indexableRobots = {

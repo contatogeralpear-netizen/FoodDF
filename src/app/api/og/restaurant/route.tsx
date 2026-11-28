@@ -6,18 +6,19 @@ export const runtime = 'nodejs';
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const slug = searchParams.get('slug') || 'brasa-burger';
+  const pedido = searchParams.get('pedido')?.toUpperCase() || null;
 
-  let restaurantName = 'Restaurante';
+  let restaurantName = 'FOODDF';
   let location = 'Brasília / DF';
   let logoUrl: string | null = null;
-  let cuisine = 'Cardápio Digital';
+  let cuisine = 'Cardápio Digital Oficial';
 
   try {
     const catalog = await getCatalog(slug);
     restaurantName = catalog.restaurant.name;
     location = `${catalog.restaurant.city} / ${catalog.restaurant.state}`;
     cuisine = catalog.restaurant.cuisine || 'Cardápio Digital';
-    if (catalog.restaurant.logo && catalog.restaurant.logo.startsWith('http')) {
+    if (catalog.restaurant.logo && (catalog.restaurant.logo.startsWith('http://') || catalog.restaurant.logo.startsWith('https://'))) {
       logoUrl = catalog.restaurant.logo;
     }
   } catch (err) {
@@ -36,44 +37,49 @@ export async function GET(request: Request) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'linear-gradient(145deg, #250f1f 0%, #3d1434 100%)',
+          background: 'linear-gradient(145deg, #4b0b26 0%, #2a0716 100%)',
           color: '#ffffff',
           fontFamily: 'sans-serif',
-          padding: '40px',
+          padding: '38px',
           boxSizing: 'border-box',
           position: 'relative',
         }}
       >
-        {/* Marca d'água FOODDF no topo */}
+        {/* Selo superior FOODDF com chapéu de chef */}
         <div
           style={{
-            position: 'absolute',
-            top: 24,
-            left: 32,
             display: 'flex',
             alignItems: 'center',
-            gap: 6,
+            gap: 10,
+            background: 'rgba(255, 255, 255, 0.1)',
+            padding: '8px 20px',
+            borderRadius: 999,
+            marginBottom: 24,
+            border: '1px solid rgba(255, 255, 255, 0.18)',
           }}
         >
-          <span style={{ fontSize: 24, fontWeight: 900, color: '#ff5900', letterSpacing: -1 }}>
+          <span style={{ fontSize: 22, fontWeight: 900, color: '#ff6a1a', letterSpacing: -0.5 }}>
             FOOD<span style={{ color: '#ffffff' }}>DF</span>
+          </span>
+          <span style={{ fontSize: 15, color: '#f5d5e3', fontWeight: 700 }}>
+            • Cardápio Oficial
           </span>
         </div>
 
         {/* Logo 1:1 Quadrada Centralizada */}
         <div
           style={{
-            width: 210,
-            height: 210,
-            borderRadius: 38,
-            background: '#ffffff',
+            width: 204,
+            height: 204,
+            borderRadius: 42,
+            background: '#fffaf5',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             overflow: 'hidden',
-            boxShadow: '0 16px 40px rgba(0,0,0,0.45)',
-            border: '4px solid rgba(255, 255, 255, 0.25)',
-            marginBottom: 24,
+            boxShadow: '0 18px 44px rgba(0,0,0,0.45)',
+            border: '5px solid #ff6a1a',
+            marginBottom: 22,
           }}
         >
           {logoUrl ? (
@@ -91,13 +97,16 @@ export async function GET(request: Request) {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                background: '#ff5900',
+                background: 'linear-gradient(145deg, #ff6a1a 0%, #e04800 100%)',
                 color: '#ffffff',
-                fontSize: 72,
-                fontWeight: 900,
               }}
             >
-              {restaurantName.charAt(0).toUpperCase()}
+              <span style={{ fontSize: 82, fontWeight: 900, lineHeight: 1 }}>
+                {restaurantName.charAt(0).toUpperCase()}
+              </span>
+              <span style={{ fontSize: 16, fontWeight: 800, marginTop: 6, letterSpacing: 1.5 }}>
+                FOODDF
+              </span>
             </div>
           )}
         </div>
@@ -105,11 +114,11 @@ export async function GET(request: Request) {
         {/* Nome do Restaurante */}
         <div
           style={{
-            fontSize: 38,
+            fontSize: 40,
             fontWeight: 900,
             color: '#ffffff',
             textAlign: 'center',
-            lineHeight: 1.15,
+            lineHeight: 1.12,
             marginBottom: 8,
             maxWidth: 520,
           }}
@@ -121,16 +130,16 @@ export async function GET(request: Request) {
         <div
           style={{
             fontSize: 20,
-            color: '#d6b8cf',
+            color: '#f2cadb',
             textAlign: 'center',
-            marginBottom: 26,
+            marginBottom: 24,
             fontWeight: 600,
           }}
         >
-          {cuisine} • {location}
+          {pedido ? `Pedido ${pedido} • ${location}` : `${cuisine} • ${location}`}
         </div>
 
-        {/* Tag de Pedido WhatsApp */}
+        {/* Tag inferior de ação */}
         <div
           style={{
             display: 'flex',
@@ -138,14 +147,13 @@ export async function GET(request: Request) {
             gap: 10,
             background: '#25d366',
             color: '#ffffff',
-            padding: '12px 26px',
+            padding: '12px 28px',
             borderRadius: 999,
             fontSize: 18,
             fontWeight: 800,
-            boxShadow: '0 8px 24px rgba(37, 211, 102, 0.4)',
           }}
         >
-          <span>Peça direto pelo WhatsApp</span>
+          <span>{pedido ? 'Acompanhe e avalie seu pedido' : 'Peça direto pelo WhatsApp'}</span>
         </div>
       </div>
     ),

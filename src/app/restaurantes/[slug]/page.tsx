@@ -9,22 +9,31 @@ import { indexableRobots, ogDefaults, twitterDefaults, siteOrigin } from '@/lib/
 
 export const dynamic = 'force-dynamic';
 
-type RestaurantPageProps = { params: Promise<{ slug: string }> };
+type RestaurantPageProps = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 const loadCatalog = cache(getCatalog);
 
-export async function generateMetadata({ params }: RestaurantPageProps): Promise<Metadata> {
-  const { slug } = await params;
+export async function generateMetadata({ params, searchParams }: RestaurantPageProps): Promise<Metadata> {
+  const [{ slug }, query] = await Promise.all([params, searchParams]);
+  const orderParam =
+    typeof query?.pedido === 'string' && /^FD\d{1,15}$/i.test(query.pedido)
+      ? query.pedido.toUpperCase()
+      : null;
   try {
     const { restaurant } = await loadCatalog(slug);
-    const title = restaurant.isDemo
-      ? `${restaurant.name} — Demonstração Ilustrativa`
-      : `${restaurant.name} em ${restaurant.city}/${restaurant.state}`;
-    const description = restaurant.isDemo
-      ? 'Conheça um cardápio fictício e veja como funciona o FOODDF. Não há cobrança na demonstração.'
-      : `${restaurant.description || `Conheça o cardápio de ${restaurant.name}`} · ${restaurant.city}/${restaurant.state}.`;
-    const shareImage1x1 = restaurant.logo && (restaurant.logo.startsWith('http://') || restaurant.logo.startsWith('https://'))
-      ? restaurant.logo
-      : `${siteOrigin}/api/og/restaurant?slug=${encodeURIComponent(restaurant.slug)}`;
+    const title = orderParam
+      ? `Pedido ${orderParam} • ${restaurant.name} — Acompanhe e Avalie`
+      : restaurant.isDemo
+        ? `${restaurant.name} — Demonstração Ilustrativa`
+        : `${restaurant.name} em ${restaurant.city}/${restaurant.state}`;
+    const description = orderParam
+      ? `Acompanhe os dados do seu pedido ${orderParam} em ${restaurant.name} e realize sua avaliação do atendimento e da refeição escolhida.`
+      : restaurant.isDemo
+        ? 'Conheça um cardápio fictício e veja como funciona o FOODDF. Não há cobrança na demonstração.'
+        : `${restaurant.description || `Conheça o cardápio de ${restaurant.name}`} · ${restaurant.city}/${restaurant.state}.`;
+    const shareImage1x1 = `${siteOrigin}/api/og/restaurant?slug=${encodeURIComponent(restaurant.slug)}${orderParam ? `&pedido=${encodeURIComponent(orderParam)}` : ''}`;
 
     return {
       title,

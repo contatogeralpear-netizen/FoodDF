@@ -1,4 +1,4 @@
-import { getOrderReview, submitOrderReview } from '@/lib/server/reviews';
+import { getOrderReview, submitOrderReview, type MealRatingInput } from '@/lib/server/reviews';
 
 export const runtime = 'nodejs';
 
@@ -21,19 +21,29 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { orderReference, rating, comment, customerName, phone, restaurantId } = body;
+    const { orderReference, rating, comment, customerName, phone, restaurantId, mealRatings } = body;
 
     if (!orderReference || !rating) {
-      return Response.json({ error: 'Referência do pedido e nota (1 a 5 estrelas) são obrigatórios.' }, { status: 400 });
+      return Response.json(
+        { error: 'Referência do pedido e nota de atendimento (1 a 5 estrelas) são obrigatórios.' },
+        { status: 400 }
+      );
     }
 
+    const ip =
+      request.headers.get('x-vercel-forwarded-for') ||
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+      'local';
+
     const result = await submitOrderReview({
-      orderReference,
+      orderReference: String(orderReference),
       rating: Number(rating),
       comment: typeof comment === 'string' ? comment : undefined,
       customerName: typeof customerName === 'string' ? customerName : undefined,
       phone: typeof phone === 'string' ? phone : undefined,
       restaurantId: typeof restaurantId === 'string' ? restaurantId : undefined,
+      mealRatings: Array.isArray(mealRatings) ? (mealRatings as MealRatingInput[]) : undefined,
+      ip,
     });
 
     return Response.json(result, { status: 201 });
